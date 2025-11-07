@@ -1,0 +1,15 @@
+ <Routes>
+        <Route index element={<Navigate to="auth/login" replace />} />
+        {/* public  access routes coupling the pages to the react components( render)   */}
+        <Route path="auth" element={<AuthContext />}>
+          <Route path="login" element={<Login />} />
+          <Route path="signup" element={<SignUp />} />
+        </Route>
+        {/* Protected Routes  */}
+        <Route path="Home" element={<Home />} />
+        <Route path="about" element={<About />} />
+        <Route path="contact" element={<Contact />} />
+        {/* 404 error message, failure to log in or signup or session ran out of time contains the  clickable links to route back to the signup or login page */}
+        <Route path="*" element={<NotFound />} />{" "}
+        {/* 404 error message, failure to log in or  or signnup or session ran out of time */}
+      </Routes>
