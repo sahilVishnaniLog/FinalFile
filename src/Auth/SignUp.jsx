@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router";
 import { auth, db } from "./firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useForm, Controller } from "react-hook-form";
 import countryPhoneCodes from "../assets/countryPhoneCode";
 import {
   Box,
@@ -54,7 +55,7 @@ export default function SignUp() {
   const [phoneCode, setPhoneCode] = useState(" ");
   const [hiddenPassword, setHiddenPassword] = useState(true);
   const Navigate = useNavigate();
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
   const timeoutRef = useRef(null);
 
   const customUserData = {
@@ -82,52 +83,56 @@ export default function SignUp() {
     } catch (error) {
       console.error("error authenticating , error message", error);
     }
-    }
-
-    //this code doesnt belong here
-
-    // try {
-    //   const userCredentials = await createUserWithEmailAndPassword(
-    //     auth,
-    //     email,
-    //     password
-    //   ).catch((err) => {
-    //     console.error("error signing up user" + err.message);
-    //   });
-    //   const { user } = userCredentials;
-
-    //   const userDoc = {
-    //     uid: user.uid,
-    //     email: user.email,
-    //     username: customUserData.username ?? user.displayName ?? "",
-    //     phone: customUserData.phone ?? "",
-    //     phoneCode: customUserData.phoneCode ?? "",
-    //     country: customUserData.country ?? "",
-    //     name: customUserData.name ?? "",
-    //     createdAt: new Date().toUTCString(),
-    //     role: user.email === "sahilvishnani25@gmail.com" ? "admin" : "user",
-    //   };
-    //   await setDoc(doc(db, "users", user.uid), userDoc).catch((err) => {
-    //     console.error("error saving user data to firestore " + err.message);
-    //   });
-    //   console.log("User created and saved to FireStore database");
-    //   // const userName = "DummyUserName";
-    //   Navigate("/${userName}", { replace: true });
-
-    //   return user;
-    // } catch (err) {
-    //   alert("error in creating user" + err.message);
-    //   Navigate("");
-    //   throw err;
-    // }
   };
 
+  //this code doesnt belong here
+
+  // try {
+  //   const userCredentials = await createUserWithEmailAndPassword(
+  //     auth,
+  //     email,
+  //     password
+  //   ).catch((err) => {
+  //     console.error("error signing up user" + err.message);
+  //   });
+  //   const { user } = userCredentials;
+
+  //   const userDoc = {
+  //     uid: user.uid,
+  //     email: user.email,
+  //     username: customUserData.username ?? user.displayName ?? "",
+  //     phone: customUserData.phone ?? "",
+  //     phoneCode: customUserData.phoneCode ?? "",
+  //     country: customUserData.country ?? "",
+  //     name: customUserData.name ?? "",
+  //     createdAt: new Date().toUTCString(),
+  //     role: user.email === "sahilvishnani25@gmail.com" ? "admin" : "user",
+  //   };
+  //   await setDoc(doc(db, "users", user.uid), userDoc).catch((err) => {
+  //     console.error("error saving user data to firestore " + err.message);
+  //   });
+  //   console.log("User created and saved to FireStore database");
+  //   // const userName = "DummyUserName";
+  //   Navigate("/${userName}", { replace: true });
+
+  //   return user;
+  // } catch (err) {
+  //   alert("error in creating user" + err.message);
+  //   Navigate("");
+  //   throw err;
+  // }
+
   function handleName(e) {
-    const { id, value } = e.target;
-    if (id === "user-name-firstName-signUp")
-      setName((prev) => ({ ...prev, firstName: value }));
-    if (id === "user-name-lastName-signUp")
-      setName((prev) => ({ ...prev, lastName: value }));
+    e.preventDefault();
+    const { value, id } = e.target;
+    const newName = { ...name };
+    if (id === "usersFirstName") {
+      newName.firstName = value;
+    }
+    if (id === "usersLastName") {
+      newName.lastName = value;
+    }
+    setName(newName);
   }
   function handleHiddenPassword() {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -146,17 +151,12 @@ export default function SignUp() {
 
   return (
     <div>
-      SignUp is Mounted
-      <button type="submit" onClick={signupwithLoggingIn}>
-        {" "}
-        signup with Logging in{" "}
-      </button>
       <Box
         elevation={2}
         sx={{
           display: "flex",
           justifyContent: "center",
-          alignItems: "left",
+          alignItems: "flex-start",
           pl: 3,
           pr: "auto",
           width: "100%",
@@ -195,20 +195,28 @@ export default function SignUp() {
               }}
               color="contrast"
             >
-              Already have an account ?{" "}
+              Already have an account ?{"error  "}
               <Button
                 endIcon={<ArrowRightAltIcon />}
                 sx={{ textDecoration: "underline", color: "inherit" }}
                 onClick={handleSignupToLogin}
               >
                 {" "}
-                Sign In{" "}
+                Sign In{"error  "}
               </Button>{" "}
             </Typography>
 
-            <Typography variant="h5" sx={{ mb: 3, fontWeight: "bold" }}>
+            <Typography
+              variant="h5"
+              sx={{
+                mb: 3,
+                fontWeight: "bold",
+                fontColor: "#7b1fa2",
+                zIndex: 10000,
+              }}
+            >
               {" "}
-              Sign Up{" "}
+              Sign Up{"error  "}
             </Typography>
             <Stack direction="column" sx={{ gap: 3 }}>
               <FormControl>
@@ -222,7 +230,7 @@ export default function SignUp() {
                       value={name.firstName}
                       onChange={(e) => handleName(e)}
                       label="  First Name* "
-                      id="user-name-firstName-signup"
+                      id="usersFirstName"
                     />
                   </FormControl>
                   <FormControl>
@@ -234,7 +242,7 @@ export default function SignUp() {
                       value={name.lastName}
                       onChange={(e) => handleName(e)}
                       label=" Last Name * "
-                      id="user-name-lastName-signup"
+                      id="usersLastName"
                     />
                   </FormControl>
                 </Stack>
@@ -369,7 +377,7 @@ export default function SignUp() {
                 control={<Checkbox />}
                 label="Receive occasional product updates and announcemennts"
               >
-                {" "}
+                {" error "}
               </FormControlLabel>
               <Button
                 sx={{ bgcolor: "#233629" }}
@@ -382,10 +390,10 @@ export default function SignUp() {
                 Create Account{" "}
               </Button>
               <Typography>
-                {" "}
+                {" error"}
                 By creating an account, you agree to the{" "}
                 <Link href="#TermsNServices"> Terms of Services </Link> For more
-                information about our privacy practices, see the{" "}
+                information about our privacy practices, see the{" error "}
                 <Link href="#PrivacyPolicy"> Privacy Policy </Link>. We'll
                 occasionally send you account-related emails.
               </Typography>

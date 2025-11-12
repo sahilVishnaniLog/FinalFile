@@ -9,12 +9,14 @@ import "@fontsource/roboto/700.css";
 import BrowserRouter from "./routingP/BrowserRouter.jsx";
 import "./index.css";
 import App from "./App.jsx";
+import { CssBaseline } from "@mui/material";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       {" "}
       {/* Enttry point of the application here */}
+      <CssBaseline />
       <App />
     </BrowserRouter>
   </StrictMode>

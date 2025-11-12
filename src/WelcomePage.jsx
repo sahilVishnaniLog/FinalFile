@@ -11,6 +11,7 @@ import {
   Divider,
   Box,
 } from "@mui/material";
+import { ProfilePopover, SettingsPopover } from "./components/component.js";
 
 import { CiBoxList, CiViewBoard, CiGlobe } from "react-icons/ci";
 import { FaWpforms } from "react-icons/fa";
@@ -48,6 +49,9 @@ export default function WelcomePage() {
   const Navigate = useNavigate();
   const location = useLocation();
 
+  //profile popover
+  const [anchorProfileEl, setAnchorProfileEl] = useState(null);
+  const [anchorSettingsEl, setAnchorSettingsEl] = useState(null);
   // debugging
   console.log(location);
 
@@ -70,15 +74,40 @@ export default function WelcomePage() {
     Navigate(`/${userName}/${newTab.toLowerCase()}`, { replace: true });
   };
 
+  // profile popover
+  function handleProfilePopoverClick(event) {
+    event.preventDefault();
+    setAnchorProfileEl(anchorProfileEl ? null : event.currentTarget);
+  }
+  function handleProfilePopoverClose(event) {
+    setAnchorProfileEl(null);
+  }
+
+  //settings popover method
+  function handleSettingsPopoverClick(event) {
+    event.preventDefault();
+    setAnchorSettingsEl(anchorSettingsEl ? null : event.currentTarget);
+  }
+  function handleSettingsPopoverClose(event, reason) {
+    setAnchorSettingsEl(null);
+  }
+  // api call will be made which will return the url to be passeḍ
+  function DummybackgroundURLProvider() {
+    return {
+      url: "https://plus.unsplash.com/premium_photo-1676827547759-5c7bdaada28c?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1317",
+    };
+  }
+
   return (
     <>
       <Container
         sx={{
-          bgcolor: "#233629",
+          bggroundImage: `url(${DummybackgroundURLProvider().url})`,
           height: "100%",
-          width: "100%",
-          maxWidth: { sm: 700, md: 900, lg: 1500, xl: 2400 },
+          width: "100vh",
+          maxWidth: { sm: 900, md: 1000, lg: 1500, xl: 2400 },
           padding: { sm: 1, md: 2, lg: 3, xl: 4 },
+          zIndex: 10000,
         }}
       >
         <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
@@ -88,16 +117,33 @@ export default function WelcomePage() {
           </Typography>
           <IconButton
             id="home-profile-popover-button"
-            ref={buttonProfilePopoverRef}
+            onClick={handleProfilePopoverClick}
             sx={IconButtonStyle}
           >
             {" "}
             <GroupIcon />{" "}
           </IconButton>
-          <IconButton id="homeBackgroundPopoverButton" sx={IconButtonStyle}>
+          <ProfilePopover
+            anchorEl={anchorProfileEl}
+            handleClose={handleProfilePopoverClose}
+            handleSignOut={handleSignOut}
+          />
+          <IconButton
+            type="button"
+            onClick={(e) => {
+              handleSettingsPopoverClick(e);
+            }}
+            sx={IconButtonStyle}
+            aria-haspopup="true"
+            aria-label="Settings"
+          >
             {" "}
             <MoreHorizIcon />{" "}
           </IconButton>
+          <SettingsPopover
+            anchorEl={anchorSettingsEl}
+            handleClose={handleSettingsPopoverClose}
+          />
         </Stack>
         <Tabs
           value={currentTab}
