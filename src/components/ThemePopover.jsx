@@ -34,7 +34,7 @@ let listContent = [
     ),
   },
   {
-    label: "Browser Theme ",
+    label: "Browser Theme",
     icon: (
       <CustomBrowserThemeIcon
         sx={{ color: "transparent", width: "4rem", height: "auto" }}
@@ -46,6 +46,7 @@ let listContent = [
 export default function ThemePopover({ anchorEl, handleClose }) {
   const open = Boolean(anchorEl);
   const [choosenTheme, setChoosenTheme] = useState("Browser Theme");
+  console.log(choosenTheme);
 
   return (
     <Popover
