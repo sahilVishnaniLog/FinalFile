@@ -10,6 +10,7 @@ import {
   RadioGroup,
   Stack,
   FormControl,
+  FormControlLabel,
 } from "@mui/material";
 import {
   CustomLightThemeIcon,
@@ -34,7 +35,7 @@ let listContent = [
     ),
   },
   {
-    label: "Browser Theme",
+    label: "browserTheme",
     icon: (
       <CustomBrowserThemeIcon
         sx={{ color: "transparent", width: "4rem", height: "auto" }}
@@ -75,31 +76,38 @@ export default function ThemePopover({ anchorEl, handleClose }) {
         },
       }}
     >
-      <RadioGroup
-        value={choosenTheme}
-        onChange={(event) => setChoosenTheme(event.target.value)}
-      >
-        <FormControl>
-          <List>
+      <FormControl>
+        <RadioGroup
+          value={choosenTheme}
+          onChange={(event) => {
+            setChoosenTheme(event.target.value);
+            console.log(choosenTheme);
+          }}
+        >
+          <List sx={{ p: 0 }}>
             {listContent.map((item, index) => {
               return (
-                <ListItem
-                  disablePadding
+                <FormControlLabel
                   key={index}
-                  secondaryAction={<Radio value={item.label} />}
-                >
-                  <ListItemButton>
-                    <Stack direction="row" spacing={2} alignItems="center">
-                      <ListItemIcon> {item.icon} </ListItemIcon>
-                      <ListItemText primary={item.label} />
-                    </Stack>
-                  </ListItemButton>
-                </ListItem>
+                  control={
+                    <Radio value={item.label} sx={{ display: "none" }} />
+                  }
+                  label={
+                    <ListItem disablePadding key={index}>
+                      <ListItemButton sx={{ width: "100%" }}>
+                        <Stack direction="row" spacing={2} alignItems="center">
+                          <ListItemIcon> {item.icon} </ListItemIcon>
+                          <ListItemText primary={item.label} />
+                        </Stack>
+                      </ListItemButton>
+                    </ListItem>
+                  }
+                />
               );
             })}
           </List>
-        </FormControl>
-      </RadioGroup>
+        </RadioGroup>
+      </FormControl>
     </Popover>
   );
 }

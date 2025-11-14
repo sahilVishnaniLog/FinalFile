@@ -14,8 +14,13 @@ import {
   ImageListItem,
   ImageListItemBar,
   FormControlLabel,
+  FormControl,
+  Radio,
+  RadioGroup,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { GoLinkExternal } from "react-icons/go";
 import { IoMdSearch } from "react-icons/io";
 
@@ -72,13 +77,25 @@ const DummyImagArray = [
     urls: { regular: "https://picsum.photos/id/237/800/600.jpg" },
   },
 ];
+const defaultBackground = {
+  id: 459,
+  alt_description: "Misty Mountains",
+  urls: {
+    regular:
+      "https://images.unsplash.com/photo-1552394459-917cbbffbc84?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWlzdHklMjBtb3VudGFpbnxlbnwwfHwwfHx8MA%3D%3D",
+  },
+};
+
 export default function BackgroundPopover({ anchorEl, handleClose }) {
   const [isSearchMounted, setSearchMounted] = useState(false);
 
   // states for the autocomplete search bar
   const [query, setQuery] = useState("background");
   const [inputvValue, setInputValue] = useState("");
-  const [selectedBG, setSelectedBG] = useState(null);
+
+  const [chosenBackground, setChosenBackground] = useState(
+    defaultBackground.urls.regular
+  );
 
   const open = Boolean(anchorEl);
 
@@ -106,7 +123,7 @@ export default function BackgroundPopover({ anchorEl, handleClose }) {
             position: "relative",
             overflow: "scroll",
             overflowX: "hidden",
-            width: `${500 / 1.36}px `,
+            width: `${550 / 1.36}px `,
             height: `${675 / 1.36}px`,
             bgcolor: "backgroun.paper",
             color: "black",
@@ -181,85 +198,123 @@ export default function BackgroundPopover({ anchorEl, handleClose }) {
           }}
         />
       )}
-      <ImageList
-        variant="standard"
-        sx={{
-          height: "auto",
-          width: "100%",
-          overflow: "visible",
+      <FormControl>
+        <RadioGroup
+          value={chosenBackground}
+          onChange={(e) => {
+            console.log(e.target.value);
 
-          // borderRadius: "2px",
-        }}
-        gap={8}
-        cols={4}
-      >
-        {DummyImagArray.map((item) => (
-          <ImageListItem
+            setChosenBackground(e.target.value);
+          }}
+        >
+          <ImageList
+            variant="standard"
             sx={{
+              height: "auto",
+              width: "auto",
               overflow: "visible",
-              width: "100% !important",
-              padding: 0,
-              cursor: "pointer",
+
+              marginLeft: "1.5rem",
+
+              // borderRadius: "2px",
             }}
-            key={item.id}
-            onClick={() => setSelectedBG(item.id)}
+            gap={8}
+            cols={4}
           >
-            <Box
-              component="img"
-              src={item.urls.regular}
-              alt={item.title}
-              loading="lazy"
-              sx={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
+            {DummyImagArray.map((item) => (
+              <FormControlLabel
+                sx={{
+                  "&.Mui-checked": {
+                    "& img": {
+                      border: "3px solid primary.main",
+                      boxShadow: "0 8px 160x rgba(25,118,210,0.4)",
+                      transform: "scale(1.02)",
+                    },
+                  },
+                }}
+                key={item.id}
+                value={item.urls.regular}
+                control={<Radio sx={{ display: "none" }} />}
+                label={
+                  <Box>
+                    <ImageListItem
+                      sx={{
+                        overflow: "visible",
+                        width: "100% !important",
+                        padding: 0,
+                        cursor: "pointer",
+                      }}
+                      key={item.id}
+                    >
+                      <Box
+                        component="img"
+                        src={item.urls.regular}
+                        alt={item.title}
+                        loading="lazy"
+                        sx={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
 
-                borderRadius: "5px",
-                border: "2px solid black",
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-              }}
-            />
-            <ImageListItemBar
-              title={item.alt_description}
-              position="bottom"
-              sx={{
-                borderBottomLeftRadius: "5px",
-                borderBottomRightRadius: "5px",
-                overflow: "hidden",
+                          borderRadius: "5px",
+                          // border: "2px solid black",
+                          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                          transform: "scale(1.02)",
+                        }}
+                      />
+                      <ImageListItemBar
+                        title={item.alt_description}
+                        position="bottom"
+                        sx={{
+                          borderBottomLeftRadius: "5px",
+                          borderBottomRightRadius: "5px",
+                          overflow: "hidden",
 
-                "& .MuiImageListItemBar-root": {
-                  width: "100% !important",
-                  margin: "0 !important",
-                  padding: "0 !important",
-                },
-                "& .MuiImageListItemBar-titleWrap": {
-                  padding: "0  4px",
-                  maxHeight: "1rem",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  bgcolor: "transparent",
-                },
-                "& .MuiImageListItemBar-title": {
-                  fontSize: "0.65rem",
-                  fontWeight: 300,
-                  lineHeight: "1rem",
-                },
-                background: "rgba(0,0,0,0.3) ",
-              }}
-            />
-            {/* <img
-                width="100%"
-                height="100%"
-                objectFit="cover"
-                srcSet={`${item.urls.regular}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                src={`${item.urls.regular}?w=164&h=164&fit=crop&auto=format`}
-                alt={item.alt_description}
-                loading="lazy"
-              /> */}
-          </ImageListItem>
-        ))}
-      </ImageList>
+                          "& .MuiImageListItemBar-root": {
+                            width: "100% !important",
+                            margin: "0 !important",
+                            padding: "0 !important",
+                          },
+                          "& .MuiImageListItemBar-titleWrap": {
+                            padding: "0  4px",
+                            maxHeight: "1rem",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                            bgcolor: "transparent",
+                          },
+                          "& .MuiImageListItemBar-title": {
+                            fontSize: "0.65rem",
+                            fontWeight: 300,
+                            lineHeight: "1rem",
+                          },
+                          background: "rgba(0,0,0,0.3) ",
+                        }}
+                      />
+                    </ImageListItem>
+                  </Box>
+                }
+              />
+            ))}
+          </ImageList>
+        </RadioGroup>
+      </FormControl>
+      <Stack direction="row" justifyContent="space-between">
+        {" "}
+        <Button
+          disabled={true}
+          variant="standard"
+          startIcon={<ArrowBackIosIcon />}
+        >
+          {" "}
+          Previous
+        </Button>
+        <Button variant="standard" endIcon={<ArrowForwardIosIcon size="24" />}>
+          {" "}
+          Next
+        </Button>{" "}
+      </Stack>
+      <Typography paddingLeft="1rem">COLORS</Typography>
     </Popover>
   );
 }

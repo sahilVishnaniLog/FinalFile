@@ -41,7 +41,7 @@ function CustomBrowserThemeIcon(props) {
         d="M36 13H33C33.0003 14.5 33.0003 13.8954 33.0003 15C33.0003 16.1046 32.9999 15.5 33 17H36C37.1046 17 38 16.1046 38 15C38 13.8954 37.1046 13 36 13Z"
         fill="#8993A5"
       />
-      <g clip-path="url(#clip0_883_44493)">
+      <g clipPath="url(#clip0_883_44493)">
         <path
           d="M33 0H2.87037C2.19097 0 0 1.11929 0 2.5V44.5C0 45.8807 0.550761 47 1.23016 47H33V44.5V2.5V0Z"
           fill="#161A1D"
@@ -88,7 +88,7 @@ function CustomBrowserThemeIcon(props) {
         />
         <path
           fillRule="evenodd"
-          clip-rule="evenodd"
+          clipRule="evenodd"
           d="M33 7H1V8H17V47H18V8H33V7Z"
           fill="#444F59"
         />
