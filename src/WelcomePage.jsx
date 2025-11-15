@@ -102,9 +102,9 @@ export default function WelcomePage() {
     <>
       <Container
         sx={{
-          bggroundImage: `url(${DummybackgroundURLProvider().url})`,
+          backgroundImage: `url(${DummybackgroundURLProvider().url})`,
           height: "100%",
-          width: "100vh",
+          width: "",
           maxWidth: { sm: 900, md: 1000, lg: 1500, xl: 2400 },
           padding: { sm: 1, md: 2, lg: 3, xl: 4 },
           zIndex: 10000,

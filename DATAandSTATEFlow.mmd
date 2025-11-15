@@ -1,0 +1,63 @@
+---
+config:
+  look: neo
+  theme: neo-dark
+  layout: elk
+---
+flowchart LR
+ subgraph subGraph0["Data Sources (Files)"]
+    direction TB
+        A@{ label: "<b>firebaseConfig.js</b><br>- Exports 'auth', 'db'" }
+        B@{ label: "<b>countryPhoneCode.js</b><br>- Exports 'countryPhoneCodes'" }
+        D@{ label: "<b>BackgroundPopover.jsx</b><br>- Hardcoded 'DummyImagArray'" }
+        E@{ label: "<b>ProfilePopover.jsx</b><br>- Hardcoded 'DummyUser'" }
+  end
+ subgraph subGraph1["State Management (In-Memory)"]
+    direction TB
+        S["<b>React Router</b><br>(useNavigate, useLocation, useParams)"]
+        U["<b>Local useState Hooks</b>"]
+  end
+ subgraph subGraph2["Auth Components"]
+        L("Login.jsx")
+        SU("SignUp.jsx")
+  end
+ subgraph subGraph3["Main App Components"]
+        W("WelcomePage.jsx")
+        SP("SettingsPopover.jsx")
+        PP("ProfilePopover.jsx")
+        BP("BackgroundPopover.jsx")
+        TP("ThemePopover.jsx")
+  end
+ subgraph subGraph4["Consuming Components"]
+    direction TB
+        subGraph2
+        subGraph3
+  end
+    A -- import 'auth', 'db' --> L & SU
+    B -- import 'countryPhoneCodes' --> SU
+    D -- Internal Data --> BP
+    E -- Internal Data --> PP
+    S -- Used by --> L & SU & W
+    U -- Manages form state --> L & SU
+    U -- Manages 'currentTab', 'anchorEl' --> W
+    U -- Manages child anchors --> SP
+    U -- Manages 'choosenTheme' --> TP
+    U -- Manages 'query', 'chosenBackground' --> BP
+    A@{ shape: rect}
+    B@{ shape: rect}
+    D@{ shape: rect}
+    E@{ shape: rect}
+    linkStyle 0 stroke:#007ACC,stroke-width:3px,fill:none
+    linkStyle 1 stroke:#007ACC,stroke-width:3px,fill:none
+    linkStyle 2 stroke:#007ACC,stroke-width:3px,fill:none
+    linkStyle 3 stroke:#007ACC,stroke-width:3px,fill:none
+    linkStyle 4 stroke:#007ACC,stroke-width:3px,fill:none
+    linkStyle 5 stroke:#28A745,stroke-width:3px,fill:none
+    linkStyle 6 stroke:#28A745,stroke-width:3px,fill:none
+    linkStyle 7 stroke:#28A745,stroke-width:3px,fill:none
+    linkStyle 8 stroke:#DC3545,stroke-width:3px,fill:none
+    linkStyle 9 stroke:#DC3545,stroke-width:3px,fill:none
+    linkStyle 10 stroke:#DC3545,stroke-width:3px,fill:none
+    linkStyle 11 stroke:#DC3545,stroke-width:3px,fill:none
+    linkStyle 12 stroke:#DC3545,stroke-width:3px,fill:none
+    linkStyle 13 stroke:#DC3545,stroke-width:3px,fill:none
