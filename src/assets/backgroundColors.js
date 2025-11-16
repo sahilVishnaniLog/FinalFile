@@ -35,7 +35,7 @@ const colorBoundariesDark = [
 ];
 
 //"linear-gradient(45deg, #FFC700, #E91E63)"
-const backgroundString = (modeChoice) =>
+const backgroundColors = (modeChoice) =>
   (modeChoice === "light" ? colorBoundariesLight : colorBoundariesDark).map(
     (color) => {
       return {
@@ -45,4 +45,4 @@ const backgroundString = (modeChoice) =>
     }
   );
 
-export default backgroundString;
+export default backgroundColors;

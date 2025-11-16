@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTheme } from "../theme/ThemeContext.jsx";
 import {
   Popover,
   List,
@@ -17,9 +18,10 @@ import {
   CustomDarkThemeIcon,
   CustomBrowserThemeIcon,
 } from "../icons/customIcons.js";
+
 let listContent = [
   {
-    label: "Light",
+    label: "light",
     icon: (
       <CustomLightThemeIcon
         sx={{ color: "transparent", width: "4rem", height: "auto" }}
@@ -27,7 +29,7 @@ let listContent = [
     ),
   },
   {
-    label: "Dark",
+    label: "dark",
     icon: (
       <CustomDarkThemeIcon
         sx={{ color: "transparent", width: "4rem", height: "auto" }}
@@ -46,8 +48,9 @@ let listContent = [
 
 export default function ThemePopover({ anchorEl, handleClose }) {
   const open = Boolean(anchorEl);
-  const [choosenTheme, setChoosenTheme] = useState("Browser Theme");
-  console.log(choosenTheme);
+  const { modeChoice, setModeChoice } = useTheme();
+
+  console.log(modeChoice);
 
   return (
     <Popover
@@ -78,10 +81,10 @@ export default function ThemePopover({ anchorEl, handleClose }) {
     >
       <FormControl>
         <RadioGroup
-          value={choosenTheme}
+          value={modeChoice}
           onChange={(event) => {
-            setChoosenTheme(event.target.value);
-            console.log(choosenTheme);
+            setModeChoice(event.target.value);
+            // console.log(modeChoice); // debugger
           }}
         >
           <List sx={{ p: 0 }}>

@@ -17,13 +17,17 @@ import {
   FormControl,
   Radio,
   RadioGroup,
+  Grid,
+  Paper,
+  Tooltip,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { GoLinkExternal } from "react-icons/go";
 import { IoMdSearch } from "react-icons/io";
-
+import { useTheme } from "../theme/ThemeContext.jsx";
+import backgroundColors from "../assets/backgroundColors.js"; // color background data from assets
 // possible queries  for searching the Unsplash API calls
 const PossibleQueries = [
   "landscape",
@@ -87,6 +91,7 @@ const defaultBackground = {
 };
 
 export default function BackgroundPopover({ anchorEl, handleClose }) {
+  const { modeChoice, backgroundColor, setBackgroundColor } = useTheme();
   const [isSearchMounted, setSearchMounted] = useState(false);
 
   // states for the autocomplete search bar
@@ -107,6 +112,11 @@ export default function BackgroundPopover({ anchorEl, handleClose }) {
       console.log("background popover unmounted");
     };
   }, [open]);
+
+  const handleBackgroundColorSelect = (event) => {
+    console.log(event.target.value);
+    setBackgroundColor(event.target.value);
+  };
   return (
     <Popover
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -315,6 +325,45 @@ export default function BackgroundPopover({ anchorEl, handleClose }) {
         </Button>{" "}
       </Stack>
       <Typography paddingLeft="1rem">COLORS</Typography>
+
+      <FormControl>
+        <RadioGroup
+          value={backgroundColor}
+          onChange={handleBackgroundColorSelect}
+        >
+          <Grid container spacing={2} bgcolor="transparent" padding={2}>
+            {backgroundColors(modeChoice).map((item) => (
+              <FormControlLabel
+                key={item.label}
+                value={item.background}
+                control={<Radio sx={{ display: "none" }} />}
+                label={
+                  <Tooltip key={item.label} title={item.label}>
+                    <Paper
+                      sx={{
+                        width: 40,
+                        height: 40,
+                        background: item.background,
+                        border:
+                          backgroundColor === item.background
+                            ? `4px solid ${
+                                modeChoice === "dark" ? "#fff" : "#000"
+                              }`
+                            : "none",
+                        "&:hover": {
+                          border: `2px solid ${
+                            modeChoice === "dark" ? "#fff" : "#000"
+                          }`,
+                        },
+                      }}
+                    ></Paper>
+                  </Tooltip>
+                }
+              />
+            ))}
+          </Grid>
+        </RadioGroup>
+      </FormControl>
     </Popover>
   );
 }
