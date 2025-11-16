@@ -117,6 +117,10 @@ export default function BackgroundPopover({ anchorEl, handleClose }) {
     console.log(event.target.value);
     setBackgroundColor(event.target.value);
   };
+  const handleBackgroundImageSelect = (event) => {
+    console.log(event.target.value);
+    setChosenBackground(event.target.value);
+  };
   return (
     <Popover
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -211,11 +215,7 @@ export default function BackgroundPopover({ anchorEl, handleClose }) {
       <FormControl>
         <RadioGroup
           value={chosenBackground}
-          onChange={(e) => {
-            console.log(e.target.value);
-
-            setChosenBackground(e.target.value);
-          }}
+          onChange={handleBackgroundImageSelect}
         >
           <ImageList
             variant="standard"
