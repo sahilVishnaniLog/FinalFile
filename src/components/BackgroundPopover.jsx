@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Popover,
   Typography,
@@ -38,8 +39,10 @@ const PossibleQueries = [
   "night sky",
   "galaxies",
   "valley",
+  "sunset",
+  "animals",
 ];
-const DummyImagArray = [
+const DummyImageArray = [
   {
     id: 1,
     alt_description: "Misty Mountains",
@@ -91,7 +94,13 @@ const defaultBackground = {
 };
 
 export default function BackgroundPopover({ anchorEl, handleClose }) {
-  const { modeChoice, backgroundColor, setBackgroundColor } = useTheme();
+  const {
+    modeChoice,
+    backgroundImg,
+    setbackgroundImg,
+    backgroundColor,
+    setBackgroundColor,
+  } = useTheme();
   const [isSearchMounted, setSearchMounted] = useState(false);
 
   // states for the autocomplete search bar
@@ -99,8 +108,12 @@ export default function BackgroundPopover({ anchorEl, handleClose }) {
   const [inputvValue, setInputValue] = useState("");
 
   const [chosenBackground, setChosenBackground] = useState(
+    // images and setImages
     defaultBackground.urls.regular
   );
+  const [backgroundImagesAPI, setBackgroundImagesAPI] = useState([]);
+  const [errorAPI, setErrorAPI] = useState(null);
+  const [backgroundImageLoading, setBackgroundImageLoading] = useState(true);
 
   const open = Boolean(anchorEl);
 
@@ -113,14 +126,51 @@ export default function BackgroundPopover({ anchorEl, handleClose }) {
     };
   }, [open]);
 
-  const handleBackgroundColorSelect = (event) => {
-    console.log(event.target.value);
-    setBackgroundColor(event.target.value);
-  };
+  //API CALL
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchBackgroundImages = async () => {
+      try {
+        const response = await axios.get(
+          import.meta.env.VITE_FIREBASE_FUNCTION_URL,
+          {
+            signal: controller.signal,
+            params: {
+              query: query,
+              per_page: 8,
+              orientation: "landscape",
+            },
+          }
+        );
+        setBackgroundImagesAPI(response.data.results || []);
+      } catch (error) {
+        if (error.name !== "CanceledError") {
+          const errMsg =
+            error.response?.data?.error || error.message || "Network error";
+          setErrorAPI("Error fetching date from  function");
+          console.error("API error:", error);
+        }
+      } finally {
+        setBackgroundImageLoading(false);
+      }
+    };
+    fetchBackgroundImages();
+    return () => controller.abort();
+  }, [query]);
+  if (backgroundImageLoading) return <p> Loading backgroundimages... </p>;
+  if (errorAPI) return <p> {errorAPI} </p>;
+
   const handleBackgroundImageSelect = (event) => {
     console.log(event.target.value);
     setChosenBackground(event.target.value);
   };
+
+  const handleBackgroundColorSelect = (event) => {
+    console.log(event.target.value);
+    setBackgroundColor(event.target.value);
+  };
+
   return (
     <Popover
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -231,7 +281,7 @@ export default function BackgroundPopover({ anchorEl, handleClose }) {
             gap={8}
             cols={4}
           >
-            {DummyImagArray.map((item) => (
+            {backgroundImagesAPI.map((item) => (
               <FormControlLabel
                 sx={{
                   "&.Mui-checked": {
@@ -259,7 +309,7 @@ export default function BackgroundPopover({ anchorEl, handleClose }) {
                       <Box
                         component="img"
                         src={item.urls.regular}
-                        alt={item.title}
+                        alt={item.alt_description}
                         loading="lazy"
                         sx={{
                           width: "100%",
