@@ -195,14 +195,14 @@ export default function SignUp() {
               }}
               color="contrast"
             >
-              Already have an account ?{"error  "}
+              Already have an account ?
               <Button
                 endIcon={<ArrowRightAltIcon />}
                 sx={{ textDecoration: "underline", color: "inherit" }}
                 onClick={handleSignupToLogin}
               >
                 {" "}
-                Sign In{"error  "}
+                Sign In
               </Button>{" "}
             </Typography>
 
@@ -216,7 +216,7 @@ export default function SignUp() {
               }}
             >
               {" "}
-              Sign Up{"error  "}
+              Sign Up
             </Typography>
             <Stack direction="column" sx={{ gap: 3 }}>
               <FormControl>
@@ -376,9 +376,7 @@ export default function SignUp() {
               <FormControlLabel
                 control={<Checkbox />}
                 label="Receive occasional product updates and announcemennts"
-              >
-                {" error "}
-              </FormControlLabel>
+              ></FormControlLabel>
               <Button
                 sx={{ bgcolor: "#233629" }}
                 variant="contained"
@@ -390,7 +388,6 @@ export default function SignUp() {
                 Create Account{" "}
               </Button>
               <Typography>
-                {" error"}
                 By creating an account, you agree to the{" "}
                 <Link href="#TermsNServices"> Terms of Services </Link> For more
                 information about our privacy practices, see the{" error "}

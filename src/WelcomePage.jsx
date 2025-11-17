@@ -33,10 +33,10 @@ const TabsArray = [
   { label: "Timeline", icon: <TbTimeline /> },
 ];
 const IconButtonStyle = {
-  bgcolor: "white",
+  bgcolor: "transparent",
   border: "2px grey solid ",
   borderRadius: "20%",
-  color: "black",
+  color: "text.secondary",
   height: "40px",
   width: "40px",
   "&:hover": { bgColor: "white" },
@@ -98,7 +98,7 @@ export default function WelcomePage() {
     <Container
       sx={{
         height: "100%",
-        width: "",
+        width: "100%",
         maxWidth: { sm: 900, md: 1000, lg: 1500, xl: 2400 },
         padding: { sm: 1, md: 2, lg: 3, xl: 4 },
       }}
@@ -110,7 +110,7 @@ export default function WelcomePage() {
         sx={{ borderRadius: 1 }}
       >
         <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
-          <Typography sx={{ fontSize: "30px", color: "white" }}>
+          <Typography sx={{ fontSize: "30px", color: "text.primary" }}>
             {" "}
             Teams{" "}
           </Typography>
@@ -133,8 +133,8 @@ export default function WelcomePage() {
               handleSettingsPopoverClick(e);
             }}
             sx={IconButtonStyle}
-            aria-haspopup="true"
-            aria-label="Settings"
+            //  aria-haspopup="true"
+            //   aria-label="Settings"
           >
             {" "}
             <MoreHorizIcon />{" "}
@@ -149,14 +149,17 @@ export default function WelcomePage() {
           onChange={handleTabChange}
           textColor="primary"
           indicatorColor="primary"
+          gap={5}
+          sx={{ fontSize: "1.5rem", minHeight: "32px" }}
         >
           {TabsArray.map((item, index) => {
             return (
               <Tab
                 sx={{
-                  color: "white",
                   borderRadius: "0px",
                   "&:active": { borderRadius: "0px" },
+                  fontSize: "1.5rem",
+                  minHeight: "32px",
                 }}
                 icon={item.icon}
                 iconPosition="start"
@@ -164,6 +167,7 @@ export default function WelcomePage() {
                 key={index}
                 label={item.label}
                 value={item.label}
+                size={48}
               />
             );
           })}

@@ -59,8 +59,8 @@ export default function SettingsPopover({ anchorEl, handleClose }) {
               pointerEvents: "auto",
               overflow: "visible",
               width: `${360 / 1.36}px`,
-              bgcolor: "white",
-              color: "black",
+              bgcolor: "background.paper",
+              color: "text.primary",
               p: `${11 / 1.36}px`,
             },
           },
@@ -102,8 +102,6 @@ export default function SettingsPopover({ anchorEl, handleClose }) {
             </ListItemButton>
           </ListItem>
         </List>
-        <ThemePopover />
-        <BackgroundPopover />
       </Popover>
 
       <ThemePopover

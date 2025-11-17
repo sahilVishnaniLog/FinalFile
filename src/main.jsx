@@ -6,7 +6,7 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
 import { ThemeProviderWrapper } from "./theme/theme.js";
-import "./index.css";
+// import "./index.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

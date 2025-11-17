@@ -68,7 +68,7 @@ export default function ThemePopover({ anchorEl, handleClose }) {
             overflow: "visible",
             width: `${331 / 1.36}px`,
             bgcolor: "background.paper",
-            color: "black",
+            color: "text.primary",
             p: `${11 / 1.36}px`,
           },
         },

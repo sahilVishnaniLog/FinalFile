@@ -127,39 +127,39 @@ export default function BackgroundPopover({ anchorEl, handleClose }) {
   }, [open]);
 
   //API CALL
-  useEffect(() => {
-    const controller = new AbortController();
+  // useEffect(() => {
+  //   const controller = new AbortController();
 
-    const fetchBackgroundImages = async () => {
-      try {
-        const response = await axios.get(
-          import.meta.env.VITE_FIREBASE_FUNCTION_URL,
-          {
-            signal: controller.signal,
-            params: {
-              query: query,
-              per_page: 8,
-              orientation: "landscape",
-            },
-          }
-        );
-        setBackgroundImagesAPI(response.data.results || []);
-      } catch (error) {
-        if (error.name !== "CanceledError") {
-          const errMsg =
-            error.response?.data?.error || error.message || "Network error";
-          setErrorAPI("Error fetching date from  function");
-          console.error("API error:", error);
-        }
-      } finally {
-        setBackgroundImageLoading(false);
-      }
-    };
-    fetchBackgroundImages();
-    return () => controller.abort();
-  }, [query]);
-  if (backgroundImageLoading) return <p> Loading backgroundimages... </p>;
-  if (errorAPI) return <p> {errorAPI} </p>;
+  //   const fetchBackgroundImages = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         import.meta.env.VITE_FIREBASE_FUNCTION_URL,
+  //         {
+  //           signal: controller.signal,
+  //           params: {
+  //             query: query,
+  //             per_page: 8,
+  //             orientation: "landscape",
+  //           },
+  //         }
+  //       );
+  //       setBackgroundImagesAPI(response.data.results || []);
+  //     } catch (error) {
+  //       if (error.name !== "CanceledError") {
+  //         const errMsg =
+  //           error.response?.data?.error || error.message || "Network error";
+  //         setErrorAPI("Error fetching date from  function");
+  //         console.error("API error:", error);
+  //       }
+  //     } finally {
+  //       setBackgroundImageLoading(false);
+  //     }
+  //   };
+  //   fetchBackgroundImages();
+  //   return () => controller.abort();
+  // }, [query]);
+  // if (backgroundImageLoading) return <p> Loading backgroundimages... </p>;
+  // if (errorAPI) return <p> {errorAPI} </p>;
 
   const handleBackgroundImageSelect = (event) => {
     console.log(event.target.value);
