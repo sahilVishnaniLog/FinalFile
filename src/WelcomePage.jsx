@@ -10,6 +10,7 @@ import {
   Tab,
   Divider,
   Box,
+  AppBar,
 } from "@mui/material";
 import { ProfilePopover, SettingsPopover } from "./components/component.js";
 
@@ -92,23 +93,21 @@ export default function WelcomePage() {
     setAnchorSettingsEl(null);
   }
   // api call will be made which will return the url to be passeḍ
-  function DummybackgroundURLProvider() {
-    return {
-      url: "https://plus.unsplash.com/premium_photo-1676827547759-5c7bdaada28c?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1317",
-    };
-  }
 
   return (
-    <>
-      <Container
-        sx={{
-          backgroundImage: `url(${DummybackgroundURLProvider().url})`,
-          height: "100%",
-          width: "",
-          maxWidth: { sm: 900, md: 1000, lg: 1500, xl: 2400 },
-          padding: { sm: 1, md: 2, lg: 3, xl: 4 },
-          zIndex: 10000,
-        }}
+    <Container
+      sx={{
+        height: "100%",
+        width: "",
+        maxWidth: { sm: 900, md: 1000, lg: 1500, xl: 2400 },
+        padding: { sm: 1, md: 2, lg: 3, xl: 4 },
+      }}
+    >
+      <AppBar
+        position="static"
+        color="transparent"
+        elevation={0}
+        sx={{ borderRadius: 1 }}
       >
         <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
           <Typography sx={{ fontSize: "30px", color: "white" }}>
@@ -169,27 +168,16 @@ export default function WelcomePage() {
             );
           })}
         </Tabs>
-        <Divider sx={{ borderBottomWidth: 3, bgcolor: "white" }} />
-        <Box
-          sx={{
-            minHeight: "80vh",
-            p: { sm: 1, md: 2, lg: 3, xl: 4 },
-            fontColor: "black",
-          }}
-        >
-          <Outlet />
-        </Box>
-      </Container>
-      <div> this is the welcome page to the site </div>
-      <div sx={{ dislay: "flex", flexDirection: "row", gap: "10px" }}>
-        <button onClick={handleSignOut} type="submit">
-          {" "}
-          SignOut{" "}
-        </button>
-        <button> LEFT</button>
-
-        <button> RIGHT </button>
-      </div>
-    </>
+      </AppBar>
+      <Box
+        sx={{
+          minHeight: "80vh",
+          p: { sm: 1, md: 2, lg: 3, xl: 4 },
+          fontColor: "black",
+        }}
+      >
+        <Outlet />
+      </Box>
+    </Container>
   );
 }
