@@ -43,13 +43,18 @@ export default function ThemeContext({
         primary: { main: "#0052CC" },
         text: {
           primary: primaryText,
-          secondary: isLight ? "#5E6C84" : "#8F9FB3",
+          secondary: secondaryText,
         },
         background: {
           paper: isLight ? "#FFFFFF" : "#22272B",
           default: "transparent",
 
           neutral: isLight ? "#F4F5F7" : alpha("#000", 0.3),
+        },
+        board: {
+          paper: isLight ? alpha("#f8f8f8", 0.3) : alpha("#18191a", 0.3),
+          default: "transparent",
+          card: isLight ? "#f0f1f2" : "#242528",
         },
       },
       typography: {
@@ -119,7 +124,7 @@ export default function ThemeContext({
         },
         MuiPaper: {
           styleOverrides: {
-            root: { backgroundImage: "none" },
+            root: { backgroundImage: "none", borderRadius: "5px" },
             elevation0: {
               backgroundColor: isLight
                 ? alpha("#fff", 0.5)
@@ -136,6 +141,7 @@ export default function ThemeContext({
             },
           },
         },
+
         MuiTabs: {
           styleOverrides: {
             root: { minHeight: 40, backgroundColor: "transparent" },

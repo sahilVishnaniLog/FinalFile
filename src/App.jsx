@@ -32,7 +32,7 @@ export default function App() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              backgroundColor: "background.paper", // Use theme's paper color
+              backgroundColor: "background.paper", // Using themes  paper color
             }}
           >
             <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
