@@ -131,6 +131,19 @@ export default function ThemeContext({ children, modeChoice, setModeChoice, back
                         },
                     },
                 },
+                MuiTextField: {
+                    styleOverrides: {
+                        root: {
+                            "&.mui-textfield-primary .MuiInputLabel-root": {
+                                color: "primary.main", //HACK palette to be added later
+                            },
+
+                            "& .MuiInputBase-input::placeholder": {
+                                color: isLight ? "#5E6C84" : "#8F9FB3",
+                            },
+                        },
+                    },
+                },
             },
         });
     }, [effectiveMode, backgroundImg, backgroundColor]);
