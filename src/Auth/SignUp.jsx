@@ -8,6 +8,7 @@ import { ArrowRightAlt as ArrowRightAltIcon, Visibility as VisibilityIcon, Visib
 import { auth, db } from "./firebaseConfig";
 import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail } from "firebase/auth";
 import { collection, doc, setDoc, addDoc } from "firebase/firestore";
+import { useAuth } from "../routingP/BrowserRouter"; // importing the auth context ( vales { isLoggedIn , setLoggedIn, userCredentials, setUserCredentials} )
 
 export default function SignUp() {
     const [isValid, setValid] = useState(false); // wewill use this to check if the username choosen in valid or available ( no conflicts between the usernames  in the database collection over firestore)
@@ -22,10 +23,13 @@ export default function SignUp() {
     const [phoneCode, setPhoneCode] = useState(" "); // FORM_DATA_UPDATE
     const [formDataState, setFormDataState] = useState({}); // DATABASE
     const [hiddenPassword, setHiddenPassword] = useState(true);
+
     const Navigate = useNavigate();
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const timeoutRef = useRef(null);
+
+    const { isLoggedIn, setLoggedIn, userInfo, setUserInfo } = useAuth();
 
     const customUserData = {
         name,

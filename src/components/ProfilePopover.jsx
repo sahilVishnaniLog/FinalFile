@@ -3,6 +3,7 @@ import { Popover, Box, List, ListItem, ListItemButton, ListItemText, ListItemIco
 
 import { PersonOutline as PersonOutlineIcon, SettingsSuggest as SettingsSuggestIcon, Logout as LogoutIcon } from "@mui/icons-material";
 import { AiOutlineUserSwitch } from "react-icons/ai";
+import { useAuth } from "../routingP/BrowserRouter"; // importing to use the setLoggedIn function to sign out the user and also to get the user credetials from the context to set the UI of the profile popover accordingly
 const DummyUser = {
     name: "Sahil Vishnani",
     email: "sahilvishnani25@gmail.com",
