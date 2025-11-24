@@ -1,27 +1,15 @@
-import React from "react";
 import { useEffect, useState, useRef } from "react";
-import { Form, useNavigate } from "react-router";
-import { auth, db } from "./firebaseConfig";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { useForm, Controller } from "react-hook-form";
+import { useNavigate } from "react-router";
 import countryPhoneCodes from "../assets/countryPhoneCode";
 import { Box, TextField, Button, FormControlLabel, Alert, Autocomplete, Typography, Checkbox, Link, Stack, InputAdornment, IconButton, Paper, AppBar } from "@mui/material";
 import { ArrowRightAlt as ArrowRightAltIcon, Visibility as VisibilityIcon, VisibilityOff as VisibilityOffIcon } from "@mui/icons-material";
+// INFO: authentication imports from firebase - project JIRA TEAMS APPLICATION
+// INFO:  APPLCATION NAME : TEST
+import { auth, db } from "./firebaseConfig";
+import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail } from "firebase/auth";
+import { collection, doc, setDoc, addDoc } from "firebase/firestore";
 
 export default function SignUp() {
-    function signupwithLoggingIn() {
-        try {
-            const userName = "DummyUserName";
-            Navigate(`/${userName}`, { replace: true });
-        } catch (error) {
-            console.error("error authenticating", error);
-        }
-        Navigate("");
-    }
-    // division
-    // division // division // division
-    // division
-    // division
     const [isValid, setValid] = useState(false); // wewill use this to check if the username choosen in valid or available ( no conflicts between the usernames  in the database collection over firestore)
     const [isRegistered, setRegistered] = useState(false);
     const [email, setEmail] = useState(""); // FORM_DATA_UPDATE
@@ -32,9 +20,11 @@ export default function SignUp() {
 
     const [phone, setPhone] = useState(""); // FORM_DATA_UPDATE
     const [phoneCode, setPhoneCode] = useState(" "); // FORM_DATA_UPDATE
+    const [formDataState, setFormDataState] = useState({}); // DATABASE
     const [hiddenPassword, setHiddenPassword] = useState(true);
     const Navigate = useNavigate();
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
     const timeoutRef = useRef(null);
 
     const customUserData = {
@@ -48,21 +38,76 @@ export default function SignUp() {
     // will be triggered on Submit ( from the Form below)
     // we also need to add the Form container to prevent the submission we will let the submit request bubble up to be encountered or to be dealt  by form handler
     // CLEANED
+    // NEXT_STEP
     function handleSignupToLogin() {
         Navigate("../login", { replace: true });
     }
-    // DATA_MODEL
-    const handleSignUp = async (event) => {
-        console.log("create account works ");
-        const stateDataObject = { email, password, name, username, phone, phoneCode, country };
-        console.log(stateDataObject);
-        event.preventDefault();
-        if (!email || !password || !name || !username || !phone || !phoneCode || !country) return setError("Please fill  in all the fields");
 
-        // const formElement = document.getElementById("signup-form");
-        // const formData = new FormData(formElement); //BUG
-        // const dataObject = Object.fromEntries(formData);
-        // console.log(dataObject);
+    // ADDED : onKeyDown  : prevents the submission on Enter key press
+    const handleInvalidSubmit = (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+        }
+    };
+
+    const signUpFirebase = async (dataObject, setError, setLoading) => {
+        try {
+            //EVENT_USER
+            setError("");
+            setLoading(true);
+            const signInMethods = await fetchSignInMethodsForEmail(auth, dataObject.email);
+            if (signInMethods.length > 0) {
+                // INFO : checks if the email is already registered with firebase
+                setError("Email already in use, Please login instead");
+                setLoading(false);
+                return;
+            }
+            const userCredential = await createUserWithEmailAndPassword(auth, dataObject.email, dataObject.password);
+
+            console.log("user created successfully"); // LOG
+        } catch (error) {
+            console.log("error signing up user", error);
+        }
+        try {
+            //API_POST
+
+            const { user } = userCredential;
+            const userUid = user.uid; // INFO :  DOCUMENT_ID ( WILL BE ) USED TO IDENTIFY THE USER
+            const userDocRef = doc(db, "users", userUid);
+            await setDoc(userDocRef, dataObject);
+            console.log("User data saved to Firestore with UID as document Id", userUid);
+            setLoading(false);
+        } catch (error) {
+            console.log("Error setting user document", error);
+        }
+
+        await addDoc(collection(db, "users"), {
+            // INFO :  adds the user to the collection named users  in firestore each usre has a unique uid which we will save as the document id of the user document
+            uid: userCredential.user.uid,
+            ...dataObject,
+        });
+        setLoading(false);
+    };
+
+    // DATA_MODEL
+    // EVENT_HANDLER_USER
+    const handleSignUp = async (event) => {
+        event.preventDefault();
+
+        console.log("create account works "); //LOG
+        if (!email || !password || !name || !username || !phone || !country) {
+            alert("Please fill in all the fields");
+            setError("Please fill  in all the fields");
+            return;
+        }
+
+        const formElement = document.getElementById("signUp-form");
+        const formData = new FormData(formElement);
+        const dataObject = Object.fromEntries(formData); // DATABASE
+
+        console.log(dataObject); // LOG
+
+        await signUpFirebase(dataObject, setError, setLoading);
 
         //dummy run
         try {
@@ -111,7 +156,6 @@ export default function SignUp() {
     // }
 
     function handleName(e) {
-        e.preventDefault();
         const { value, id } = e.target;
         const newName = { ...name };
         if (id === "usersFirstName") {
@@ -122,25 +166,21 @@ export default function SignUp() {
         }
         setName(newName);
     }
-    function handleHiddenPassword() {
-        if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
-        setHiddenPassword(true);
+    //CLEANED
+    useEffect(() => {
         timeoutRef.current = setTimeout(() => {
-            setHiddenPassword(false);
-        }, 2000);
+            setHiddenPassword(true);
+        }, 7000);
 
-        useEffect(() => {
-            return () => {
-                if (timeoutRef.current) clearTimeout(timeoutRef.current);
-            };
-        }, []);
-    }
+        return () => {
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        };
+    }, [hiddenPassword]);
 
     return (
         <>
             <AppBar position="fixed" sx={{ backgroundColor: "appbar.paper", height: "3rem", display: "flex", alignItems: "flex-end" }}>
-                {" "}
                 <Typography
                     sx={{
                         top: "1rem",
@@ -177,10 +217,9 @@ export default function SignUp() {
                 }}
                 elevation={3}
             >
-                <Box>
-                    {" "}
-                    <img sx={{ width: "50%", maxWidth: "50%", overflow: "hidden" }} src="https://images.unsplash.com/photo-1761405378282-e819a65cb493?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=764"></img>{" "}
-                </Box>
+                {/* <Box>
+                    // BUG <img sx={{ width: "50%", maxWidth: "50%", overflow: "hidden", objectFit: "scale-down" }} src="https://images.unsplash.com/photo-1761405378282-e819a65cb493?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=764"></img>{" "}
+                </Box> */}
                 <Box
                     sx={{
                         display: "block",
@@ -209,12 +248,12 @@ export default function SignUp() {
                         <form id="signUp-form" onSubmit={handleSignUp}>
                             <Stack direction="column" sx={{ gap: 3 }}>
                                 <Stack direction="row" width="100%" gap="2rem">
-                                    <TextField name="firstName" value={name.firstName} onChange={(e) => handleName(e)} label="  First Name* " id="usersFirstName" helperText="Please enter first name only" />
+                                    <TextField name="firstName" value={name.firstName} onChange={(e) => handleName(e)} onKeyDown={handleInvalidSubmit} label="  First Name* " id="usersFirstName" helperText="Please enter first name only" />
 
-                                    <TextField name="lastName" value={name.lastName} onChange={(e) => handleName(e)} label=" Last Name * " id="usersLastName" helperText="Please enter last name only" />
+                                    <TextField name="lastName" value={name.lastName} onChange={(e) => handleName(e)} onKeyDown={handleInvalidSubmit} label=" Last Name * " id="usersLastName" helperText="Please enter last name only" />
                                 </Stack>
 
-                                <TextField name="email" value={email} onChange={(e) => setEmail(e.target.value)} label="Email*" id="user-email-signup" helperText={"Please enter a valid email address"}>
+                                <TextField name="email" value={email} onChange={(e) => setEmail(e.target.value)} label="Email*" id="user-email-signup" helperText={"Please enter a valid email address"} onKeyDown={handleInvalidSubmit}>
                                     {" "}
                                     Email{" "}
                                 </TextField>
@@ -223,20 +262,25 @@ export default function SignUp() {
                                     variant="outlined"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
+                                    onKeyDown={handleInvalidSubmit}
                                     type={hiddenPassword ? "password" : "text"}
                                     htmlFor="user-password-signup"
                                     helperText={"Password should be at least 8 characters including a number and a specialCharacter."}
-                                    endadornment={
-                                        <InputAdornment position="end" cursor="pointer">
-                                            <IconButton edge="end" onClick={handleHiddenPassword}>
-                                                {hiddenPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    }
+                                    slotProps={{
+                                        input: {
+                                            endAdornment: (
+                                                <InputAdornment position="end" cursor="pointer">
+                                                    <IconButton edge="end" onClick={() => setHiddenPassword(!hiddenPassword)}>
+                                                        {hiddenPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            ),
+                                        },
+                                    }}
                                     label="Set Password"
                                     id="user-password-signup"
                                 />
-                                <TextField name="username" onChange={(e) => setUsername(e.target.value)} value={username} label="Set Username" id="user-useraName-signup" helperText={"Username should contain only AlphaNumberic characters and shouud not start with a number. "} error={isValid} />
+                                <TextField name="username" onKeyDown={handleInvalidSubmit} onChange={(e) => setUsername(e.target.value)} value={username} label="Set Username" id="user-useraName-signup" helperText={"Username should contain only AlphaNumberic characters and shouud not start with a number. "} error={isValid} />
                                 {isValid && (
                                     <Alert severity="error" variant="text" sx={{ color: "red" }}>
                                         {" "}
@@ -246,6 +290,7 @@ export default function SignUp() {
                                 <Autocomplete
                                     options={countryPhoneCodes}
                                     getOptionLabel={(option) => option.country || " "}
+                                    onKeyDown={handleInvalidSubmit}
                                     onChange={(event, newValue) => {
                                         event.preventDefault();
 
@@ -256,19 +301,31 @@ export default function SignUp() {
                                     onInputChange={(_event, newInputValue) => {
                                         setCountry(newInputValue);
                                     }}
-                                    sx={{ width: 400 }}
-                                    renderInput={(params) => <TextField name="country" value={country} onChange={(e) => setCountry(e.target.value)} {...params} label="Country/Region" />}
+                                    sx={{ width: "100%", margin: "1rem 0 " }}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            name="country"
+                                            value={country}
+                                            onSubmit={(e) => e.preventDefault()}
+                                            onKeyDown={handleInvalidSubmit}
+                                            onChange={(e) => {
+                                                setCountry(e.target.value);
+                                            }}
+                                            {...params}
+                                            label="Country/Region"
+                                        />
+                                    )}
                                 ></Autocomplete>
                                 <Alert>For compliance reason . we're required to collect country information to send you occasional updates and announcements.</Alert>
                                 <Box sx={{ display: "flex", flexDirection: "row", gap: "0rem" }}>
-                                    <TextField width="3rem" label={country} onChange={(e) => setPhoneCode(e.target.value)} name="phoneCode" value={countryPhoneCodes.find((item) => item.country === country)?.code || ""} variant="outlined" sx={{ mr: 2 }} />
-                                    <TextField onChange={(e) => setPhone(e.target.value)} name="phone" value={phone} width="10rem" label="Phone" variant="outlined">
+                                    <TextField width="3rem" label={country} name="phoneCode" value={countryPhoneCodes.find((item) => item.country === country)?.code || ""} variant="outlined" sx={{ mr: 2 }} />
+                                    <TextField onKeyDown={handleInvalidSubmit} onSubmit={(e) => e.preventDefault()} onChange={(e) => setPhone(e.target.value)} name="phone" value={phone} width="10rem" label="Phone" variant="outlined">
                                         {" "}
                                     </TextField>
                                 </Box>
 
                                 <FormControlLabel control={<Checkbox name="emailUpdates" />} label="Receive occasional product updates and announcemennts"></FormControlLabel>
-                                <Button sx={{ bgcolor: "#233629" }} variant="contained" type="click" endIcon={<ArrowRightAltIcon />}>
+                                <Button sx={{ bgcolor: "#233629" }} variant="contained" type="submit" endIcon={<ArrowRightAltIcon />}>
                                     {" "}
                                     Create Account{" "}
                                 </Button>

@@ -1,25 +1,21 @@
-// Import the functions you need from the SDKs you need
+//INFO : PROJECT NAME : JIRA--TEAMS-APPLICATION
+//INFO : APPLICATION NAME : WEB-DEV TEST
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyDf4cSgKXgimJ-o-ucBkL5okzCFovri5rA",
-  authDomain: "teamtags-434fd.firebaseapp.com",
-  projectId: "teamtags-434fd",
-  storageBucket: "teamtags-434fd.firebasestorage.app",
-  messagingSenderId: "399458148063",
-  appId: "1:399458148063:web:d2a5d66915e179ce10936a",
-  measurementId: "G-KLYTLYCPRX",
+    apiKey: "AIzaSyDI7x-vFs5QU1zgOna6S24IUsHXzRlH9Po",
+    authDomain: "jira--teams-application.firebaseapp.com",
+    projectId: "jira--teams-application", // shared within the project
+    storageBucket: "jira--teams-application.firebasestorage.app", // shared with the projst
+    messagingSenderId: "352357560678",
+    appId: "1:352357560678:web:5ffa362d9c3761c3fe98a7", // unique to an application
+    measurementId: "G-2ML2GKX829",
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+
 export const db = getFirestore(app);
+export const auth = getAuth(app);
+console.log(" firebase intiialization");
