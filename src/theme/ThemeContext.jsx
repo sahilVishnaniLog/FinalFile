@@ -41,6 +41,9 @@ export default function ThemeContext({ children, modeChoice, setModeChoice, back
                     default: "transparent",
                     card: isLight ? "#f0f1f2" : "#242528",
                 },
+                appbar: {
+                    paper: isLight ? "#f8f8f8" : "#18191a",
+                },
             },
             typography: {
                 fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
@@ -131,16 +134,34 @@ export default function ThemeContext({ children, modeChoice, setModeChoice, back
                         },
                     },
                 },
-                MuiTextField: {
+                MuiFormHelperText: {
                     styleOverrides: {
                         root: {
-                            "&.mui-textfield-primary .MuiInputLabel-root": {
-                                color: "primary.main", //HACK palette to be added later
-                            },
-
-                            "& .MuiInputBase-input::placeholder": {
+                            color: isLight ? "#172B4D" : "#EDF2FC",
+                        },
+                    },
+                },
+                MuiInputBase: {
+                    styleOverrides: {
+                        input: {
+                            "&::placeholder": {
                                 color: isLight ? "#5E6C84" : "#8F9FB3",
+                                opacity: 1,
                             },
+                        },
+                    },
+                },
+                MuiInputLabel: {
+                    styleOverrides: {
+                        root: {
+                            color: isLight ? "#5E6C84" : "#8F9FB3",
+                        },
+                    },
+                },
+                MuiCheckbox: {
+                    styleOverrides: {
+                        root: {
+                            color: isLight ? "#5E6C84" : "#8F9FB3",
                         },
                     },
                 },
