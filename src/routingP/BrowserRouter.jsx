@@ -51,7 +51,7 @@ export default function BrowserRouter() {
     );
 }
 export const useAuth = () => {
-    const context = useContext(AuthContext);
+    const context = useContext(AuthContextHook);
     if (!context) throw new Error("useAuth must be used  within a AuthProvider");
     return context;
 };
