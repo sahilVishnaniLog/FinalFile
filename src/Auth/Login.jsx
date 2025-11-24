@@ -141,5 +141,5 @@ export default function Login() {
     );
 }
 export function userCredential() {
-    const userCredenial = useContext(AuthContext);
+    const { userInfo, setUserInfo, isLoggedIn, setLoggedIn } = useAuth();
 }
