@@ -31,14 +31,6 @@ export default function SignUp() {
 
     const { isLoggedIn, setLoggedIn, userInfo, setUserInfo } = useAuth();
 
-    const customUserData = {
-        name,
-        username,
-        phone,
-        phoneCode,
-        country,
-    };
-
     // will be triggered on Submit ( from the Form below)
     // we also need to add the Form container to prevent the submission we will let the submit request bubble up to be encountered or to be dealt  by form handler
     // CLEANED
@@ -66,31 +58,34 @@ export default function SignUp() {
                 setLoading(false);
                 return;
             }
-            const userCredential = await createUserWithEmailAndPassword(auth, dataObject.email, dataObject.password);
+            const userCredentials = await createUserWithEmailAndPassword(auth, dataObject.email, dataObject.password);
 
             console.log("user created successfully"); // LOG
-        } catch (error) {
-            console.log("error signing up user", error);
-        }
-        try {
+            if (!userCredentials) {
+                setLoggedIn(true);
+            }
+
             //API_POST
 
-            const { user } = userCredential;
+            const { user } = userCredentials;
             const userUid = user.uid; // INFO :  DOCUMENT_ID ( WILL BE ) USED TO IDENTIFY THE USER
-            const userDocRef = doc(db, "users", userUid);
-            await setDoc(userDocRef, dataObject);
+            const userDocRef = doc(db, "users", userUid); //Here, inside users collection , we are first creating a document with the userUid as the document id
+            await setDoc(userDocRef, { uid: userUid, ...dataObject }); // in this documentId( userrUid) we will save the user data + userUid ( for double checking the user data)
+            setUserInfo({ uid: userUid, ...dataObject }); // using context to store the user data for the time being of the user logged in on sign up we will set the userInfo  to null
             console.log("User data saved to Firestore with UID as document Id", userUid);
             setLoading(false);
-        } catch (error) {
-            console.log("Error setting user document", error);
-        }
 
-        await addDoc(collection(db, "users"), {
-            // INFO :  adds the user to the collection named users  in firestore each usre has a unique uid which we will save as the document id of the user document
-            uid: userCredential.user.uid,
-            ...dataObject,
-        });
-        setLoading(false);
+            // await addDoc(collection(db, "users"), {
+            //     // INFO :  adds the user to the collection named users  in firestore each usre has a unique uid which we will save as the document id of the user document
+            //     uid: userCredentials.user.uid,
+            //     ...dataObject,
+            // });
+            setLoading(false);
+        } catch (error) {
+            console.error("error authenticating , error message", error);
+            setError(error.message);
+            setLoading(false);
+        }
     };
 
     // DATA_MODEL
@@ -114,11 +109,15 @@ export default function SignUp() {
         await signUpFirebase(dataObject, setError, setLoading);
 
         //dummy run
-        try {
-            const userName = "DummyUserName";
-            Navigate(`/${userName}`, { replace: true });
-        } catch (error) {
-            console.error("error authenticating , error message", error);
+        if (isLoggedIn) {
+            try {
+                const userName = "DummyUserName";
+                Navigate(`/${userName}`, { replace: true });
+            } catch (error) {
+                console.error("error authenticating , error message", error);
+            }
+        } else {
+            Navigate("../login", { replace: true });
         }
     };
 
