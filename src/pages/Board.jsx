@@ -6,6 +6,7 @@ import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDown
 import { LuChartSpline } from "react-icons/lu";
 import { RiListSettingsLine } from "react-icons/ri";
 import { RadioGroupPopover } from "../components/component.js";
+import KanbanBoard from "./kanbanBoard/KanbanBoard.jsx";
 
 export default function Board() {
     const [anchorRadioGroupEl, setAnchorRadioGroupEl] = useState(null);
@@ -91,6 +92,7 @@ export default function Board() {
                 </Toolbar>
             </AppBar>
             <Divider sx={{ borderColor: "background.neutral", borderMargin: "1rem" }} />
+            <KanbanBoard />
         </>
     );
 }
