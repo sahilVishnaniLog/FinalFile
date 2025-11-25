@@ -139,7 +139,7 @@ export default function profilePopover({ anchorEl, handleClose, handleSignOut })
                 </ListItem>
             </List>
 
-            <AvatarGroup alignItem="center" max={4}>
+            <AvatarGroup alignItems="center" max={4}>
                 {DummyOnlineUser.map((user) => {
                     return <Avatar alt={user.name} src={user.url} />;
                 })}

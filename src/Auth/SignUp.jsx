@@ -12,7 +12,7 @@ import { useAuth } from "../routingP/BrowserRouter"; // importing the auth conte
 
 export default function SignUp() {
     const [isValid, setValid] = useState(false); // wewill use this to check if the username choosen in valid or available ( no conflicts between the usernames  in the database collection over firestore)
-    const [isRegistered, setRegistered] = useState(false);
+
     const [email, setEmail] = useState(""); // FORM_DATA_UPDATE
     const [password, setPassword] = useState(""); // FORM_DATA_UPDATE
     const [country, setCountry] = useState("india"); // FORM_DATA_UPDATE
@@ -21,7 +21,7 @@ export default function SignUp() {
 
     const [phone, setPhone] = useState(""); // FORM_DATA_UPDATE
     const [phoneCode, setPhoneCode] = useState(" "); // FORM_DATA_UPDATE
-    const [formDataState, setFormDataState] = useState({}); // DATABASE
+
     const [hiddenPassword, setHiddenPassword] = useState(true);
 
     const Navigate = useNavigate();
@@ -36,6 +36,7 @@ export default function SignUp() {
     // CLEANED
     // NEXT_STEP
     function handleSignupToLogin() {
+        //NEXT_STEP
         Navigate("../login", { replace: true });
     }
 
@@ -120,43 +121,6 @@ export default function SignUp() {
             Navigate("../login", { replace: true });
         }
     };
-
-    //this code doesnt belong here
-
-    // try {
-    //   const userCredentials = await createUserWithEmailAndPassword(
-    //     auth,
-    //     email,
-    //     password
-    //   ).catch((err) => {
-    //     console.error("error signing up user" + err.message);
-    //   });
-    //   const { user } = userCredentials;
-
-    //   const userDoc = {
-    //     uid: user.uid,
-    //     email: user.email,
-    //     username: customUserData.username ?? user.displayName ?? "",
-    //     phone: customUserData.phone ?? "",
-    //     phoneCode: customUserData.phoneCode ?? "",
-    //     country: customUserData.country ?? "",
-    //     name: customUserData.name ?? "",
-    //     createdAt: new Date().toUTCString(),
-    //     role: user.email === "sahilvishnani25@gmail.com" ? "admin" : "user",
-    //   };
-    //   await setDoc(doc(db, "users", user.uid), userDoc).catch((err) => {
-    //     console.error("error saving user data to firestore " + err.message);
-    //   });
-    //   console.log("User created and saved to FireStore database");
-    //   // const userName = "DummyUserName";
-    //   Navigate("/${userName}", { replace: true });
-
-    //   return user;
-    // } catch (err) {
-    //   alert("error in creating user" + err.message);
-    //   Navigate("");
-    //   throw err;
-    // }
 
     function handleName(e) {
         const { value, id } = e.target;

@@ -11,6 +11,7 @@ const AuthContextHook = createContext();
 export default function BrowserRouter() {
     const [isLoggedIn, setLoggedIn] = useState(false);
     const [userInfo, setUserInfo] = useState();
+
     const router = createBrowserRouter([
         // browser context and it can also work as the wrapper for all the components thatnpm  will decide the routing of the application
         {
@@ -28,6 +29,7 @@ export default function BrowserRouter() {
                 },
                 {
                     path: ":userName",
+                    // loader: protectedLoader,
                     element: <WelcomePage />,
 
                     children: [

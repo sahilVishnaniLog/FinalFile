@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { auth } from "./firebaseConfig";
-import { useAuth } from "../routingP/BrowserRouter";
-import { Container, Paper, Typography, Box, Button, TextField, Divider, Alert } from "@mui/material";
+import { auth, db } from "./firebaseConfig";
+import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { useAuth } from "../routingP/BrowserRouter"; // CONTEXT
+import { Container, Paper, Typography, Box, Button, TextField, Divider, Alert, Stack } from "@mui/material";
 import { Google as GoogleIcon, Phone as PhoneIcon } from "@mui/icons-material";
 import { FcGoogle } from "react-icons/fc";
 
@@ -39,9 +41,15 @@ export default function Login() {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const [isTrue, setIsTrue] = useState(true);
+    const { isLoggedIn, setLoggedIn, userInfo, setUserInfo } = useAuth();
     const Navigate = useNavigate();
 
     //methods for handlers
+    const handleInvalidSubmit = (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+        }
+    };
     const handleAuthAction = async (e) => {
         e.preventDefault();
     };
@@ -51,26 +59,71 @@ export default function Login() {
     const handlePhoneLogin = (e) => {
         e.preventDefault();
     };
+    const signInFirebase = async (dataObject, setError, setLoading) => {
+        try {
+            setError("");
+            setLoading(true);
+            const userCredentials = await signInWithEmailAndPassword(auth, dataObject.email, dataObject.password);
+            // update component state/context on success
+            if (userCredentials) {
+                setLoggedIn(true);
+                const { user } = userCredentials; // API_GET
+                const documentId = user.uid; // this is the uid ( which e have used to save the data of the user in our firebase database) in the collection named users
+                const docRef = doc(db, "users", documentId);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const userData = docSnap.data();
+                    setUserInfo(userData);
+                    console.log(userData);
+                }
+            }
+        } catch (error) {
+            setError(error.message);
+            console.log(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleLogin = async (event) => {
+        //TODO
         // code to trigger the authorization request and the firebase will send back the userCredential to the callback function
         event.preventDefault();
 
-        try {
-            const userName = "DummyUserName";
-            Navigate(`/${userName}`, { replace: true });
-        } catch (error) {
-            alert("Login failed:", error);
-            setError("Login failed");
-            Navigate("");
+        console.log("login works");
+        if (!email || !password) {
+            alert("Please fill in all the fields");
+            setError("Please fill in all the fields");
+            setLoading(false);
+            return;
+        }
+        const formElement = document.getElementById("signIn-form");
+        const formData = new FormData(formElement);
+        const dataObject = Object.fromEntries(formData); // DATABASE
+
+        console.log(dataObject); // LOG ;
+
+        await signInFirebase(dataObject, setError, setLoading);
+
+        if (isLoggedIn) {
+            try {
+                const userName = "DummyUserName";
+                Navigate(`/${userName}`, { replace: true });
+            } catch (error) {
+                alert("Login failed:", error);
+                setError("Login failed");
+            }
+        } else {
+            Navigate("../login", { replace: true });
         }
     };
     const handleRoutingToSignUp = (event) => {
+        // CLEANED
         event.preventDefault();
 
         Navigate("../signup", { replace: true });
         // Navigate("signup", { replace: true });
     };
-    const userUid = userCredential.user.uid; // will be null if the user is not successfully logged  will provide the authContext to the protected routes
 
     return (
         <Container maxWidth="lg" sx={{ display: "flex", justifyContent: "center" }}>
@@ -95,9 +148,6 @@ export default function Login() {
                 </Typography>
                 {error === "Login failed" && <Alert severity="error">{error}</Alert>}
                 <Box
-                    component="form"
-                    onSubmit={handleAuthAction}
-                    noValidate
                     gap={3}
                     sx={{
                         display: "flex",
@@ -107,16 +157,20 @@ export default function Login() {
                         width: "80%",
                     }}
                 >
-                    <TextField label="Email" type="email" placeholder="sahilvishnani25@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)}>
-                        {" "}
-                    </TextField>
-                    <TextField label="Password" type="password" placeholder="***********" value={password} onChange={(e) => setPassword(e.target.value)}>
-                        {" "}
-                    </TextField>
-                    <Button variant="contained" type="submit" onClick={handleLogin} color="success">
-                        {" "}
-                        Sign In
-                    </Button>
+                    <form id="signIn-form" onSubmit={handleLogin}>
+                        <Stack direction="column" gap={2}>
+                            <TextField label="Email" type="email" placeholder="sahilvishnani25@gmail.com" name="email" value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={handleInvalidSubmit}>
+                                {" "}
+                            </TextField>
+                            <TextField label="Password" type="password" placeholder="***********" name="password" value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={handleInvalidSubmit}>
+                                {" "}
+                            </TextField>
+                            <Button variant="contained" type="submit" onClick={handleLogin} color="success">
+                                {" "}
+                                Sign In
+                            </Button>
+                        </Stack>
+                    </form>
 
                     <Divider>or</Divider>
 
@@ -132,14 +186,11 @@ export default function Login() {
                         New User ?{" "}
                         <Button variant="text" onClick={handleRoutingToSignUp}>
                             {" "}
-                            Create an Account{" "}
+                            Create an Account
                         </Button>
                     </Typography>
                 </Box>
             </Paper>
         </Container>
     );
-}
-export function userCredential() {
-    const { userInfo, setUserInfo, isLoggedIn, setLoggedIn } = useAuth();
 }
