@@ -1,8 +1,9 @@
-import { useEffect, useState, use } from "react";
+import { useEffect, useState, useMemo , useRef } from "react";
 import { useNavigate } from "react-router";
 import countryPhoneCodes from "../assets/countryPhoneCode"; // DATABASE
 import { Box, TextField, Button, FormControlLabel, Alert, Autocomplete, Typography, Checkbox, Link, Stack, InputAdornment, IconButton, Paper, AppBar } from "@mui/material";
 import { ArrowRightAlt as ArrowRightAltIcon, Visibility as VisibilityIcon, VisibilityOff as VisibilityOffIcon } from "@mui/icons-material";
+import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
 // INFO: authentication imports from firebase - project JIRA TEAMS APPLICATION
 // INFO:  APPLCATION NAME : TEST
 import { auth, db } from "./firebaseConfig";
@@ -30,12 +31,83 @@ export default function SignUp() {
     const Navigate = useNavigate();
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+
+    //regex test 
     const [isPhoneValid, setIsPhoneValid] = useState(true) ; 
+    const[isfirstNameValid, setIsfirstNameValid] = useState(true) ; 
+    const [islastNameValid, setIslastNameValid] = useState(true) ; 
+    const[isEmailValid, setIsEmailValid] = useState(true) ; 
+    const[isPasswordValid, setIsPasswordValid] = useState(true) ; 
+    const [isUsernameValid, setIsUsernameValid] = useState(true) ; 
+    const objectRegEx = { email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, password: /^(?=.*[A-Z])(?=.*[a-z])(?=.\\d)(?=.*[@$!%*?&]).{8,}$/, name: /^[a-zA-Z]+$/ , username : /^[a-zA-Z0-9]+[_,@]*[a-zA-Z0_9]*$/ }; // DATABASE: : REGULAR EXPRESSIONS  FOR VALIDATION
+
+    
+
+    function handleName(e) { // TODO : Add the regex test 
+        const { value, id } = e.target;
+        const newName = { ...name };
+        if (id === "usersFirstName") {
+            newName.firstName = value;
+        }
+        if (id === "usersLastName") {
+            newName.lastName = value;
+        }
+        setName(newName);
+        
+        let pattern = objectRegEx.name; 
+        try { 
+            let regEx = new RegExp(pattern) ; 
+            let isNameValid = regEx.test(value)  ; 
+            if (id === 'usersFirstName' ) { 
+                setIsfirstNameValid(isNameValid) ;      
+            }
+            if (id === 'usersLastName' ) { 
+                setIslastNameValid(isNameValid) ; 
+            }
+
+        }catch (err) { 
+            console.error("invalid name regex pattern for the name" , err) ;  
+             if (id === 'userFirstName' ) 
+                setIsfirstNameValid(false) ; 
+            if (id === 'userLastName' ) 
+                setIslastNameValid(false) ; 
+
+             
+        }
+        
+            
+        
+    }
+    function handleEmail(e) { 
+        setEmail(e.target.value) ; 
+        let pattern = objectRegEx.email ; 
+        try { 
+            let regEx = new RegExp(pattern) ; 
+            let isEmailValid = regEx.test(e.target.value) ; 
+            setIsEmailValid(isEmailValid) ; 
+        } catch(err) { 
+            console.error("invalid email doesnt satisfy the regex pattern", err) ;  
+            setIsEmailValid(false) ; 
+        }
+        }
+
+    
+    function handlePassword(e) { 
+        setPassword(e.target.value) ; 
+    }
+    function handleRegexValidation( e) { 
+        const {value , id } = e.target ; 
+        if ( id==='')
+        const 
+        
+    }
+   
+
+
     const timeoutRef = useRef(null);
 
     const { isLoggedIn, setLoggedIn, userInfo, setUserInfo } = useAuth();
-    const objectRegEx = { email: /^\S+@\S+\.\S+$/, password: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, name: /^[a-zA-Z]+$/, phone: /^\d{10}$/ }; // CRITICAL : REGULAR EXPRESSIONS  FOR VALIDATION
-
+    
     //ADDED
     const FlagIcons = ({ isoCode, size = 30 }) => {
         const FlagComponent = Flags[isoCode];
@@ -132,25 +204,17 @@ export default function SignUp() {
         }
     };
 
-    function handleName(e) {
-        const { value, id } = e.target;
-        const newName = { ...name };
-        if (id === "usersFirstName") {
-            newName.firstName = value;
-        }
-        if (id === "usersLastName") {
-            newName.lastName = value;
-        }
-        setName(newName);
-    }
     
-    function handlePhoneInput(event) {  // TODO 
+    //TODO 
+
+    
+    function handlePhoneInput(event) {  // CRITICAL 
         const input = event.target.value;
         console.log(input);
 
         setPhone(input);
 
-        const matched = countryPhoneCodes.find((item) => item.country === country);
+        const matched = SelectedCountryObject;
 
         if (!matched || !matched.regex) {
             // No pattern available for selected country — mark phone as invalid (or adjust default behavior)
@@ -169,7 +233,12 @@ export default function SignUp() {
         }
     }
 
-    //CLEANED
+    //ADDED : to prevent multiple array searches for other elements to be used for setting the code , flag , flagIcon , and regex of the selected  country 
+    const SelectedCountryObject  = useMemo( () => { 
+        if(!country) return null ; 
+        return countryPhoneCodes.find((item) => item.country === country) ; 
+
+    },[country]) ; 
     useEffect(() => {
         timeoutRef.current = setTimeout(() => {
             setHiddenPassword(true);
@@ -250,12 +319,12 @@ export default function SignUp() {
                         <form id="signUp-form" onSubmit={handleSignUp}>
                             <Stack direction="column" sx={{ gap: 3 }}>
                                 <Stack direction="row" width="100%" gap="2rem">
-                                    <TextField name="firstName" value={name.firstName} onChange={(e) => handleName(e)} onKeyDown={handleInvalidSubmit} label="  First Name* " id="usersFirstName" helperText="Please enter first name only" />
+                                        <TextField name="firstName" value={name.firstName} onChange={handleName} onKeyDown={handleInvalidSubmit} label="  First Name* " id="usersFirstName" helperText={ isfirstNameValid? "Please enter first name only" : (<Stack direction='row' sx={{ gap: 1, alignItems: 'center' }}>  <ReportGmailerrorredIcon sx={{ color: 'red', fontSize: '0.75rem' }} /><Typography color= 'red' variant='caption'  > Please enter a valid first name only. </Typography> </Stack> )}  /> {/*TODO*/}
 
-                                    <TextField name="lastName" value={name.lastName} onChange={(e) => handleName(e)} onKeyDown={handleInvalidSubmit} label=" Last Name * " id="usersLastName" helperText="Please enter last name only" />
+                                    <TextField name="lastName" value={name.lastName} onChange={handleName} onKeyDown={handleInvalidSubmit} label=" Last Name * " id="usersLastName" helperText={islastNameValid? "Please enter last name only": (<Stack direction='row' sx={{ gap: 1 , alignItems: 'center' }} > <ReportGmailerrorredIcon  sx={{ color:  'red' , fontSize: "0.75rem"}} /> <Typography color ='red' variant='caption' > Please enter a valid last name. </Typography></Stack> )}  /> {/*TODO*/}
                                 </Stack>
 
-                                <TextField name="email" value={email} onChange={(e) => setEmail(e.target.value)} label="Email*" id="user-email-signup" helperText={"Please enter a valid email address"} onKeyDown={handleInvalidSubmit}>
+                                <TextField name="email" value={email} onChange={handleEmail} label="Email*" id="user-email-signup" helperText={isEmailValid ? "Please enter a valid email address": (<Stack direction='row' sx={{ gap: 1 , alignItems: 'center' }}> <ReportGmailerrorredIcon sx={{ color: 'red', fontSize: '0.75rem' }} /> <Typography sx={{ color: 'red', fontSize: '0.75rem'  }} > Please enter a valid email address. </Typography></Stack>)}  onKeyDown={handleInvalidSubmit}> {/*DEBUG*/ } 
                                     {" "}
                                     Email{" "}
                                 </TextField>
@@ -263,13 +332,12 @@ export default function SignUp() {
                                     name="password"
                                     variant="outlined"
                                     value={password}
-                                    onChange={(e) => {
-                                        setPassword(e.target.value);
-                                    }}
+                                    onChange={handlePassword} 
+                                    
                                     onKeyDown={handleInvalidSubmit}
                                     type={hiddenPassword ? "password" : "text"}
                                     htmlFor="user-password-signup"
-                                    helperText={"Password should be at least 8 characters including a number and a specialCharacter."}
+                                    helperText={isPasswordValid ? "Password should be at least 8 characters long including at least one uppercase letter, one lowercase letter, one number , and on special character.":(<Stack direction='row' sx={{gap: 1, alignItems : 'center' }}> <ReportGmailerrorredIcon sx={{ color: 'red' , fontSize: "0.75rem"  }} /> <Typography sx={{ color: 'red' , fontSize: '0.75rem'  }} > This is not an acceptable password. </Typography></Stack>) }
                                     slotProps={{
                                         input: {
                                             endAdornment: (
@@ -284,14 +352,9 @@ export default function SignUp() {
                                     label="Set Password"
                                     id="user-password-signup"
                                 />
-                                <TextField name="username" onKeyDown={handleInvalidSubmit} onChange={(e) => setUsername(e.target.value)} value={username} label="Set Username" id="user-useraName-signup" helperText={"Username should contain only AlphaNumberic characters and shouud not start with a number. "} error={isValid} />
-                                {isValid && (
-                                    <Alert severity="error" variant="text" sx={{ color: "red" }}>
-                                        {" "}
-                                        Username should container only alphaNumeric character and should also not start with a number s
-                                    </Alert>
-                                )}
-                                <Autocomplete
+                                <TextField name="username" onKeyDown={handleInvalidSubmit} onChange={(e)=> {setUsername(e.target.value) }} onBlur={handleRegexValidation}  value={username} label="Set Username" id="user-SignUp-userName" helperText={isPasswordValid ? "Username should contain only AlphaNumberic characters and should  not start with a number.": ( <Stack direction='row' sx={{ gap: 1, alignItems: 'center' }}> <ReportGmailerrorredIcon sx={{ color: 'red' , fontSize: '0.75rem'  }} /> <  Typography variant='caption' sx={{ color: 'red' }} > Not an acceptable username, It should contain only Aplhanueric characters and should not state with a number.</Typography> </Stack>)}  />
+                                
+                                <Autocomplete // REVIEW : MEMOIZATION 
                                     options={countryPhoneCodes}
                                     getOptionLabel={(option) => option.country || " "}
                                     onKeyDown={handleInvalidSubmit}
@@ -324,14 +387,14 @@ export default function SignUp() {
                                 <Box sx={{ display: "flex", flexDirection: "row", gap: "0rem" }}>
                                     <TextField
                                         width="3rem"
-                                        label={countryPhoneCodes.find((item) => item.country === country)?.flag || "" }
+                                        label={SelectedCountryObject?.flag || "" }
                                         name="phoneCode"
-                                        value={countryPhoneCodes.find((item) => item.country === country)?.code || ""}
+                                        value={SelectedCountryObject?.code || ""}
                                         variant="outlined"
                                         sx={{ mr: 2 }}
                                         disabled
                                         slotProps={{
-                                            input: { startAdornment: <InputAdornment position="start">{country ? <FlagIcons isoCode={countryPhoneCodes.find((item) => item.country === country)?.iso} /> : null}</InputAdornment> },
+                                            input: { startAdornment: <InputAdornment position="start">{country ? <FlagIcons isoCode={ SelectedCountryObject?.iso} /> : null}</InputAdornment> },
                                         }}
                                     />{" "}
                                     {/*CLEANED:  this is the textField for the country code we will add an icons at the start of the  countryCode and will save the flag to the label above legend */}
