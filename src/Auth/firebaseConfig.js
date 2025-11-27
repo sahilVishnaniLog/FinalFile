@@ -2,7 +2,7 @@
 //INFO : APPLICATION NAME : WEB-DEV TEST
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDI7x-vFs5QU1zgOna6S24IUsHXzRlH9Po",
@@ -13,9 +13,22 @@ const firebaseConfig = {
     appId: "1:352357560678:web:5ffa362d9c3761c3fe98a7", // unique to an application
     measurementId: "G-2ML2GKX829",
 };
+let app;
+try {
+    app = initializeApp(firebaseConfig);
+} catch (error) {
+    console.error("Error intializing firebase", error);
+    throw error;
+}
+export const auth = app ? getAuth(app) : null;
 
-const app = initializeApp(firebaseConfig);
+export const db = app ? getFirestore(app) : null;
 
-export const db = getFirestore(app);
-export const auth = getAuth(app);
+export const googleProvider = app ? new GoogleAuthProvider() : null;
+if (googleProvider) {
+    googleProvider.setCustomParameters({
+        prompt: "select_account",
+    });
+}
+
 console.log(" firebase intiialization");

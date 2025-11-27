@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import { Popover, Box, List, ListItem, ListItemButton, ListItemText, ListItemIcon, Divider, Typography, Stack, Avatar, AvatarGroup } from "@mui/material";
-
+import { handleSignOut } from "../Auth/handleSignOut";
 import { PersonOutline as PersonOutlineIcon, SettingsSuggest as SettingsSuggestIcon, Logout as LogoutIcon } from "@mui/icons-material";
 import { AiOutlineUserSwitch } from "react-icons/ai";
 import { useAuth } from "../routingP/BrowserRouter"; // importing to use the setLoggedIn function to sign out the user and also to get the user credetials from the context to set the UI of the profile popover accordingly
@@ -39,7 +39,7 @@ function stringAvatar(name) {
     const secondInitial = nameParts[1] ? nameParts[1][0] : "";
 }
 
-export default function profilePopover({ anchorEl, handleClose, handleSignOut }) {
+export default function profilePopover({ anchorEl, handleClose }) {
     const open = Boolean(anchorEl);
     const Navigate = useNavigate();
 
@@ -139,7 +139,7 @@ export default function profilePopover({ anchorEl, handleClose, handleSignOut })
                 </ListItem>
             </List>
 
-            <AvatarGroup alignItems="center" max={4}>
+            <AvatarGroup sx={{ alignItems: "center" }} max={4}>
                 {DummyOnlineUser.map((user) => {
                     return <Avatar alt={user.name} src={user.url} />;
                 })}

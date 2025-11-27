@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { auth, db } from "./firebaseConfig";
-import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { auth, db, googleProvider } from "./firebaseConfig";
+import { signInWithEmailAndPassword, onAuthStateChanged, getIdToken, signInWithRedirect, getRedirectResult } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { useAuth } from "../routingP/BrowserRouter"; // CONTEXT
+import { useAuth } from "../routingP/BrowserRouter"; // NOTE : we dont need this we are now handling all this using the token  and saving it to the loal storage and removing it on logout
 import { Container, Paper, Typography, Box, Button, TextField, Divider, Alert, Stack } from "@mui/material";
 import { Google as GoogleIcon, Phone as PhoneIcon } from "@mui/icons-material";
 import { FcGoogle } from "react-icons/fc";
@@ -20,28 +20,25 @@ const modalStyle = {
     p: 4,
 };
 // testing Authorization
-const User = {
-    uid: "sahilVishnaniUniqueIdentificationCode",
-    email: "sahilvishnani25@gmail.com",
-    emailVerified: true,
-    displayName: "Sahil Vishnani",
-    userName: "SahilVishnani2520",
-    photoURL: "https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=900",
+// const _dataSet = {
+//     firstName: "dummyFirstName",
+//     lastName: "dummyLastName",
+//     email: "dummyEmail",
+//     password: "dummyPassword",
+//     phone: "dummyPhone",
+//     phoneCode: "dummyPhoneCode",
+//     username: "dummyUserName; ",
 
-    phone: "+91 7568202959",
-};
-const DummyUserCredential = {
-    user: User,
-};
+//     photoURL: "notAddedYet",
+// };
+
 export default function Login() {
-    const [userCredential, setUserCredential] = useState(DummyUserCredential);
-
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const [isTrue, setIsTrue] = useState(true);
-    const { isLoggedIn, setLoggedIn, userInfo, setUserInfo } = useAuth();
+    //  const { isLoggedIn, setLoggedIn, userInfo, setUserInfo } = useAuth();
     const Navigate = useNavigate();
 
     //methods for handlers
@@ -53,8 +50,20 @@ export default function Login() {
     const handleAuthAction = async (e) => {
         e.preventDefault();
     };
-    const handleGoogleLogin = (e) => {
+    const handleGoogleLogin = async (e) => {
+        // TODO : handleGoogleLogin
         e.preventDefault();
+        console.log("google handler is working"); // button is listened to.
+
+        setError("");
+        setLoading(true);
+        try {
+            await signInWithRedirect(auth, googleProvider);
+        } catch (err) {
+            console.log(err); // error message from firebase auth
+            setError(err.message);
+            setLoading(false);
+        }
     };
     const handlePhoneLogin = (e) => {
         e.preventDefault();
@@ -64,19 +73,24 @@ export default function Login() {
             setError("");
             setLoading(true);
             const userCredentials = await signInWithEmailAndPassword(auth, dataObject.email, dataObject.password);
+            const { user } = userCredentials;
             // update component state/context on success
-            if (userCredentials) {
-                setLoggedIn(true);
-                const { user } = userCredentials; // API_GET
-                const documentId = user.uid; // this is the uid ( which e have used to save the data of the user in our firebase database) in the collection named users
-                const docRef = doc(db, "users", documentId);
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    const userData = docSnap.data();
-                    setUserInfo(userData);
-                    console.log(userData);
+
+            // TODO
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    // truthy event
+                    const authToken = await user.getIdToken(); // API_GET
+                    localStorage.setItem("auth-token", authToken); // logout will remove this token where else the loader function will check for this token
+                    const documentId = user.uid;
+                    const docRef = doc(db, "users", documentId);
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists()) {
+                        const { firstName, lastName, email, username } = docSnap.data();
+                        localStorage.setItem("user-info", JSON.stringify({ firstName, lastName, email, username })); // this is JSON string which needs to be parsed to be used in the whole app everywhere
+                    }
                 }
-            }
+            });
         } catch (error) {
             setError(error.message);
             console.log(error.message);
@@ -97,17 +111,20 @@ export default function Login() {
             setLoading(false);
             return;
         }
-        const formElement = document.getElementById("signIn-form");
-        const formData = new FormData(formElement);
-        const dataObject = Object.fromEntries(formData); // DATABASE
+        let formElement = document.getElementById("signIn-form");
+        let formData = new FormData(formElement);
+        let dataObject = Object.fromEntries(formData); // DATABASE
 
         console.log(dataObject); // LOG ;
 
         await signInFirebase(dataObject, setError, setLoading);
 
-        if (isLoggedIn) {
+        if (localStorage.getItem("auth-token")) {
             try {
-                const userName = "DummyUserName";
+                const userInfoJSON = localStorage.getItem("user-info");
+
+                const { username } = JSON.parse(localStorage.getItem("user-info"));
+                const userName = username;
                 Navigate(`/${userName}`, { replace: true });
             } catch (error) {
                 alert("Login failed:", error);
@@ -174,7 +191,7 @@ export default function Login() {
 
                     <Divider>or</Divider>
 
-                    <Button variant="contained" startIcon={<FcGoogle />} sx={{ bgcolor: "gray" }} onClick={isTrue ? handleGoogleLogin : SignUp}>
+                    <Button variant="contained" startIcon={<FcGoogle />} sx={{ bgcolor: "gray" }} onClick={handleGoogleLogin}>
                         Sign in with Google
                     </Button>
                     <Button variant="outlined" startIcon={<PhoneIcon />}>

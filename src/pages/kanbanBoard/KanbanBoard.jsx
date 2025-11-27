@@ -28,28 +28,27 @@ const DragOverlayCard = ({ value, boardList }) => {
         <Card
             sx={{
                 ...cardSx,
-                boxShadow: "0 4px 20px rgba(0,0,0,0.15)", // Creative: Ghost trail shadow
-                transform: "scale(1.02)", // Micro-lift on overlay
+                boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
+                transform: "scale(1.02)",
                 transition: "transform 0.1s ease-out",
             }}
         >
             <CardContent sx={cardContentSx}>
                 <Stack sx={stack1Sx}>
-                    {/* Top: Title + Static Icons (grayed, non-interactive) */}
                     <Stack {...stack2Props}>
                         <Typography sx={{ fontSize: "0.8rem" }}>{task.title}</Typography>
-                        {/* Static Edit Icon: Gray, no onClick */}
+
                         <IconButton disabled size="small" sx={{ color: "text.secondary", p: 0 }}>
                             <EditIcon sx={{ fontSize: 10 }} />
                         </IconButton>
                         <Box sx={{ flexGrow: 1 }} />
-                        {/* Static More Icon: Gray dots */}
+
                         <IconButton disabled size="small" sx={{ color: "text.secondary" }}>
                             <MoreHorizIcon />
                         </IconButton>
                     </Stack>
                     <Box sx={{ flexGrow: 1 }} />
-                    {/* Bottom: Unchanged */}
+
                     <Stack {...stack2Props}>
                         <Box> {workTypeIconMap(task.workType)}</Box>
                         <Typography sx={{ fontSize: "0.8rem" }}>{task.projectId}</Typography>
@@ -69,11 +68,8 @@ export default function KanbanBoard() {
     const [activeTaskId, setActiveTaskId] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
 
-    // FIX 1: Refactored logic to base the preview on the latest committed state (kanboardList),
-    // ensuring a clean state in every update.
     const updatePreviewBoard = useCallback(
         (activeId, over) => {
-            // Start from a deep copy of the latest committed state.
             let nextBoard = JSON.parse(JSON.stringify(kanboardList));
 
             const activeItem = findTask(activeId, nextBoard);
@@ -85,8 +81,6 @@ export default function KanbanBoard() {
             const sourceColumnIndex = nextBoard.findIndex((col) => col.id === sourceColumn.id);
             const activeIndex = sourceColumn.tasks.findIndex((t) => t.id === activeId);
 
-            // Remove the active item from its committed source location in the preview copy
-            // This is crucial for correctly simulating the move across columns.
             nextBoard[sourceColumnIndex].tasks.splice(activeIndex, 1);
 
             const overType = over.data.current?.type;
@@ -97,7 +91,6 @@ export default function KanbanBoard() {
                 const targetColumnId = over.data.current.columnId;
                 targetColumnIndex = nextBoard.findIndex((col) => col.id === targetColumnId);
 
-                // over.data.current.sortable?.index gives the position to insert at
                 overIndex = over.data.current.sortable?.index ?? 0;
             } else if (overType === "columnType1") {
                 const targetColumnId = over.id;
@@ -117,21 +110,16 @@ export default function KanbanBoard() {
                 return nextBoard;
             }
 
-            // If drag is happening over an invalid drop zone, return the board with the item still removed
             return nextBoard;
         },
         [kanboardList]
-    ); // FIX 2: Dependency array ensures the latest kanboardList is available
-
-    // FIX 3: Refactored handleDragEnd to use state setters directly from closure
-    // and simplify cross-column index calculation.
+    );
     const handleDragEnd = useCallback(
         (event) => {
             const { active, over } = event;
             const activeId = active.id;
             const overId = over?.id;
 
-            // If drop is invalid (e.g., dropped outside DndContext), reset to original
             if (!overId) {
                 setActiveTaskId(null);
                 setIsDragging(false);
@@ -158,32 +146,27 @@ export default function KanbanBoard() {
                         targetColumn = prev.find((col) => col.id === over.data.current.columnId);
 
                         if (targetColumn.id === sourceColumn.id) {
-                            // Intra commit (reorder within same column)
                             const overIndex = over.data.current.sortable?.index ?? 0;
                             newTasks = arrayMove(sourceColumn.tasks, activeIndex, overIndex);
                         } else {
-                            // Cross commit (move to different column)
                             const overIndex = over.data.current.sortable?.index ?? targetColumn.tasks.length; // Simplified index calculation
                             const taskToMove = sourceColumn.tasks.find((t) => t.id === activeId);
 
                             newTasks = [...targetColumn.tasks.slice(0, overIndex), taskToMove, ...targetColumn.tasks.slice(overIndex)];
                         }
                     } else if (overType === "columnType1") {
-                        // Dropped directly on a column (insert at end)
                         targetColumn = prev.find((col) => col.id === over.id);
-                        if (targetColumn.id === sourceColumn.id) return prev; // No change if dropped on same column background
+                        if (targetColumn.id === sourceColumn.id) return prev;
 
                         const taskToMove = sourceColumn.tasks.find((t) => t.id === activeId);
                         newTasks = [...targetColumn.tasks, taskToMove];
                     }
 
-                    // Map to update state
                     return prev.map((col) => {
                         if (col.id === sourceColumn.id) {
-                            // If cross-column move, filter out the task.
                             return { ...col, tasks: sourceColumn.id === targetColumn.id ? newTasks : sourceColumn.tasks.filter((t) => t.id !== activeId) };
                         }
-                        // If target column, apply newTasks.
+
                         if (col.id === targetColumn.id) return { ...col, tasks: newTasks };
                         return col;
                     });
@@ -192,12 +175,11 @@ export default function KanbanBoard() {
                 console.log("Invalid drop.");
             }
 
-            // Reset drag state for both valid/invalid drops
             setActiveTaskId(null);
             setIsDragging(false);
-            setPreviewBoard(kanboardList); // Reset preview to latest committed state.
+            setPreviewBoard(kanboardList);
         },
-        [kanboardList] // Dependency array ensures latest state is available in closure
+        [kanboardList]
     );
 
     return (
@@ -210,11 +192,11 @@ export default function KanbanBoard() {
                     setPreviewBoard(kanboardList); // Init preview as original
                 }}
                 onDragOver={({ active, over }) => {
-                    if (!over || !active.id) return;
-                    // FIX 4: Call the refactored function directly, passing only necessary arguments.
+                    if (!over || !active.id) return; // WHEN NO DROPPABLE AVAILABLE
+
                     setPreviewBoard(updatePreviewBoard(active.id, over));
                 }}
-                onDragEnd={handleDragEnd} // FIX 5: Pass the function directly
+                onDragEnd={handleDragEnd}
             >
                 <Container sx={{ background: "transparent" }}>
                     <Stack direction="row" spacing={2}>

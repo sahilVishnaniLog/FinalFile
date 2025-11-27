@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router";
-import countryPhoneCodes from "../assets/countryPhoneCode";
+import countryPhoneCodes from "../assets/countryPhoneCode"; // DATABASE
 import { Box, TextField, Button, FormControlLabel, Alert, Autocomplete, Typography, Checkbox, Link, Stack, InputAdornment, IconButton, Paper, AppBar } from "@mui/material";
 import { ArrowRightAlt as ArrowRightAltIcon, Visibility as VisibilityIcon, VisibilityOff as VisibilityOffIcon } from "@mui/icons-material";
 // INFO: authentication imports from firebase - project JIRA TEAMS APPLICATION
@@ -9,13 +9,15 @@ import { auth, db } from "./firebaseConfig";
 import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail } from "firebase/auth";
 import { collection, doc, setDoc, addDoc } from "firebase/firestore";
 import { useAuth } from "../routingP/BrowserRouter"; // importing the auth context ( vales { isLoggedIn , setLoggedIn, userCredentials, setUserCredentials} )
-
+import FlagIcon from "@mui/icons-material/Flag"; // DEBUG
+import * as Flags from "country-flag-icons/react/3x2"; // ADDED: importing flags from country flag icons package
 export default function SignUp() {
+    // CLEANED
     const [isValid, setValid] = useState(false); // wewill use this to check if the username choosen in valid or available ( no conflicts between the usernames  in the database collection over firestore)
 
     const [email, setEmail] = useState(""); // FORM_DATA_UPDATE
     const [password, setPassword] = useState(""); // FORM_DATA_UPDATE
-    const [country, setCountry] = useState("india"); // FORM_DATA_UPDATE
+    const [country, setCountry] = useState(null); // FORM_DATA_UPDATE
     const [username, setUsername] = useState(""); // FORM_DATA_UPDATE
     const [name, setName] = useState({ firstName: "", lastName: "" }); // FORM_DATA_UPDATE
 
@@ -30,7 +32,13 @@ export default function SignUp() {
     const timeoutRef = useRef(null);
 
     const { isLoggedIn, setLoggedIn, userInfo, setUserInfo } = useAuth();
+    const objectRegEx = { email: /^\S+@\S+\.\S+$/, password: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, name: /^[a-zA-Z]+$/, phone: /^\d{10}$/ }; // CRITICAL : REGULAR EXPRESSIONS  FOR VALIDATION
 
+    //ADDED
+    const FlagIcons = ({ isoCode, size = 30 }) => {
+        const FlagComponent = Flags[isoCode];
+        return FlagComponent ? <FlagComponent style={{ width: size, height: "auto", marginRight: 10 }} /> : <FlagIcon />;
+    };
     // will be triggered on Submit ( from the Form below)
     // we also need to add the Form container to prevent the submission we will let the submit request bubble up to be encountered or to be dealt  by form handler
     // CLEANED
@@ -161,7 +169,7 @@ export default function SignUp() {
                         endIcon={<ArrowRightAltIcon />}
                         sx={{
                             textDecoration: "underline",
-                            color: "inherit",
+
                             color: "text.primary",
                         }}
                         onClick={handleSignupToLogin}
@@ -228,7 +236,9 @@ export default function SignUp() {
                                     name="password"
                                     variant="outlined"
                                     value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
+                                    onChange={(e) => {
+                                        setPassword(e.target.value);
+                                    }}
                                     onKeyDown={handleInvalidSubmit}
                                     type={hiddenPassword ? "password" : "text"}
                                     htmlFor="user-password-signup"
@@ -285,7 +295,19 @@ export default function SignUp() {
                                 ></Autocomplete>
                                 <Alert>For compliance reason . we're required to collect country information to send you occasional updates and announcements.</Alert>
                                 <Box sx={{ display: "flex", flexDirection: "row", gap: "0rem" }}>
-                                    <TextField width="3rem" label={country} name="phoneCode" value={countryPhoneCodes.find((item) => item.country === country)?.code || ""} variant="outlined" sx={{ mr: 2 }} />
+                                    <TextField
+                                        width="3rem"
+                                        label={country}
+                                        name="phoneCode"
+                                        value={countryPhoneCodes.find((item) => item.country === country)?.code || ""}
+                                        variant="outlined"
+                                        sx={{ mr: 2 }}
+                                        disabled
+                                        slotProps={{
+                                            input: { startAdornment: <InputAdornment position="start">{country ? <FlagIcons isoCode={countryPhoneCodes.find((item) => item.country === country)?.iso} /> : null}</InputAdornment> },
+                                        }}
+                                    />{" "}
+                                    {/*TODO:  this is the textField for the country code we will add an icons at the start of the  countryCode and will save the flag to the label above legend */}
                                     <TextField onKeyDown={handleInvalidSubmit} onSubmit={(e) => e.preventDefault()} onChange={(e) => setPhone(e.target.value)} name="phone" value={phone} width="10rem" label="Phone" variant="outlined">
                                         {" "}
                                     </TextField>
