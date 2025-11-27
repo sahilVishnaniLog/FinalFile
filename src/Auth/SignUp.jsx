@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, use } from "react";
 import { useNavigate } from "react-router";
 import countryPhoneCodes from "../assets/countryPhoneCode"; // DATABASE
 import { Box, TextField, Button, FormControlLabel, Alert, Autocomplete, Typography, Checkbox, Link, Stack, InputAdornment, IconButton, Paper, AppBar } from "@mui/material";
@@ -11,6 +11,7 @@ import { collection, doc, setDoc, addDoc } from "firebase/firestore";
 import { useAuth } from "../routingP/BrowserRouter"; // importing the auth context ( vales { isLoggedIn , setLoggedIn, userCredentials, setUserCredentials} )
 import FlagIcon from "@mui/icons-material/Flag"; // DEBUG
 import * as Flags from "country-flag-icons/react/3x2"; // ADDED: importing flags from country flag icons package
+
 export default function SignUp() {
     // CLEANED
     const [isValid, setValid] = useState(false); // wewill use this to check if the username choosen in valid or available ( no conflicts between the usernames  in the database collection over firestore)
@@ -29,6 +30,7 @@ export default function SignUp() {
     const Navigate = useNavigate();
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [isPhoneValid, setIsPhoneValid] = useState(true) ; 
     const timeoutRef = useRef(null);
 
     const { isLoggedIn, setLoggedIn, userInfo, setUserInfo } = useAuth();
@@ -140,6 +142,31 @@ export default function SignUp() {
             newName.lastName = value;
         }
         setName(newName);
+    }
+    
+    function handlePhoneInput(event) {  // TODO 
+        const input = event.target.value;
+        console.log(input);
+
+        setPhone(input);
+
+        const matched = countryPhoneCodes.find((item) => item.country === country);
+
+        if (!matched || !matched.regex) {
+            // No pattern available for selected country — mark phone as invalid (or adjust default behavior)
+            setIsPhoneValid(false);
+            return;
+        }
+
+        try {
+            const pattern = matched.regex;
+            const regEx = new RegExp(pattern);
+            const isPhoneValid = regEx.test(input);
+            setIsPhoneValid(isPhoneValid);
+        } catch (err) {
+            console.error("Invalid phone regex pattern for country:", country, err);
+            setIsPhoneValid(false);
+        }
     }
 
     //CLEANED
@@ -297,7 +324,7 @@ export default function SignUp() {
                                 <Box sx={{ display: "flex", flexDirection: "row", gap: "0rem" }}>
                                     <TextField
                                         width="3rem"
-                                        label={country}
+                                        label={countryPhoneCodes.find((item) => item.country === country)?.flag || "" }
                                         name="phoneCode"
                                         value={countryPhoneCodes.find((item) => item.country === country)?.code || ""}
                                         variant="outlined"
@@ -307,11 +334,12 @@ export default function SignUp() {
                                             input: { startAdornment: <InputAdornment position="start">{country ? <FlagIcons isoCode={countryPhoneCodes.find((item) => item.country === country)?.iso} /> : null}</InputAdornment> },
                                         }}
                                     />{" "}
-                                    {/*TODO:  this is the textField for the country code we will add an icons at the start of the  countryCode and will save the flag to the label above legend */}
-                                    <TextField onKeyDown={handleInvalidSubmit} onSubmit={(e) => e.preventDefault()} onChange={(e) => setPhone(e.target.value)} name="phone" value={phone} width="10rem" label="Phone" variant="outlined">
+                                    {/*CLEANED:  this is the textField for the country code we will add an icons at the start of the  countryCode and will save the flag to the label above legend */}
+                                    <TextField onKeyDown={handleInvalidSubmit} onSubmit={(e) => e.preventDefault()} onChange={handlePhoneInput} name="phone" value={phone} width="10rem" label="Phone" variant="outlined">
                                         {" "}
                                     </TextField>
                                 </Box>
+                                {!isPhoneValid && <Alert severity='warning'> Please enter a valid phone number</Alert> /* TODO: */  }  
 
                                 <FormControlLabel control={<Checkbox name="emailUpdates" />} label="Receive occasional product updates and announcemennts"></FormControlLabel>
                                 <Button sx={{ bgcolor: "#233629" }} variant="contained" type="submit" endIcon={<ArrowRightAltIcon />}>

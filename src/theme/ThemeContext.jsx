@@ -148,6 +148,11 @@ export default function ThemeContext({ children, modeChoice, setModeChoice, back
                                 color: isLight ? "#5E6C84" : "#8F9FB3",
                                 opacity: 1,
                             },
+                            "&:-webkit-autofill" : {  //INFO : this is for autofill of inputs in chrome
+                                WebkitBoxShadow: '0 0 0 100px transparent inset !important',
+                                WebkitTextFillColor: primaryText,
+                                transition: 'background-color 3000s ease-in-out 0s' 
+                            }
                         },
                     },
                 },

@@ -156,7 +156,7 @@ const countryPhoneCodes = [
     { country: "Ukraine", code: "+380", iso: "UA", flag: "🇺🇦", regex: "^\\d{9}$" },
     { country: "United Arab Emirates", code: "+971", iso: "AE", flag: "🇦🇪", regex: "^\\d{9}$" },
     { country: "United Kingdom", code: "+44", iso: "GB", flag: "🇬🇧", regex: "^\\d{10,11}$" },
-    { country: "United States", code: "+1", iso: "US", flag: "🇺🇸", regex: "^\\d{10}$" },
+    { country: "United States", code: "+1", iso: "US", flag: "🇺🇸", regex: "^[2-9]\\d{2}[2-9]\\d{6}$" },
     { country: "Uruguay", code: "+598", iso: "UY", flag: "🇺🇾", regex: "^\\d{8}$" },
     { country: "Uzbekistan", code: "+998", iso: "UZ", flag: "🇺🇿", regex: "^\\d{9}$" },
     { country: "Vatican City", code: "+379", iso: "VA", flag: "🇻🇦", regex: "^\\d{10}$" },
