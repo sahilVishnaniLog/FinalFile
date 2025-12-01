@@ -124,19 +124,23 @@ export default function TaskCreatorForm({ setOpen }) {
               />
               <Accordion
                 disableGutters
-                sx={{
-                  backgroundColor: "transpar:ent",
-                  "&:before": { display: "none" },
-                }}
                 elevation={0}
+                sx={{
+                  backgroundColor: "transparent", // Makes the background see-through
+                  border: "none", // Removes border (if using variant="outlined")
+                  boxShadow: "none", // Removes the drop shadow
+                  "&:before": {
+                    display: "none", // Removes the default line above the accordion
+                  },
+                }}
               >
-                <AccordionSummary>
+                <AccordionSummary sx={{ p: 0 }}>
                   <Typography sx={{ fontSize: "1rem", fontWeight: "bold" }}>
                     {" "}
                     Description{" "}
                   </Typography>
                 </AccordionSummary>
-                <AccordionDetails>
+                <AccordionDetails sx={{ p: 0 }}>
                   <InlineTextField
                     multiline
                     sx={{ fontSize: "0.8rem", color: "text.primary" }}
