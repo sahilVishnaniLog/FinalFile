@@ -16,10 +16,17 @@ import {
   AccordionDetails,
   TextField,
   InputAdornment,
+  Paper,
+  Tooltip,
 } from "@mui/material";
+
+import FullScreenButton from "../utils/FullScreenButton.jsx";
+import InlineTextField from "../utils/InlineTextField.jsx";
+
 const DummyChipData = { projectTitle: "MBA-6", projectType: "Request" };
-const isFullScreen = false;
+
 const DummyViewers = 10;
+
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ShareIcon from "@mui/icons-material/Share";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -28,9 +35,15 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import { workTypeIconMap } from "./kanbanBoard/KanbanIconMap.jsx";
 import { Maximize2, X } from "lucide-react";
 
-export default function TaskCreatorForm() {
+const handleFullScreen = () => {
+  if (isFullScreen) {
+    document.exitFullscreen();
+  }
+};
+
+export default function TaskCreatorForm({ setOpen }) {
   return (
-    <Container>
+    <Container bgcolor="rgba( f, f, f, 1)">
       <AppBar
         position="static"
         bgcolor="transparent"
@@ -61,11 +74,14 @@ export default function TaskCreatorForm() {
             <IconButton>
               <MoreHorizIcon />
             </IconButton>
-            <IconButton>
-              {isFullScreen ? <CloseFullscreenIcon /> : <Maximize2 />}{" "}
-            </IconButton>
+            <FullScreenButton />
 
-            <IconButton>
+            <IconButton
+              onClick={(e) => {
+                e.preventDefault;
+                setOpen(false);
+              }}
+            >
               <X size={28} strokeWidth={2.25} />
             </IconButton>
           </Stack>
@@ -90,21 +106,48 @@ export default function TaskCreatorForm() {
             <Button
             // anchor for a popover
             ></Button>
-            <Accordion>
-              <AccordionSummary>
-                <Stack direction="row" justifyContent="space-between">
-                  <Typography sx={{ fontWeight: "bold", fontSize: "1.2rem" }}>
-                    Details
+            <Paper elevation sx={{ padding: 2, width: "80vh", height: "80vh" }}>
+              <Stack direction="row" justifyContent="space-between">
+                <Typography sx={{ fontWeight: "bold", fontSize: "1.2rem" }}>
+                  Details
+                </Typography>
+
+                <IconButton>
+                  <SettingsIcon /> {/*naked Settings Icon */}
+                </IconButton>
+              </Stack>
+              <Tooltip title="Task Title" placement="top">
+                {" "}
+              </Tooltip>
+              <InlineTextField
+                sx={{ fontSize: "1.2rem", fontWeight: "bold" }}
+              />
+              <Accordion
+                disableGutters
+                sx={{
+                  backgroundColor: "transpar:ent",
+                  "&:before": { display: "none" },
+                }}
+                elevation={0}
+              >
+                <AccordionSummary>
+                  <Typography sx={{ fontSize: "1rem", fontWeight: "bold" }}>
+                    {" "}
+                    Description{" "}
                   </Typography>
-                  <IconButton>
-                    <SettingsIcon /> {/*naked Settings Icon */}
-                  </IconButton>
-                </Stack>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Stack direction="row"></Stack>
-              </AccordionDetails>
-            </Accordion>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <InlineTextField
+                    multiline
+                    sx={{ fontSize: "0.8rem", color: "text.primary" }}
+                  >
+                    {" "}
+                  </InlineTextField>
+                </AccordionDetails>
+              </Accordion>
+
+              <Stack direction="row"></Stack>
+            </Paper>
           </Stack>
         </Box>
       </Stack>

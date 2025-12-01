@@ -26,6 +26,7 @@ import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
 // INFO: authentication imports from firebase - project JIRA TEAMS APPLICATION
 // INFO:  APPLCATION NAME : TEST
 import { auth, db } from "./firebaseConfig";
+import ValidateTextField from "../components/ValidateTextField.jsx";
 import {
   createUserWithEmailAndPassword,
   fetchSignInMethodsForEmail,
@@ -93,8 +94,8 @@ export default function SignUp() {
       }
     } catch (err) {
       console.error("invalid name regex pattern for the name", err);
-      if (id === "userFirstName") setIsfirstNameValid(false);
-      if (id === "userLastName") setIslastNameValid(false);
+      if (id === "usersFirstName") setIsfirstNameValid(false);
+      if (id === "usersLastName") setIslastNameValid(false);
     }
   }
   function handleBlur(e) {
@@ -247,12 +248,11 @@ export default function SignUp() {
     await signUpFirebase(dataObject, setError, setLoading);
 
     //dummy run
-    if (isLoggedIn) {
+    if (auth.currentUser) {
       try {
-        const userName = "DummyUserName";
-        Navigate(`/${userName}`, { replace: true });
-      } catch (error) {
-        console.error("error authenticating , error message", error);
+        Navigate(`/${dataObject.usernamme}`, { replace: true });
+      } catch (err) {
+        console.error("Navigation error", err);
       }
     } else {
       Navigate("../login", { replace: true });

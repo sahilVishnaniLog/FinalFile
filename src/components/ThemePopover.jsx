@@ -84,6 +84,7 @@ export default function ThemePopover({ anchorEl, handleClose }) {
           value={modeChoice}
           onChange={(event) => {
             setModeChoice(event.target.value);
+            localStorage.setItem("theme", event.target.value);
             // console.log(modeChoice); // debugger
           }}
         >
