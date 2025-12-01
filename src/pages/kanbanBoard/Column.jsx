@@ -1,8 +1,11 @@
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { Paper, Stack, AppBar, Chip, Card, CardActionArea, CardContent, Typography, Box } from "@mui/material";
+import { useState} from 'react' ; 
+import { Paper, Stack, AppBar, Chip, Card, CardActionArea, CardContent, Typography, Box, Modal } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import CardTask from "./CardTask.jsx";
+import TaskCreatorForm from "../TaskCreatorForm.jsx";
+
 
 const paperSx = {
     background: "board.paper",
@@ -32,6 +35,11 @@ const dropIndicatorSx = {
 };
 
 export default function Column({ column, activeTaskId, isDragging }) {
+    const[open, setOpen] = useState(false) ; 
+    const handleClose = () => { 
+        setOpen(false) ; 
+
+    }
     const { setNodeRef, isOver } = useDroppable({
         id: column.id,
         data: {
@@ -51,6 +59,7 @@ export default function Column({ column, activeTaskId, isDragging }) {
         : paperSx;
 
     return (
+        <> 
         <Paper ref={setNodeRef} sx={columnSx}>
             <Stack spacing="1rem">
                 <AppBar sx={appBarSx} elevation={0}>
@@ -73,7 +82,7 @@ export default function Column({ column, activeTaskId, isDragging }) {
                 </SortableContext>
                 {isOver && <Box sx={{ ...dropIndicatorSx, opacity: 1 }} />}
                 {column.tasks.length === 0 && <Box sx={{ height: "60px", opacity: 0 }} />}
-                <Card elevation={0} sx={{ bgcolor: "transparent" }}>
+                <Card elevation={0} sx={{ bgcolor: "transparent" }} onClick={()=>setOpen(true)  }>
                     <CardActionArea>
                         <CardContent>
                             <Stack direction="row" spacing={1.5}>
@@ -87,5 +96,13 @@ export default function Column({ column, activeTaskId, isDragging }) {
                 </Card>
             </Stack>
         </Paper>
+        <Modal 
+        open={open} 
+        onClose={handleClose}
+         > 
+
+         <TaskCreatorForm/> 
+         </Modal>
+    </>
     );
 }

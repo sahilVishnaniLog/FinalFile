@@ -7,11 +7,7 @@ import { useState } from "react";
 
 import { createContext, useContext } from "react";
 const AuthContextHook = createContext();
-
-export default function BrowserRouter() {
-    const [isLoggedIn, setLoggedIn] = useState(false);
-    const [userInfo, setUserInfo] = useState();
-    const authLoader = async () => {
+ const authLoader = async () => {
         const token = localStorage.getItem("auth-token");
         if (!token) {
             return new Response(null, {
@@ -20,8 +16,7 @@ export default function BrowserRouter() {
             });
         }
     };
-
-    const router = createBrowserRouter([
+const router  = createBrowserRouter( [
         // browser context and it can also work as the wrapper for all the components thatnpm  will decide the routing of the application
         {
             path: "/",
@@ -54,8 +49,12 @@ export default function BrowserRouter() {
                 },
             ],
         },
-    ]);
+    ])
 
+export default function BrowserRouter() {
+    const [isLoggedIn, setLoggedIn] = useState(false);
+    const [userInfo, setUserInfo] = useState();
+   
     return (
         <AuthContextHook.Provider value={{ isLoggedIn, setLoggedIn, userInfo, setUserInfo }}>
             <RouterProvider router={router} />

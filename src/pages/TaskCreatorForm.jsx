@@ -25,7 +25,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { workTypeIconMap } from "./Initialdata.jsx";
+import { workTypeIconMap } from "./kanbanBoard/KanbanIconMap.jsx";
 import { Maximize2, X } from "lucide-react";
 
 export default function TaskCreatorForm() {

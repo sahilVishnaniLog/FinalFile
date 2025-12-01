@@ -1,12 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect , useRef  } from "react";
 import { useNavigate } from "react-router";
 import { auth, db, googleProvider } from "./firebaseConfig";
 import { signInWithEmailAndPassword, onAuthStateChanged, getIdToken, signInWithRedirect, getRedirectResult } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useAuth } from "../routingP/BrowserRouter"; // NOTE : we dont need this we are now handling all this using the token  and saving it to the loal storage and removing it on logout
-import { Container, Paper, Typography, Box, Button, TextField, Divider, Alert, Stack } from "@mui/material";
-import { Google as GoogleIcon, Phone as PhoneIcon } from "@mui/icons-material";
+import { Container, Paper, Typography, Box, Button, TextField, Divider, Alert, Stack ,Modal, InputAdornment, IconButton} from "@mui/material";
+import { Google as GoogleIcon, Phone as PhoneIcon, Visibility as VisibilityIcon , VisibilityOff as VisibilityOffIcon } from "@mui/icons-material";
 import { FcGoogle } from "react-icons/fc";
+
 
 const modalStyle = {
     position: "absolute",
@@ -38,8 +39,10 @@ export default function Login() {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const [isTrue, setIsTrue] = useState(true);
+     const [hiddenPassword, setHiddenPassword] = useState(true);
     //  const { isLoggedIn, setLoggedIn, userInfo, setUserInfo } = useAuth();
     const Navigate = useNavigate();
+    const timeoutRef = useRef( null) ; 
 
     //methods for handlers
     const handleInvalidSubmit = (e) => {
@@ -47,9 +50,7 @@ export default function Login() {
             e.preventDefault();
         }
     };
-    const handleAuthAction = async (e) => {
-        e.preventDefault();
-    };
+    
     const handleGoogleLogin = async (e) => {
         // TODO : handleGoogleLogin
         e.preventDefault();
@@ -59,15 +60,15 @@ export default function Login() {
         setLoading(true);
         try {
             await signInWithRedirect(auth, googleProvider);
+            
+
         } catch (err) {
             console.log(err); // error message from firebase auth
             setError(err.message);
             setLoading(false);
         }
     };
-    const handlePhoneLogin = (e) => {
-        e.preventDefault();
-    };
+    
     const signInFirebase = async (dataObject, setError, setLoading) => {
         try {
             setError("");
@@ -141,6 +142,17 @@ export default function Login() {
         Navigate("../signup", { replace: true });
         // Navigate("signup", { replace: true });
     };
+    useEffect ( ()=> { 
+        timeoutRef.current = setTimeout(() =>{ 
+            setHiddenPassword(true) ; 
+        }, 7000 ) ; 
+        return () => { 
+            if(timeoutRef.current) { 
+                clearTimeout(timeoutRef.current)  ; 
+            }
+        }
+    }, [hiddenPassword])
+
 
     return (
         <Container maxWidth="lg" sx={{ display: "flex", justifyContent: "center" }}>
@@ -176,12 +188,20 @@ export default function Login() {
                 >
                     <form id="signIn-form" onSubmit={handleLogin}>
                         <Stack direction="column" gap={2}>
-                            <TextField label="Email" type="email" placeholder="sahilvishnani25@gmail.com" name="email" value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={handleInvalidSubmit}>
-                                {" "}
-                            </TextField>
-                            <TextField label="Password" type="password" placeholder="***********" name="password" value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={handleInvalidSubmit}>
-                                {" "}
-                            </TextField>
+                            <TextField label="Email" type='text' 
+                             placeholder="sahilvishnani25@gmail.com" name="email" value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={handleInvalidSubmit}/>
+                               
+                           
+                            <TextField label="Password" type={hiddenPassword ? "password": "text" }  placeholder="***********" name="password" value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={handleInvalidSubmit}
+                                 slotProps={{ input: { 
+                                    endAdornment: (<InputAdornment position='end'  cursor='pointer' > 
+                                    <IconButton edge='end' onClick={ () => setHiddenPassword(!hiddenPassword) } > 
+                                        { hiddenPassword ? <VisibilityIcon /> : <VisibilityOffIcon/>} 
+                                        </IconButton> 
+                                        </InputAdornment>)
+                                 } 
+                                    
+                                }} /> 
                             <Button variant="contained" type="submit" onClick={handleLogin} color="success">
                                 {" "}
                                 Sign In
@@ -191,7 +211,7 @@ export default function Login() {
 
                     <Divider>or</Divider>
 
-                    <Button variant="contained" startIcon={<FcGoogle />} sx={{ bgcolor: "gray" }} onClick={handleGoogleLogin}>
+                    <Button variant="contained" startIcon={<FcGoogle />} color='success' onClick={handleGoogleLogin}>
                         Sign in with Google
                     </Button>
                     <Button variant="outlined" startIcon={<PhoneIcon />}>

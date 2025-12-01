@@ -4,11 +4,12 @@ import { handleSignOut } from "../Auth/handleSignOut";
 import { PersonOutline as PersonOutlineIcon, SettingsSuggest as SettingsSuggestIcon, Logout as LogoutIcon } from "@mui/icons-material";
 import { AiOutlineUserSwitch } from "react-icons/ai";
 import { useAuth } from "../routingP/BrowserRouter"; // importing to use the setLoggedIn function to sign out the user and also to get the user credetials from the context to set the UI of the profile popover accordingly
-const DummyUser = {
-    name: "Sahil Vishnani",
-    email: "sahilvishnani25@gmail.com",
-    url: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=870",
-};
+const User = ( ) => { 
+    let userJSON   = localStorage.getItem('user-info') ; 
+    let userObject = JSON.parse(userJSON)  ; 
+    return userObject ; 
+} ; 
+
 
 const DummyOnlineUser = [
     {
@@ -28,15 +29,16 @@ const DummyOnlineUser = [
         url: "https://media.istockphoto.com/id/116192438/photo/one-indian-it-software-engineer-white-collar-worker-computer-people.webp?a=1&b=1&s=612x612&w=0&k=20&c=yCT6pKSUFtfymcCnUzx6SeSqS8yrWLDeVYZH8mOcJ3c=",
     },
 ];
+ async function  handleSwitchAccount() { 
+    handleSignOut() ; 
 
-function stringAvatar(name) {
-    const safeName = typeof name === "string" ? name : "";
+}
+function stringAvatar(firstName, lastName) {
+   
 
-    const nameParts = safeName.split(" ");
+    const firstInitial = firstName ? firstName[0] : "";
 
-    const firstInitial = nameParts[0] ? nameParts[0][0] : "?";
-
-    const secondInitial = nameParts[1] ? nameParts[1][0] : "";
+    const secondInitial = lastName ? lastName[0] : "";
 }
 
 export default function profilePopover({ anchorEl, handleClose }) {
@@ -86,7 +88,7 @@ export default function profilePopover({ anchorEl, handleClose }) {
             >
                 <Stack direction="row" gap={2}>
                     <Avatar
-                        {...stringAvatar(DummyUser.name)}
+                        {...stringAvatar(User().firstName, User().lastName)}
                         sx={{
                             width: "4rem",
                             height: `4rem`,
@@ -95,11 +97,11 @@ export default function profilePopover({ anchorEl, handleClose }) {
                     />
 
                     <Stack direction="column">
-                        <Typography sx={{ fontWeight: "bold" }} fontSize="1.3rem">
+                        <Typography sx={{ fontWeight: "bold" , textTransform: 'capitalize',   }} fontSize="1.3rem">
                             {" "}
-                            {DummyUser.name}{" "}
+                            {User().firstName + " " + User().lastName}{" "}
                         </Typography>
-                        <Typography fontSize="0.9rem"> {DummyUser.email} </Typography>
+                        <Typography fontSize="0.9rem"> {User().email} </Typography>
                     </Stack>
                 </Stack>
             </Box>
@@ -122,7 +124,7 @@ export default function profilePopover({ anchorEl, handleClose }) {
                 </ListItem>
                 <Divider />
                 <ListItem disablePadding>
-                    <ListItemButton>
+                    <ListItemButton onClick={handleSwitchAccount}>
                         <ListItemIcon>
                             <AiOutlineUserSwitch />
                         </ListItemIcon>
