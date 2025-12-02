@@ -1,78 +1,3 @@
-// import { onRequest } from "firebase-functions/v2/https";
-// import { logger } from "firebase-functions/logger";
-// import { defineSecret } from "firebase-functions/params";
-// import axios from "axios";
-
-// const unsplashAccessApiKey = defineSecret("UNSPLASH_ACCESS_API_KEY"); // BUG : fix
-
-// export const getApiData = onRequest(
-//   {
-//     secrets: [unsplashAccessApiKey],
-//     cors: true /* only for development purpose */,
-//     memory: "256MiB",
-//     timeoutSeconds: 60,
-//   },
-//   async (req, res) => {
-//     res.set(
-//       "Access-Control-Allow-Origin",
-//       "*"
-//     ); /* only for development purpose here the domain will replace  the (*) */
-//     if (req.method === "OPTIONS") {
-//       return res.status(204).send("");
-//     }
-
-//     //CRITICAL
-
-//     const accessKey = unsplashAccessApiKey.value(); // BUG :FIXXED  incompleter  throwing the error code 500(cant place the API key here )
-//     const {
-//       query = "cats", //TODO we will make this dynamic later
-//       per_page = 8,
-//       orientation = "landscape",
-//     } = req.query;
-
-//     if (!accessKey) {
-//       logger.error("UNSPLASH_ACCESS_API_KEY secret is missing");
-//       return res.status(500).json("UNSPLASH_ACCESS_API_KEY secret is missing");
-//     }
-//     const apiUrl = "https://api.unsplash.com/search/photos";
-//     if (!query) {
-//       return res.status(400).json({ error: "Query parameter is required" });
-//     }
-
-//     try {
-//       logger.info(`Fetching Unsplash images for : "${query}"`);
-//       const apiResponse = await axios.get(apiUrl, {
-//         params: {
-//           query,
-//           per_page: parseInt(per_page, 8),
-//           orientation,
-//         },
-//         headers: {
-//           Authorization: `Client-ID ${accessKey}`,
-//         },
-//       });
-//       res.status(200).json({ result: apiResponse.data.results || [] });
-//     } catch (err) {
-//       logger.error("Unsplash get request failed", {
-//         message: err.message,
-//         status: err.response?.status,
-//         data: err.response?.data,
-//       });
-//       if (err.response) {
-//         res.status(err.response.status).json(err.response.data);
-//       } else {
-//         res
-//           .status(500)
-//           .json({ error: "failed to fetch from the unsplash APṖ" });
-//       }
-//     }
-//   }
-// );
-
-// functions/src/index.js
-// Firebase Cloud Functions v2 for Unsplash API Integration
-// This file exports the getApiData function to proxy Unsplash search requests securely.
-
 import { onRequest } from "firebase-functions/v2/https";
 import { defineSecret } from "firebase-functions/params"; // Required for secrets in v2
 import { logger } from "firebase-functions/logger";
@@ -151,6 +76,8 @@ export const getApiData = onRequest(
 
       // Propagate Unsplash errors directly (e.g., 401 for invalid key, 429 for rate limit)
       if (err.response) {
+        // 401 for invalid key  , 429 for rate limit
+
         res.status(err.response.status).json(err.response.data);
       } else {
         // Network or other errors
@@ -159,6 +86,3 @@ export const getApiData = onRequest(
     }
   }
 );
-
-// Optional: Export additional functions here if needed (e.g., for other endpoints)
-// Example: export const anotherFunction = onRequest((req, res) => { ... });
