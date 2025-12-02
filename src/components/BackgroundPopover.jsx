@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import BackgroundImage from "../theme/BackgroundImage.jsx";
+
 import {
   Popover,
   Typography,
@@ -84,14 +85,6 @@ const DummyImageArray = [
     urls: { regular: "https://picsum.photos/id/237/800/600.jpg" },
   },
 ];
-const defaultBackground = {
-  id: 459,
-  alt_description: "Misty Mountains",
-  urls: {
-    regular:
-      "https://images.unsplash.com/photo-1552394459-917cbbffbc84?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWlzdHklMjBtb3VudGFpbnxlbnwwfHwwfHx8MA%3D%3D",
-  },
-};
 
 export default function BackgroundPopover({ anchorEl, handleClose }) {
   const {
@@ -107,10 +100,6 @@ export default function BackgroundPopover({ anchorEl, handleClose }) {
   const [query, setQuery] = useState("background");
   const [inputvValue, setInputValue] = useState("");
 
-  const [chosenBackground, setChosenBackground] = useState(
-    // images and setImages
-    defaultBackground.urls.regular
-  );
   const [backgroundImagesAPI, setBackgroundImagesAPI] = useState([]);
   const [errorAPI, setErrorAPI] = useState(null);
   const [backgroundImageLoading, setBackgroundImageLoading] = useState(true);
@@ -125,46 +114,6 @@ export default function BackgroundPopover({ anchorEl, handleClose }) {
       console.log("background popover unmounted");
     };
   }, [open]);
-
-  //API CALL
-  // useEffect(() => {
-  //   const controller = new AbortController();
-
-  //   const fetchBackgroundImages = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         import.meta.env.VITE_FIREBASE_FUNCTION_URL,
-  //         {
-  //           signal: controller.signal,
-  //           params: {
-  //             query: query,
-  //             per_page: 8,
-  //             orientation: "landscape",
-  //           },
-  //         }
-  //       );
-  //       setBackgroundImagesAPI(response.data.results || []);
-  //     } catch (error) {
-  //       if (error.name !== "CanceledError") {
-  //         const errMsg =
-  //           error.response?.data?.error || error.message || "Network error";
-  //         setErrorAPI("Error fetching date from  function");
-  //         console.error("API error:", error);
-  //       }
-  //     } finally {
-  //       setBackgroundImageLoading(false);
-  //     }
-  //   };
-  //   fetchBackgroundImages();
-  //   return () => controller.abort();
-  // }, [query]);
-  // if (backgroundImageLoading) return <p> Loading backgroundimages... </p>;
-  // if (errorAPI) return <p> {errorAPI} </p>;
-
-  const handleBackgroundImageSelect = (event) => {
-    console.log(event.target.value);
-    setChosenBackground(event.target.value);
-  };
 
   const handleBackgroundColorSelect = (event) => {
     console.log(event.target.value);
@@ -262,103 +211,8 @@ export default function BackgroundPopover({ anchorEl, handleClose }) {
           }}
         />
       )}
-      <FormControl>
-        <RadioGroup
-          value={chosenBackground}
-          onChange={handleBackgroundImageSelect}
-        >
-          <ImageList
-            variant="standard"
-            sx={{
-              height: "auto",
-              width: "auto",
-              overflow: "visible",
+      <BackgroundImage query={query} setQuery={setQuery} />
 
-              marginLeft: "1.5rem",
-
-              // borderRadius: "2px",
-            }}
-            gap={8}
-            cols={4}
-          >
-            {backgroundImagesAPI.map((item) => (
-              <FormControlLabel
-                sx={{
-                  "&.Mui-checked": {
-                    "& img": {
-                      border: "3px solid primary.main",
-                      boxShadow: "0 8px 160x rgba(25,118,210,0.4)",
-                      transform: "scale(1.02)",
-                    },
-                  },
-                }}
-                key={item.id}
-                value={item.urls.regular}
-                control={<Radio sx={{ display: "none" }} />}
-                label={
-                  <Box>
-                    <ImageListItem
-                      sx={{
-                        overflow: "visible",
-                        width: "100% !important",
-                        padding: 0,
-                        cursor: "pointer",
-                      }}
-                      key={item.id}
-                    >
-                      <Box
-                        component="img"
-                        src={item.urls.regular}
-                        alt={item.alt_description}
-                        loading="lazy"
-                        sx={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-
-                          borderRadius: "5px",
-                          // border: "2px solid black",
-                          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                          transform: "scale(1.02)",
-                        }}
-                      />
-                      <ImageListItemBar
-                        title={item.alt_description}
-                        position="bottom"
-                        sx={{
-                          borderBottomLeftRadius: "5px",
-                          borderBottomRightRadius: "5px",
-                          overflow: "hidden",
-
-                          "& .MuiImageListItemBar-root": {
-                            width: "100% !important",
-                            margin: "0 !important",
-                            padding: "0 !important",
-                          },
-                          "& .MuiImageListItemBar-titleWrap": {
-                            padding: "0  4px",
-                            maxHeight: "1rem",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                            bgcolor: "transparent",
-                          },
-                          "& .MuiImageListItemBar-title": {
-                            fontSize: "0.65rem",
-                            fontWeight: 300,
-                            lineHeight: "1rem",
-                          },
-                          background: "rgba(0,0,0,0.3) ",
-                        }}
-                      />
-                    </ImageListItem>
-                  </Box>
-                }
-              />
-            ))}
-          </ImageList>
-        </RadioGroup>
-      </FormControl>
       <Stack direction="row" justifyContent="space-between">
         {" "}
         <Button

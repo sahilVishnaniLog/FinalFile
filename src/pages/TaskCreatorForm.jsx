@@ -108,7 +108,13 @@ export default function TaskCreatorForm({ setOpen }) {
             ></Button>
             <Paper elevation sx={{ padding: 2, width: "80vh", height: "80vh" }}>
               <Stack direction="row" justifyContent="space-between">
-                <Typography sx={{ fontWeight: "bold", fontSize: "1.2rem" }}>
+                <Typography
+                  sx={{
+                    fontWeight: "bold",
+                    fontSize: "1.2rem",
+                    color: "text.secondary",
+                  }}
+                >
                   Details
                 </Typography>
 
@@ -120,7 +126,11 @@ export default function TaskCreatorForm({ setOpen }) {
                 {" "}
               </Tooltip>
               <InlineTextField
-                sx={{ fontSize: "1.2rem", fontWeight: "bold" }}
+                sx={{
+                  fontSize: "1.2rem",
+                  fontWeight: "bold",
+                  color: "text.tertiary",
+                }}
               />
               <Accordion
                 disableGutters
@@ -135,20 +145,34 @@ export default function TaskCreatorForm({ setOpen }) {
                 }}
               >
                 <AccordionSummary sx={{ p: 0 }}>
-                  <Typography sx={{ fontSize: "1rem", fontWeight: "bold" }}>
-                    {" "}
-                    Description{" "}
+                  <Typography
+                    sx={{
+                      fontSize: "1rem",
+                      fosntWeight: "bold",
+                      color: "text.secondary",
+                    }}
+                  >
+                    Description
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails sx={{ p: 0 }}>
                   <InlineTextField
                     multiline
-                    sx={{ fontSize: "0.8rem", color: "text.primary" }}
-                  >
-                    {" "}
-                  </InlineTextField>
+                    sx={{ fontSize: "0.8rem", color: "text.tertiary" }}
+                  />
                 </AccordionDetails>
               </Accordion>
+              <Typography
+                sx={{
+                  fontSize: "1rem",
+                  color: "text.secondary",
+                  fontWeight: "500",
+                }}
+              >
+                {" "}
+                Subtasks{" "}
+              </Typography>
+              <InlineTextField></InlineTextField>
 
               <Stack direction="row"></Stack>
             </Paper>
