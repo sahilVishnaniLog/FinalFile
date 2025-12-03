@@ -43,54 +43,11 @@ const PossibleQueries = [
   "sunset",
   "animals",
 ];
-const DummyImageArray = [
-  {
-    id: 1,
-    alt_description: "Misty Mountains",
-    urls: { regular: "https://picsum.photos/id/1018/800/600.jpg" },
-  },
-  {
-    id: 2,
-    alt_description: "Calm Lake",
-    urls: { regular: "https://picsum.photos/id/1015/800/600.jpg" },
-  },
-  {
-    id: 3,
-    alt_description: "Forest Path",
-    urls: { regular: "https://picsum.photos/id/1016/800/600.jpg" },
-  },
-  {
-    id: 4,
-    alt_description: "City at Night",
-    urls: { regular: "https://picsum.photos/id/102/800/600.jpg" },
-  },
-  {
-    id: 5,
-    alt_description: "Laptop on Desk",
-    urls: { regular: "https://picsum.photos/id/103/800/600.jpg" },
-  },
-  {
-    id: 6,
-    alt_description: "Lone Tree",
-    urls: { regular: "https://picsum.photos/id/1040/800/600.jpg" },
-  },
-  {
-    id: 7,
-    alt_description: "Ocean Pier",
-    urls: { regular: "https://picsum.photos/id/1043/800/600.jpg" },
-  },
-  {
-    id: 8,
-    alt_description: "Dog in Snow",
-    urls: { regular: "https://picsum.photos/id/237/800/600.jpg" },
-  },
-];
 
 export default function BackgroundPopover({ anchorEl, handleClose }) {
   const {
     modeChoice,
-    backgroundImg,
-    setbackgroundImg,
+
     backgroundColor,
     setBackgroundColor,
   } = useTheme();
@@ -98,11 +55,7 @@ export default function BackgroundPopover({ anchorEl, handleClose }) {
 
   // states for the autocomplete search bar
   const [query, setQuery] = useState("background");
-  const [inputvValue, setInputValue] = useState("");
-
-  const [backgroundImagesAPI, setBackgroundImagesAPI] = useState([]);
-  const [errorAPI, setErrorAPI] = useState(null);
-  const [backgroundImageLoading, setBackgroundImageLoading] = useState(true);
+  const [inputValue, setInputValue] = useState("");
 
   const open = Boolean(anchorEl);
 
@@ -151,7 +104,9 @@ export default function BackgroundPopover({ anchorEl, handleClose }) {
       }}
     >
       <Stack direction="row">
-        <Typography sx={{ fontWeight: "bold", marginTop: "1rem" }}>
+        <Typography
+          sx={{ fontWeight: "bold", marginTop: "1rem", color: "text.primary" }}
+        >
           {" "}
           Space background{" "}
         </Typography>
@@ -169,7 +124,7 @@ export default function BackgroundPopover({ anchorEl, handleClose }) {
         justifyContent="space-between"
         height="30px"
       >
-        <Typography sx={{ fontSize: "0.8rem" }}>
+        <Typography sx={{ fontSize: "0.8rem", color: "text.tertiary" }}>
           PHOTOS BY{" "}
           <Link
             target="_blank"
@@ -184,21 +139,29 @@ export default function BackgroundPopover({ anchorEl, handleClose }) {
           startIcon={isSearchMounted ? <CloseIcon /> : <IoMdSearch />}
           onClick={() => setSearchMounted(!isSearchMounted)}
           variant="outlined"
+          sx={{ height: "24px", width: "100px" }}
         >
           {isSearchMounted ? "Close" : "Search"}
         </Button>
       </Stack>
+      <Box sx={{ height: "10px" }} />
       {isSearchMounted && (
         <Autocomplete
-          freeSolo
-          onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
+          freeSolo //BUG
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              setQuery(inputValue || "landscape");
+            }
+          }}
           fullWidth
           options={PossibleQueries}
           value={query}
-          onChange={(event) => setQuery(event.target.value) || "landscape"}
-          onInputChange={(event, newInputValue) => setInputValue(newInputValue)}
+          onChange={(event, newValue) => setQuery(newValue) || "landscape"} // BUG
+          onInputChange={(event, newInputValue) => setInputValue(newInputValue)} //BUG
           renderInput={(params) => <TextField {...params} label="search" />}
           placeholder="Search"
+          size="small"
           slotProps={{
             input: {
               startAdornment: (
@@ -211,8 +174,7 @@ export default function BackgroundPopover({ anchorEl, handleClose }) {
           }}
         />
       )}
-      <BackgroundImage query={query} setQuery={setQuery} />
-
+      <BackgroundImage query={query} setQuery={setQuery} /> {/*COMPONENT */}
       <Stack direction="row" justifyContent="space-between">
         {" "}
         <Button
@@ -228,8 +190,9 @@ export default function BackgroundPopover({ anchorEl, handleClose }) {
           Next
         </Button>{" "}
       </Stack>
-      <Typography paddingLeft="1rem">COLORS</Typography>
-
+      <Typography paddingLeft="1rem" color="text.secondary" fontWeight="bold">
+        COLORS
+      </Typography>
       <FormControl>
         <RadioGroup
           value={backgroundColor}

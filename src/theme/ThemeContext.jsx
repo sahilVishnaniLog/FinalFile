@@ -42,8 +42,7 @@ export default function ThemeContext({
           tertiaryText: "#96999e",
         };
 
-    const bgImage = `url(${backgroundImg.url})`;
-    //const bgImage = backgroundImg? `url(${backgroundImg.url})`: "none" ;
+    const bgImage = backgroundImg ? `url(${backgroundImg})` : "none";
 
     return createTheme({
       palette: {
@@ -79,7 +78,7 @@ export default function ThemeContext({
           styleOverrides: {
             body: {
               backgroundImage: bgImage,
-              background: backgroundColor || (isLight ? "#f8f8f8" : "#18191a"),
+              background: backgroundColor,
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundAttachment: "fixed",

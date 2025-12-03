@@ -12,7 +12,7 @@ const colorBoundariesLight = [
   { start: "#e9f2fe", end: "#e9f2fe", popperLabel: "Blue" },
   { start: "#e7f9ff", end: "#e7f9ff", popperLabel: "Teal" },
   { start: "#dcfff1", end: "#dcfff1", popperLabel: "Green" },
-  { start: "#ffecf8", end: "#ffecf8", popperLabel: "Peach" },
+  { start: "#ffecf8", end: "#a4096bff", popperLabel: "Peach" },
   { start: "#ffffff", end: "#ffffff", popperLabel: "none(white)" },
 ];
 
