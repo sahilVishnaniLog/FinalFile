@@ -4,6 +4,15 @@ import { useMediaQuery } from "@mui/material";
 
 const ThemeContextHook = createContext();
 
+//helper functions for contrast returns ( hexColorcode)
+const getContrastYIQ = (hexColor) => {
+  const color = hexColor.replace("#", "");
+  const r = parseInt(color.substr(0, 2), 16);
+  const g = parseInt(color.substr(2, 2), 16);
+  const b = parseInt(color.substr(4, 2), 16);
+  const yiq = (r * 299 + g * 587 + b * 114) / 1000;
+  return yiq >= 128 ? "#000000" : "#ffffff"; // Return hex for MUI palette
+};
 export default function ThemeContext({
   children,
   modeChoice,
