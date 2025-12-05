@@ -18,11 +18,14 @@ import {
   InputAdornment,
   Paper,
   Tooltip,
+  Avatar,
 } from "@mui/material";
+import AutoModeOutlinedIcon from "@mui/icons-material/AutoModeOutlined";
 
 import FullScreenButton from "../utils/FullScreenButton.jsx";
 import InlineTextField from "../utils/InlineTextField.jsx";
 import { SplitterX, SplitterY } from "../utils/Splitter.jsx";
+import { VscSourceControl } from "react-icons/vsc";
 
 const DummyChipData = { projectTitle: "MBA-6", projectType: "Request" };
 
@@ -36,6 +39,11 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import { workTypeIconMap } from "./kanbanBoard/KanbanIconMap.jsx";
 import { Maximize2, X } from "lucide-react";
 
+const User = () => {
+  let userJSON = localStorage.getItem("user-info");
+  let userObject = JSON.parse(userJSON);
+  return userObject;
+};
 const handleFullScreen = () => {
   if (isFullScreen) {
     document.exitFullscreen();
@@ -189,7 +197,141 @@ export default function TaskCreatorForm({ setOpen }) {
                   <Stack direction="row"></Stack>
                 </Box>
                 <Box class="Splitter-panel2">
-                  <div> this is the second panel </div>
+                  <Stack direction="row" jusitfyContent="space-between">
+                    <Button>In Progress</Button>
+                    <Button>
+                      <Tooltip title="Automation">
+                        <IconButton>
+                          <AutoModeOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Button>
+                  </Stack>
+                  <Accordion>
+                    <AccordionSummary>
+                      <Typography>Details</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Stack
+                        direction="column"
+                        spacing={2}
+                        alignItems="flex-start"
+                        justifyContent="center"
+                      >
+                        <Typography>Assignee</Typography>
+                        <Stack
+                          direction="row"
+                          spacing={2}
+                          alignItems="center"
+                          justifyContent="flex-start"
+                        >
+                          <Avatar></Avatar>
+                          <Typography>
+                            {" "}
+                            {User().firstName + " " + User().lastName}{" "}
+                          </Typography>
+                        </Stack>
+                        <Button variant="standard" sx={{ color: "primary" }}>
+                          assign to me
+                        </Button>
+                        <Typography color="text.primary"> Priority</Typography>
+                        <Typography color="text.secondary"> None</Typography>
+                        <Box sx={{ flexGrow: 1 }} />
+                        <Typography color="text.primary"> Parent</Typography>
+                        <Typography color="text.secondary">Add parent" </Typography> 
+                        {/* this will be a InlineMulitpleSelect field  */}
+                        <Typography color="text.primary"> Due date </Typography>
+                        <Typography color="text.secondary" > None </Typography> 
+                        {/* will be calender to choose date from the calendar  */}
+                        <Typography color="text.primary"> Labels</Typography>
+                        <Typography color="text.secondary" > Add labels </Typography> 
+                        { /* this will be a dynamic field to add labels */ } 
+                        <Typography color="text.primary"> Team</Typography>
+                        <Typography color="text.secondary" > Add member </Typography> 
+                        { /* this will be a dynamic field to add labels */ } 
+                        <Typography color="text.primary"> Start date </Typography>
+                        <Typography color="text.secondary"> none </Typography> 
+                        { /* this will be a dynamic field to add labels */ } 
+                        <Accordion> 
+                          <AccordionSummary> 
+                            Development
+                          </AccordionSummary>
+                          <AccordionDetails> 
+                            <Accordion> 
+                              <AccordionSummary> 
+                                
+                                  <Stack direction='row' spacing={3} > 
+
+                                  <Typography color='primary.main' > 
+                                    CreatBranch
+                                  </Typography>
+
+                                </Stack>
+                                
+
+                                </AccordionSummary>
+                                </Accordion> 
+
+                                <Accordion> 
+                              <AccordionSummary> 
+                                
+                                  <Stack direction='row' spacing={3} > 
+                                    <VscSourceControl />
+
+                                  <Typography color='primary.main' > 
+                                    Create branch
+                                  </Typography>
+
+                                </Stack>
+                                
+
+                                </AccordionSummary>
+                                <AccordionDetails> 
+                                  <h4> 
+                                    this hides the create Branch functions
+                                    </h4> 
+                                </AccordionDetails>
+                                </Accordion> 
+                                
+
+
+                            
+                            <Accordion> 
+                              <AccordionSummary> 
+                                <Typography> 
+                                  Create commit
+                                </Typography>
+                              </AccordionSummary>
+                              <AccordionDetails> 
+                                <h4> 
+                                  this hides the create commit  functions
+                                  </h4> 
+                              </AccordionDetails>
+                              </Accordion>
+
+
+
+
+                        
+
+                        <Typography size={"1.2rem"} > 
+                          Reporter 
+                        </Typography>
+                        <Stack direction='row' spacing={3} > 
+                          <Avatar> 
+
+                          </Avatar>
+                          <Typography> 
+                            {User.firstName + " " + User.lastName} 
+                          </Typography>
+                        </Stack>
+
+                        
+
+                      
+                      </Stack>
+                    </AccordionDetails>
+                  </Accordion>
                 </Box>
               </SplitterX>
             </Paper>
