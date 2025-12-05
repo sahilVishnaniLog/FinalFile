@@ -22,6 +22,7 @@ import {
 
 import FullScreenButton from "../utils/FullScreenButton.jsx";
 import InlineTextField from "../utils/InlineTextField.jsx";
+import { SplitterX, SplitterY } from "../utils/Splitter.jsx";
 
 const DummyChipData = { projectTitle: "MBA-6", projectType: "Request" };
 
@@ -43,13 +44,13 @@ const handleFullScreen = () => {
 
 export default function TaskCreatorForm({ setOpen }) {
   return (
-    <Container bgcolor="rgba( f, f, f, 1)">
+    <Container bgcolor="rgba( f, f, f,1)">
       <AppBar
         position="static"
         bgcolor="transparent"
         color="text.secondary"
         elevation={0}
-        width="100%"
+        width="1500px"
       >
         <Toolbar
           sx={{
@@ -58,6 +59,7 @@ export default function TaskCreatorForm({ setOpen }) {
             display: "flex",
             flexDirection: "row",
             backgroundColor: "transparent",
+            width: "1400px",
           }}
         >
           <Chip
@@ -106,75 +108,90 @@ export default function TaskCreatorForm({ setOpen }) {
             <Button
             // anchor for a popover
             ></Button>
-            <Paper elevation sx={{ padding: 2, width: "80vh", height: "80vh" }}>
-              <Stack direction="row" justifyContent="space-between">
-                <Typography
-                  sx={{
-                    fontWeight: "bold",
-                    fontSize: "1.2rem",
-                    color: "text.secondary",
-                  }}
-                >
-                  Details
-                </Typography>
-
-                <IconButton>
-                  <SettingsIcon /> {/*naked Settings Icon */}
-                </IconButton>
-              </Stack>
-              <Tooltip title="Task Title" placement="top">
-                {" "}
-              </Tooltip>
-              <InlineTextField
-                sx={{
-                  fontSize: "1.2rem",
-                  fontWeight: "bold",
-                  color: "text.tertiary",
-                }}
-              />
-              <Accordion
-                disableGutters
-                elevation={0}
-                sx={{
-                  backgroundColor: "transparent", // Makes the background see-through
-                  border: "none", // Removes border (if using variant="outlined")
-                  boxShadow: "none", // Removes the drop shadow
-                  "&:before": {
-                    display: "none", // Removes the default line above the accordion
-                  },
-                }}
+            <Paper
+              elevation
+              sx={{ padding: 2, width: "1400px", height: "80vh" }}
+            >
+              <SplitterX
+                totalSize="100%"
+                initialPrimarySize={450}
+                minSize={150}
+                maxSize={1000}
               >
-                <AccordionSummary sx={{ p: 0 }}>
+                <Box class="Splitter-panel1" sx={{}}>
+                  <Stack direction="row" justifyContent="space-between">
+                    <Typography
+                      sx={{
+                        fontWeight: "bold",
+                        fontSize: "1.2rem",
+                        color: "text.secondary",
+                      }}
+                    >
+                      Details
+                    </Typography>
+
+                    <IconButton>
+                      <SettingsIcon /> {/*naked Settings Icon */}
+                    </IconButton>
+                  </Stack>
+                  <Tooltip title="Task Title" placement="top">
+                    {" "}
+                  </Tooltip>
+                  <InlineTextField
+                    sx={{
+                      fontSize: "1.2rem",
+                      fontWeight: "bold",
+                      color: "text.tertiary",
+                    }}
+                  />
+                  <Accordion
+                    disableGutters
+                    elevation={0}
+                    sx={{
+                      backgroundColor: "transparent", // Makes the background see-through
+                      border: "none", // Removes border (if using variant="outlined")
+                      boxShadow: "none", // Removes the drop shadow
+                      "&:before": {
+                        display: "none", // Removes the default line above the accordion
+                      },
+                    }}
+                  >
+                    <AccordionSummary sx={{ p: 0 }}>
+                      <Typography
+                        sx={{
+                          fontSize: "1rem",
+                          fosntWeight: "bold",
+                          color: "text.secondary",
+                        }}
+                      >
+                        Description
+                      </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails sx={{ p: 0 }}>
+                      <InlineTextField
+                        multiline
+                        sx={{ fontSize: "0.8rem", color: "text.tertiary" }}
+                      />
+                    </AccordionDetails>
+                  </Accordion>
                   <Typography
                     sx={{
                       fontSize: "1rem",
-                      fosntWeight: "bold",
                       color: "text.secondary",
+                      fontWeight: "500",
                     }}
                   >
-                    Description
+                    {" "}
+                    Subtasks{" "}
                   </Typography>
-                </AccordionSummary>
-                <AccordionDetails sx={{ p: 0 }}>
-                  <InlineTextField
-                    multiline
-                    sx={{ fontSize: "0.8rem", color: "text.tertiary" }}
-                  />
-                </AccordionDetails>
-              </Accordion>
-              <Typography
-                sx={{
-                  fontSize: "1rem",
-                  color: "text.secondary",
-                  fontWeight: "500",
-                }}
-              >
-                {" "}
-                Subtasks{" "}
-              </Typography>
-              <InlineTextField></InlineTextField>
+                  <InlineTextField></InlineTextField>
 
-              <Stack direction="row"></Stack>
+                  <Stack direction="row"></Stack>
+                </Box>
+                <Box class="Splitter-panel2">
+                  <div> this is the second panel </div>
+                </Box>
+              </SplitterX>
             </Paper>
           </Stack>
         </Box>
