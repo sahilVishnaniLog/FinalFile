@@ -2,25 +2,19 @@ import { useState } from "react";
 import { ThemeContext } from "./theme.js";
 import { CssBaseline } from "@mui/material";
 import BrowserRouter from "../routingP/BrowserRouter.jsx";
-
-const DefaultThemeSettings = {
-  mode: "browserTheme",
-  backgroundImg: {
-    url: "https://images.unsplash.com/photo-1491466424936-e304919aada7?q=80&w=2069&auto=format&fit=crop",
-    alt: "Snowy mountain (Day)",
-    id: "snowy-mountain",
-  },
-  backgroundColor: "",
-};
-
+import {
+  defaultPalette,
+  defaultThemeSettings,
+} from "../assets/defaultThemeSettings.js";
 export default function ThemeProviderWrapper() {
-  const [modeChoice, setModeChoice] = useState(DefaultThemeSettings.mode);
+  const [modeChoice, setModeChoice] = useState(defaultThemeSettings.mode);
   const [backgroundImg, setBackgroundImg] = useState(
-    DefaultThemeSettings.backgroundImg
+    defaultThemeSettings.backgroundImg
   );
   const [backgroundColor, setBackgroundColor] = useState(
-    DefaultThemeSettings.backgroundColor
+    defaultThemeSettings.backgroundColor
   );
+  const [paletteX, setPaletteX] = useState(defaultPalette);
 
   return (
     <>
@@ -31,6 +25,8 @@ export default function ThemeProviderWrapper() {
         setBackgroundImg={setBackgroundImg}
         backgroundColor={backgroundColor}
         setBackgroundColor={setBackgroundColor}
+        paletteX={paletteX}
+        setPaletteX={setPaletteX}
       >
         <CssBaseline />
         <BrowserRouter />

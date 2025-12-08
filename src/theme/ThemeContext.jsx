@@ -21,6 +21,7 @@ export default function ThemeContext({
   setBackgroundImg,
   backgroundColor,
   setBackgroundColor,
+  paletteX,
 }) {
   const isSystemDark = useMediaQuery("(prefers-color-scheme: dark)", {
     noSssr: true,
@@ -56,7 +57,25 @@ export default function ThemeContext({
     return createTheme({
       palette: {
         mode: effectiveMode,
-        primary: { main: "#0052CC" },
+        primary: defaultPaletteX.primary,
+        secondary: defaultPaletteX.secondary,
+
+        error: defaultPalletteX.error,
+
+        success: defaultPaletteX.success,
+
+        warning: defaultPaletteX.warning,
+
+        info: defaultPaletteX.info,
+
+        common: {
+          black: "#000",
+          white: "#fff",
+        },
+
+        contrastThreshold: 3,
+        tonalOffset: 0.2,
+
         text: {
           primary: primaryText,
           secondary: secondaryText,

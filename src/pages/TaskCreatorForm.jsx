@@ -26,7 +26,7 @@ import FullScreenButton from "../utils/FullScreenButton.jsx";
 import InlineTextField from "../utils/InlineTextField.jsx";
 import { SplitterX, SplitterY } from "../utils/Splitter.jsx";
 import { VscSourceControl } from "react-icons/vsc";
-
+import { LuGitCommitVertical } from "react-icons/lu";
 const DummyChipData = { projectTitle: "MBA-6", projectType: "Request" };
 
 const DummyViewers = 10;
@@ -41,7 +41,7 @@ import { Maximize2, X } from "lucide-react";
 
 const User = () => {
   let userJSON = localStorage.getItem("user-info");
-  let userObject = JSON.parse(userJSON);
+  let userObject = userJSON ? JSON.parse(userJSON) : null;
   return userObject;
 };
 const handleFullScreen = () => {
@@ -238,97 +238,79 @@ export default function TaskCreatorForm({ setOpen }) {
                         <Typography color="text.secondary"> None</Typography>
                         <Box sx={{ flexGrow: 1 }} />
                         <Typography color="text.primary"> Parent</Typography>
-                        <Typography color="text.secondary">Add parent" </Typography> 
+                        <Typography color="text.secondary">
+                          Add parent"{" "}
+                        </Typography>
                         {/* this will be a InlineMulitpleSelect field  */}
                         <Typography color="text.primary"> Due date </Typography>
-                        <Typography color="text.secondary" > None </Typography> 
+                        <Typography color="text.secondary"> None </Typography>
                         {/* will be calender to choose date from the calendar  */}
                         <Typography color="text.primary"> Labels</Typography>
-                        <Typography color="text.secondary" > Add labels </Typography> 
-                        { /* this will be a dynamic field to add labels */ } 
+                        <Typography color="text.secondary">
+                          {" "}
+                          Add labels{" "}
+                        </Typography>
+                        {/* this will be a dynamic field to add labels */}
                         <Typography color="text.primary"> Team</Typography>
-                        <Typography color="text.secondary" > Add member </Typography> 
-                        { /* this will be a dynamic field to add labels */ } 
-                        <Typography color="text.primary"> Start date </Typography>
-                        <Typography color="text.secondary"> none </Typography> 
-                        { /* this will be a dynamic field to add labels */ } 
-                        <Accordion> 
-                          <AccordionSummary> 
-                            Development
-                          </AccordionSummary>
-                          <AccordionDetails> 
-                            <Accordion> 
-                              <AccordionSummary> 
-                                
-                                  <Stack direction='row' spacing={3} > 
-
-                                  <Typography color='primary.main' > 
-                                    CreatBranch
-                                  </Typography>
-
-                                </Stack>
-                                
-
-                                </AccordionSummary>
-                                </Accordion> 
-
-                                <Accordion> 
-                              <AccordionSummary> 
-                                
-                                  <Stack direction='row' spacing={3} > 
-                                    <VscSourceControl />
-
-                                  <Typography color='primary.main' > 
+                        <Typography color="text.secondary">
+                          {" "}
+                          Add member{" "}
+                        </Typography>
+                        {/* this will be a dynamic field to add labels */}
+                        <Typography color="text.primary">
+                          {" "}
+                          Start date{" "}
+                        </Typography>
+                        <Typography color="text.secondary"> none </Typography>
+                        {/* this will be a dynamic field to add labels */}
+                        <Accordion>
+                          <AccordionSummary>Development</AccordionSummary>
+                          <AccordionDetails>
+                            <Accordion>
+                              <AccordionSummary>
+                                <Stack direction="row" spacing={3}>
+                                  <VscSourceControl />
+                                  <Typography color="primary.main">
                                     Create branch
                                   </Typography>
-
                                 </Stack>
-                                
-
-                                </AccordionSummary>
-                                <AccordionDetails> 
-                                  <h4> 
-                                    this hides the create Branch functions
-                                    </h4> 
-                                </AccordionDetails>
-                                </Accordion> 
-                                
-
-
-                            
-                            <Accordion> 
-                              <AccordionSummary> 
-                                <Typography> 
-                                  Create commit
-                                </Typography>
                               </AccordionSummary>
-                              <AccordionDetails> 
-                                <h4> 
-                                  this hides the create commit  functions
-                                  </h4> 
+                              <AccordionDetails>
+                                <h4>this hides the create Branch functions</h4>
                               </AccordionDetails>
-                              </Accordion>
+                            </Accordion>
 
+                            <Accordion>
+                              <AccordionSummary>
+                                <Stack direction="row" spacing={3}>
+                                  <LuGitCommitVertical />
 
+                                  <Typography color="primary.main">
+                                    Create commit
+                                  </Typography>
+                                </Stack>
+                              </AccordionSummary>
+                              <AccordionDetails>
+                                <h4>this hides the create commit functions</h4>
+                              </AccordionDetails>
+                            </Accordion>
+                          </AccordionDetails>
+                        </Accordion>
 
+                        <Box sx={{ flexGrow: 1 }} />
 
-                        
-
-                        <Typography size={"1.2rem"} > 
-                          Reporter 
-                        </Typography>
-                        <Stack direction='row' spacing={3} > 
-                          <Avatar> 
-
-                          </Avatar>
-                          <Typography> 
-                            {User.firstName + " " + User.lastName} 
+                        <Typography size={"1.2rem"}>Reporter</Typography>
+                        <Stack
+                          direction="row"
+                          spacing={3}
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          <Avatar></Avatar>
+                          <Typography>
+                            {User().firstName + " " + User().lastName}
                           </Typography>
                         </Stack>
-
-                        
-
-                      
                       </Stack>
                     </AccordionDetails>
                   </Accordion>

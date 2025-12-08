@@ -25,3 +25,8 @@ componentStructure.mmd
 *.njsproj
 *.sln
 *.sw?
+
+# Security
+.env
+.env.test
+.env.production
