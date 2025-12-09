@@ -1,4 +1,4 @@
-export const  defaultPalette = {
+export const defaultPaletteX = {
   primary: {
     light: "#42a5f5",
     main: "#1976d2",
@@ -30,13 +30,12 @@ export const  defaultPalette = {
     dark: "#1b5e20",
   },
 };
-export  const defaultThemeSettings = { 
-    mode: "browserTheme",
+export const defaultThemeSettings = {
+  mode: "browserTheme",
   backgroundImg: {
     url: "https://images.unsplash.com/photo-1491466424936-e304919aada7?q=80&w=2069&auto=format&fit=crop",
     alt: "Snowy mountain (Day)",
     id: "snowy-mountain",
   },
   backgroundColor: "",
-
-}
+};

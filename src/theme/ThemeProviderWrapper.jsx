@@ -2,10 +2,7 @@ import { useState } from "react";
 import { ThemeContext } from "./theme.js";
 import { CssBaseline } from "@mui/material";
 import BrowserRouter from "../routingP/BrowserRouter.jsx";
-import {
-  defaultPalette,
-  defaultThemeSettings,
-} from "../assets/defaultThemeSettings.js";
+import { defaultThemeSettings } from "../assets/defaultPalette.js";
 export default function ThemeProviderWrapper() {
   const [modeChoice, setModeChoice] = useState(defaultThemeSettings.mode);
   const [backgroundImg, setBackgroundImg] = useState(
@@ -14,7 +11,7 @@ export default function ThemeProviderWrapper() {
   const [backgroundColor, setBackgroundColor] = useState(
     defaultThemeSettings.backgroundColor
   );
-  const [paletteX, setPaletteX] = useState(defaultPalette);
+  const [paletteX, setPaletteX] = useState(null);
 
   return (
     <>

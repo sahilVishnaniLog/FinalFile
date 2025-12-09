@@ -1,7 +1,8 @@
 import { createContext, useContext, useMemo, useEffect } from "react";
 import { createTheme, ThemeProvider, alpha } from "@mui/material/styles";
 import { useMediaQuery } from "@mui/material";
-
+import { defaultPaletteX } from "../assets/defaultPalette.js";
+import generatePalette from "../utils/paletteGenerator.js";
 const ThemeContextHook = createContext();
 
 //helper functions for contrast returns ( hexColorcode)
@@ -22,6 +23,7 @@ export default function ThemeContext({
   backgroundColor,
   setBackgroundColor,
   paletteX,
+  setPaletteX,
 }) {
   const isSystemDark = useMediaQuery("(prefers-color-scheme: dark)", {
     noSssr: true,
@@ -36,6 +38,10 @@ export default function ThemeContext({
   useEffect(() => {
     setBackgroundColor("");
   }, [backgroundImg]);
+  useEffect(() => {
+    const palette = generatePalette(backgroundImg) || defaultPaletteX;
+    setPaletteX(palette);
+  }, [backgroundImg, setPaletteX]);
 
   const theme = useMemo(() => {
     const isLight = effectiveMode === "light";
@@ -57,16 +63,16 @@ export default function ThemeContext({
     return createTheme({
       palette: {
         mode: effectiveMode,
-        primary: defaultPaletteX.primary,
-        secondary: defaultPaletteX.secondary,
+        primary: paletteX.primary, //BUG  - reading null propperty
+        secondary: paletteX.secondary,
 
-        error: defaultPalletteX.error,
+        error: paletteX.error,
 
-        success: defaultPaletteX.success,
+        success: paletteX.success,
 
-        warning: defaultPaletteX.warning,
+        warning: paletteX.warning,
 
-        info: defaultPaletteX.info,
+        info: paletteX.info,
 
         common: {
           black: "#000",
@@ -246,6 +252,8 @@ export default function ThemeContext({
     setBackgroundImg,
     backgroundColor,
     setBackgroundColor,
+    paletteX,
+    setPaletteX,
   };
 
   return (
