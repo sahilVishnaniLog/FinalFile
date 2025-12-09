@@ -79,7 +79,7 @@ const generatePalette = async (imageURL) => {
   try {
     const { base64, mimeType } = await convertImageToBase64(imageURL);
 
-    const model = await genAI.models.generateContent({
+    const response = await genAI.models.generateContent({
       model: "gemini-1.5-flash",
       config: {
         responseMimeType: "application/json",
@@ -103,7 +103,7 @@ const generatePalette = async (imageURL) => {
       ],
     });
 
-    if (response.text()) {
+    if (response.text) {
       return JSON.parse(response.text);
     }
     throw new Error("Failed to generate palette");
