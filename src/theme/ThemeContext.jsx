@@ -2,7 +2,7 @@ import { createContext, useContext, useMemo, useEffect } from "react";
 import { createTheme, ThemeProvider, alpha } from "@mui/material/styles";
 import { useMediaQuery } from "@mui/material";
 import { defaultPaletteX } from "../assets/defaultPalette.js";
-import generatePalette from "../utils/paletteGenerator.js";
+
 const ThemeContextHook = createContext();
 
 //helper functions for contrast returns ( hexColorcode)
@@ -38,10 +38,10 @@ export default function ThemeContext({
   useEffect(() => {
     setBackgroundColor("");
   }, [backgroundImg]);
-  useEffect(() => {
-    const palette = generatePalette(backgroundImg) || defaultPaletteX;
-    setPaletteX(palette);
-  }, [backgroundImg, setPaletteX]);
+  // useEffect(() => {
+  //   const palette = generatePalette(backgroundImg) || defaultPaletteX;
+  //   setPaletteX(palette);
+  // }, [backgroundImg, setPaletteX]);
 
   const theme = useMemo(() => {
     const isLight = effectiveMode === "light";
@@ -63,16 +63,6 @@ export default function ThemeContext({
     return createTheme({
       palette: {
         mode: effectiveMode,
-        primary: paletteX.primary, //BUG  - reading null propperty
-        secondary: paletteX.secondary,
-
-        error: paletteX.error,
-
-        success: paletteX.success,
-
-        warning: paletteX.warning,
-
-        info: paletteX.info,
 
         common: {
           black: "#000",

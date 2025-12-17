@@ -1,0 +1,100 @@
+%%{
+  init: {
+    'theme': 'base',
+    'themeVariables': {
+      'primaryColor': '#ffffff',
+      'primaryTextColor': '#000',
+      'primaryBorderColor': '#000',
+      'lineColor': '#333'
+    }
+  }
+}%%
+
+graph TD
+    %% Root Level
+    subgraph Root ["Root Entry"]
+        Main[main.jsx]
+    end
+
+    %% Providers Wrapper
+    subgraph Providers ["Global Providers"]
+        TPW[ThemeProviderWrapper]
+        TC[ThemeContext.Provider]
+        AuthProv[AuthContextHook.Provider]
+    end
+
+    %% Router Layer
+    subgraph RouterLayer ["Routing Configuration"]
+        BR[BrowserRouter Component]
+        RP[RouterProvider]
+        R_Config[Router Configuration Object]
+    end
+
+    %% Layouts & Pages
+    subgraph Layouts ["Layouts & Route Containers"]
+        App["App.jsx<br/>(Root Layout)"]
+        AuthLayout["Auth/AuthContext.jsx<br/>(Auth Layout)"]
+        Welcome["WelcomePage.jsx<br/>(Protected Layout)"]
+    end
+
+    %% Auth Components
+    subgraph AuthPages ["Authentication Pages"]
+        Login[Login.jsx]
+        SignUp[SignUp.jsx]
+    end
+
+    %% Feature Pages
+    subgraph Dashboard ["Dashboard / User Pages"]
+        Board[Board.jsx]
+        Forms[Forms.jsx]
+        List[List.jsx]
+        Summary[Summary.jsx]
+        Timeline[Timeline.jsx]
+    end
+
+    %% Kanban Specifics
+    subgraph KanbanSystem ["Kanban Board System"]
+        KB[KanbanBoard.jsx]
+        DND["DndContext<br/>(dnd-kit)"]
+        Col[Column.jsx]
+        TaskCard[CardTask.jsx]
+        TaskForm["TaskCreatorForm.jsx<br/>(Modal)"]
+    end
+
+    %% Relationships
+    Main --> TPW
+    TPW --> TC
+    TC --> BR
+    BR --> AuthProv
+    AuthProv --> RP
+    RP -.->|Renders based on Route| R_Config
+    
+    %% Route Mapping
+    R_Config -- "/" --> App
+    App -- "/auth" --> AuthLayout
+    App -- "/:userName" --> Welcome
+
+    %% Auth Branch
+    AuthLayout -- "/login" --> Login
+    AuthLayout -- "/signup" --> SignUp
+
+    %% Dashboard Branch
+    Welcome -- "/board" --> Board
+    Welcome -- "/forms" --> Forms
+    Welcome -- "/list" --> List
+    Welcome -- "/summary" --> Summary
+    Welcome -- "/timeline" --> Timeline
+
+    %% Kanban Branch
+    Board --> KB
+    KB --> DND
+    DND --> Col
+    Col --> TaskCard
+    Col -->|Via Modal| TaskForm
+
+    %% Styling
+    style Main fill:#e1f5fe,stroke:#01579b
+    style TPW fill:#fff9c4,stroke:#fbc02d
+    style BR fill:#e1f5fe,stroke:#01579b
+    style App fill:#f3e5f5,stroke:#7b1fa2
+    style KB fill:#e0f2f1,stroke:#00695c

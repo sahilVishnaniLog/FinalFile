@@ -81,67 +81,92 @@ export default function WelcomePage() {
     // api call will be made which will return the url to be passeḍ
 
     return (
-        <Container
-            sx={{
-                height: "100%",
-                width: "100%",
-                maxWidth: { sm: 900, md: 1000, lg: 1500, xl: 2400 },
-                padding: { sm: 1, md: 2, lg: 3, xl: 4 },
-            }}
+      <Container
+        sx={{
+          height: "100%",
+          width: "100%",
+          maxWidth: { sm: 900, md: 1000, lg: 1500, xl: 2400 },
+          padding: { sm: 1, md: 2, lg: 3, xl: 4 },
+        }}
+      >
+        <AppBar
+          position="static"
+          color="transparent"
+          elevation={0}
+          sx={{ borderRadius: 1 }}
         >
-            <AppBar position="static" color="transparent" elevation={0} sx={{ borderRadius: 1 }}>
-                <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
-                    <Typography sx={{ fontSize: "30px", color: "text.primary" }}> Teams </Typography>
-                    <IconButton id="home-profile-popover-button" onClick={handleProfilePopoverClick} sx={IconButtonStyle}>
-                        {" "}
-                        <GroupIcon />{" "}
-                    </IconButton>
-                    <ProfilePopover anchorEl={anchorProfileEl} handleClose={handleProfilePopoverClose} />
-                    <IconButton
-                        type="button"
-                        onClick={(e) => {
-                            handleSettingsPopoverClick(e);
-                        }}
-                        sx={IconButtonStyle}
-                        //  aria-haspopup="true"
-                        //   aria-label="Settings"
-                    >
-                        {" "}
-                        <MoreHorizIcon />{" "}
-                    </IconButton>
-                    <SettingsPopover anchorEl={anchorSettingsEl} handleClose={handleSettingsPopoverClose} />
-                </Stack>
-                <Tabs value={currentTab} onChange={handleTabChange} textColor="primary" indicatorColor="primary" gap={5} sx={{ fontSize: "1.5rem", minHeight: "32px" }}>
-                    {TabsArray.map((item, index) => {
-                        return (
-                            <Tab
-                                sx={{
-                                    borderRadius: "0px",
-                                    "&:active": { borderRadius: "0px" },
-                                    fontSize: "1.5rem",
-                                    minHeight: "32px",
-                                }}
-                                icon={item.icon}
-                                iconPosition="start"
-                                tabIndex={0}
-                                key={index}
-                                label={item.label}
-                                value={item.label}
-                                size={48}
-                            />
-                        );
-                    })}
-                </Tabs>
-            </AppBar>
-            <Box
-                sx={{
-                    minHeight: "80vh",
-                    p: { sm: 1, md: 2, lg: 3, xl: 4 },
-                    fontColor: "black",
-                }}
+          <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
+            <Typography sx={{ fontSize: "30px", color: "text.primary" }}>
+              {" "}
+              Stride{" "}
+            </Typography>
+            <IconButton
+              id="home-profile-popover-button"
+              onClick={handleProfilePopoverClick}
+              sx={IconButtonStyle}
             >
-                <Outlet />
-            </Box>
-        </Container>
+              {" "}
+              <GroupIcon />{" "}
+            </IconButton>
+            <ProfilePopover
+              anchorEl={anchorProfileEl}
+              handleClose={handleProfilePopoverClose}
+            />
+            <IconButton
+              type="button"
+              onClick={(e) => {
+                handleSettingsPopoverClick(e);
+              }}
+              sx={IconButtonStyle}
+              //  aria-haspopup="true"
+              //   aria-label="Settings"
+            >
+              {" "}
+              <MoreHorizIcon />{" "}
+            </IconButton>
+            <SettingsPopover
+              anchorEl={anchorSettingsEl}
+              handleClose={handleSettingsPopoverClose}
+            />
+          </Stack>
+          <Tabs
+            value={currentTab}
+            onChange={handleTabChange}
+            textColor="primary"
+            indicatorColor="primary"
+            gap={5}
+            sx={{ fontSize: "1.5rem", minHeight: "32px" }}
+          >
+            {TabsArray.map((item, index) => {
+              return (
+                <Tab
+                  sx={{
+                    borderRadius: "0px",
+                    "&:active": { borderRadius: "0px" },
+                    fontSize: "1.5rem",
+                    minHeight: "32px",
+                  }}
+                  icon={item.icon}
+                  iconPosition="start"
+                  tabIndex={0}
+                  key={index}
+                  label={item.label}
+                  value={item.label}
+                  size={48}
+                />
+              );
+            })}
+          </Tabs>
+        </AppBar>
+        <Box
+          sx={{
+            minHeight: "80vh",
+            p: { sm: 1, md: 2, lg: 3, xl: 4 },
+            fontColor: "black",
+          }}
+        >
+          <Outlet />
+        </Box>
+      </Container>
     );
 }

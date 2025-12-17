@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Container,
   IconButton,
@@ -19,6 +20,10 @@ import {
   Paper,
   Tooltip,
   Avatar,
+  Select,
+  MenuItem,
+  FormControl,
+  ClickAwayListener,
 } from "@mui/material";
 import AutoModeOutlinedIcon from "@mui/icons-material/AutoModeOutlined";
 
@@ -27,16 +32,21 @@ import InlineTextField from "../utils/InlineTextField.jsx";
 import { SplitterX, SplitterY } from "../utils/Splitter.jsx";
 import { VscSourceControl } from "react-icons/vsc";
 import { LuGitCommitVertical } from "react-icons/lu";
+
 const DummyChipData = { projectTitle: "MBA-6", projectType: "Request" };
 
 const DummyViewers = 10;
+const PriorityArray = ["Highest", "High", "Medium", "Low", "Lowest"];
 
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ShareIcon from "@mui/icons-material/Share";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { workTypeIconMap } from "./kanbanBoard/KanbanIconMap.jsx";
+import {
+  workTypeIconMap,
+  PriorityIconMap,
+} from "./kanbanBoard/KanbanIconMap.jsx";
 import { Maximize2, X } from "lucide-react";
 
 const User = () => {
@@ -51,6 +61,11 @@ const handleFullScreen = () => {
 };
 
 export default function TaskCreatorForm({ setOpen }) {
+  const [priority, setPriority] = useState(""); //
+  const [isEditingPriority, setIsEditingPriority] = useState(true);
+  const [workType, setWorkType] = useState("");
+  const [isEditingWorkType, setIsEditingWorkType] = useState(false);
+
   return (
     <Container bgcolor="rgba( f, f, f,1)">
       <AppBar
@@ -235,7 +250,58 @@ export default function TaskCreatorForm({ setOpen }) {
                           assign to me
                         </Button>
                         <Typography color="text.primary"> Priority</Typography>
-                        <Typography color="text.secondary"> None</Typography>
+                        // TODO
+                        <ClickAwayListener
+                          onClickAway={() => setIsEditingPriority(false)}
+                        >
+                          {isEditingPriority ? (
+                            <Box
+                              sx={{ minWidth: 200 }}
+                              onClick={(event) => event.stopPropagation()}
+                            >
+                              <FormControl fullWidth>
+                                <Select
+                                  variant="outlined"
+                                  id="one"
+                                  value={priority}
+                                  onChange={(e) => setPriority(e.target.value)}
+                                  onClose={() => setIsEditingPriority(false)}
+                                >
+                                  {PriorityArray.map((item) => {
+                                    return (
+                                      <MenuItem value={item} key={item}>
+                                        <Stack
+                                          direction="row"
+                                          spacing={2}
+                                          alignItems="center"
+                                          justifyContent="flex-start"
+                                        >
+                                          {PriorityIconMap(item)}
+                                          <Typography> {item} </Typography>
+                                        </Stack>
+                                      </MenuItem>
+                                    );
+                                  })}
+                                </Select>
+                              </FormControl>
+                            </Box>
+                          ) : (
+                            <Stack
+                              direction="row"
+                              spacing={2}
+                              alignItems="center"
+                              justifyContent="flex-start"
+                              onClick={() => setIsEditingPriority(true)}
+                            >
+                              {PriorityIconMap(priority)}
+                              <Typography color="text.secondary">
+                                {" "}
+                                {priority || "Select..."}{" "}
+                              </Typography>
+                            </Stack>
+                          )}
+                        </ClickAwayListener>
+                        // TODO
                         <Box sx={{ flexGrow: 1 }} />
                         <Typography color="text.primary"> Parent</Typography>
                         <Typography color="text.secondary">
@@ -296,9 +362,7 @@ export default function TaskCreatorForm({ setOpen }) {
                             </Accordion>
                           </AccordionDetails>
                         </Accordion>
-
                         <Box sx={{ flexGrow: 1 }} />
-
                         <Typography size={"1.2rem"}>Reporter</Typography>
                         <Stack
                           direction="row"

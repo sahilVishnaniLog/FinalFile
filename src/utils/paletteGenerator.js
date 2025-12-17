@@ -1,9 +1,9 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative";
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY; // NOTE the api key is stored in the environment variables
 
 // creating a ew client instance of google generative AI
-const genAI = new GoogleGenAI({ apiKey: API_KEY }); // NOTE
+const genAI = new GoogleGenerativeAI({ apiKey: API_KEY }); // NOTE
 // image => base
 const convertImageToBase64 = async (imageURL) => {
   try {
@@ -73,35 +73,28 @@ const schema = {
     required: ["primary", "secondary", "success", "info", "warning", "error"],
   },
 };
-
+const prompt = `create a 6-color palette  as JSON saving colors is hex format `;
 // writing the function to make the API call // API_GET_REQUESTS_GOOGLE_GENERATIVE_AI
 const generatePalette = async (imageURL) => {
   try {
     const { base64, mimeType } = await convertImageToBase64(imageURL);
-
-    const response = await genAI.models.generateContent({
+    const model = genAI.getGenrativeModel({
       model: "gemini-1.5-flash",
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: schema,
-      },
-      contents: [
+    });
+
+    const result = await model.generateContent(
+      [
         {
           role: "user",
-          parts: [
-            {
-              text: "Analyze the image and gerate a 6 coloṙplaette fitting MUI guidelines. ",
-            },
-            {
-              inlineData: {
-                mimeType: mimeType,
-                data: base64,
-              },
-            },
-          ],
+          parts: [{ text: prompt }],
         },
       ],
-    });
+      {
+        generationConfig: {
+          responseMimeType: "application/json",
+        },
+      }
+    );
 
     if (response.text) {
       return JSON.parse(response.text);
