@@ -1,0 +1,55 @@
+flowchart TD
+    %% Global Stores
+    subgraph GlobalStore ["Global Storage & Context"]
+        direction TB
+        LS[("<b>Local Storage</b><br/>(Browser)")]
+        TC_Store["<b>ThemeContext</b><br/>- mode<br/>- palette<br/>- background"]
+        AC_Store["<b>AuthContext</b><br/>- isLoggedIn<br/>- userInfo"]
+    end
+
+    %% Authentication Flow
+    subgraph AuthLogic ["Auth & User Data Flow"]
+        LoginForm[Login / SignUp Forms]
+        Firebase[Firebase Auth & Firestore]
+        
+        LoginForm -- "1. Submit Credentials" --> Firebase
+        Firebase -- "2. Returns Token & User Data" --> LoginForm
+        
+        LoginForm -- "3. Set 'auth-token'" --> LS
+        LoginForm -- "3. Set 'user-info'" --> LS
+        
+        LS -.->|Read Token for Loader| BR_Loader[AuthLoader <br/> (BrowserRouter)]
+        LS -.->|Read 'user-info'| TaskForm[TaskCreatorForm <br/> (Reads User Name)]
+    end
+
+    %% State Management Components
+    subgraph ComponentState ["Component Local State"]
+        BoardState["<b>Board.jsx</b><br/>- Filter State (Radio)<br/>- Search Query"]
+        
+        KBState["<b>KanbanBoard.jsx</b><br/>- kanboardList (Tasks)<br/>- activeTaskId (Dragging)<br/>- previewBoard (Optimistic UI)"]
+        
+        ColState["<b>Column.jsx</b><br/>- Droppable Refs<br/>- Modal Open/Close"]
+        
+        FormState["<b>TaskCreatorForm.jsx</b><br/>- Input Values<br/>- UI Accordion State"]
+    end
+
+    %% Data Connections
+    TC_Store -->|Provides Theme| LoginForm & BoardState & KBState & TaskForm
+    AC_Store -->|Provides Auth Status| LoginForm & BoardState
+    
+    BoardState -->|Passes Search/Filter| KBState
+    
+    KBState -->|Passes Task Data| ColState
+    ColState -->|Passes Task Details| TaskCard[CardTask]
+    
+    ColState -- "Opens" --> TaskForm
+    TaskForm -- "Reads 'user-info'" --> LS
+
+    %% Styling for clarity
+    classDef storage fill:#ffecb3,stroke:#ffa000,stroke-width:2px,color:#000;
+    classDef logic fill:#e1bee7,stroke:#8e24aa,stroke-width:2px,color:#000;
+    classDef state fill:#c8e6c9,stroke:#388e3c,stroke-width:2px,color:#000;
+
+    class LS,TC_Store,AC_Store storage;
+    class LoginForm,Firebase,BR_Loader logic;
+    class BoardState,KBState,ColState,FormState state;
