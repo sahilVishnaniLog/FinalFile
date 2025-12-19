@@ -1,7 +1,16 @@
 import { useNavigate, Outlet, useLocation } from "react-router";
 import { Paper, Button, Typography, Avatar, Stack, Container } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+// adding global day.js setup if 
 
+import dayjs from 'dayjs' ; 
+import utc from 'dayjs/plugin/utc' ; 
+import timezone from  'dayjs/plugin/timezone' ; 
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("Asia/Kolkata");
+// --- end day.js setup --- 
 export default function App() {
     const navigate = useNavigate();
     const location = useLocation();

@@ -29,9 +29,13 @@ import AutoModeOutlinedIcon from "@mui/icons-material/AutoModeOutlined";
 
 import FullScreenButton from "../utils/FullScreenButton.jsx";
 import InlineTextField from "../utils/InlineTextField.jsx";
-import { SplitterX, SplitterY } from "../utils/Splitter.jsx";
+import { SplitterX } from "../utils/Splitter.jsx";
 import { VscSourceControl } from "react-icons/vsc";
 import { LuGitCommitVertical } from "react-icons/lu";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dayjs from "dayjs";
 
 const DummyChipData = { projectTitle: "MBA-6", projectType: "Request" };
 
@@ -65,9 +69,17 @@ export default function TaskCreatorForm({ setOpen }) {
   const [isEditingPriority, setIsEditingPriority] = useState(true);
   const [workType, setWorkType] = useState("");
   const [isEditingWorkType, setIsEditingWorkType] = useState(false);
+  const [isAssigned, setIsAssigned] = useState(false);
+
+  const [dueDate, setDueDate] = useState(dayjs.tz("2025-12-18")); // state for due date
+
+  const handleChangeAtDatePicker = (newValue) => {
+    setDueDate(newValue);
+    alert(newValue.format("YYYY-MM-DD")); //DEBUG: print the selcted date
+  };
 
   return (
-    <Container bgcolor="rgba( f, f, f,1)">
+    <Container bgcolor="rgba( 255, 255, 255,0.61)">
       <AppBar
         position="static"
         bgcolor="transparent"
@@ -222,7 +234,7 @@ export default function TaskCreatorForm({ setOpen }) {
                       </Tooltip>
                     </Button>
                   </Stack>
-                  <Accordion>
+                  <Accordion defaultExpanded>
                     <AccordionSummary>
                       <Typography>Details</Typography>
                     </AccordionSummary>
@@ -246,70 +258,78 @@ export default function TaskCreatorForm({ setOpen }) {
                             {User().firstName + " " + User().lastName}{" "}
                           </Typography>
                         </Stack>
-                        <Button variant="standard" sx={{ color: "primary" }}>
-                          assign to me
+                        <Button
+                          variant="contained"
+                          elevation={0}
+                          color={isAssigned ? "info" : "success"}
+                          onClick={() => setIsAssigned(!isAssigned)}
+                        >
+                          {isAssigned ? "Assign to me" : "Assigned"}
                         </Button>
                         <Typography color="text.primary"> Priority</Typography>
-                        // TODO
-                        <ClickAwayListener
-                          onClickAway={() => setIsEditingPriority(false)}
-                        >
-                          {isEditingPriority ? (
-                            <Box
-                              sx={{ minWidth: 200 }}
-                              onClick={(event) => event.stopPropagation()}
-                            >
-                              <FormControl fullWidth>
-                                <Select
-                                  variant="outlined"
-                                  id="one"
-                                  value={priority}
-                                  onChange={(e) => setPriority(e.target.value)}
-                                  onClose={() => setIsEditingPriority(false)}
-                                >
-                                  {PriorityArray.map((item) => {
-                                    return (
-                                      <MenuItem value={item} key={item}>
-                                        <Stack
-                                          direction="row"
-                                          spacing={2}
-                                          alignItems="center"
-                                          justifyContent="flex-start"
-                                        >
-                                          {PriorityIconMap(item)}
-                                          <Typography> {item} </Typography>
-                                        </Stack>
-                                      </MenuItem>
-                                    );
-                                  })}
-                                </Select>
-                              </FormControl>
-                            </Box>
-                          ) : (
-                            <Stack
-                              direction="row"
-                              spacing={2}
-                              alignItems="center"
-                              justifyContent="flex-start"
-                              onClick={() => setIsEditingPriority(true)}
-                            >
-                              {PriorityIconMap(priority)}
-                              <Typography color="text.secondary">
-                                {" "}
-                                {priority || "Select..."}{" "}
-                              </Typography>
-                            </Stack>
-                          )}
-                        </ClickAwayListener>
-                        // TODO
+
+                        {isEditingPriority ? (
+                          <Box
+                            sx={{ minWidth: 200 }}
+                            //onClick={(event) => event.stopPropagation()}
+                          >
+                            <FormControl fullWidth>
+                              <Select
+                                autoFocus // focuses when rendered
+                                // open={true}
+                                variant="outlined"
+                                id="one"
+                                value={priority}
+                                onChange={(e) => {
+                                  setPriority(e.target.value);
+                                  setIsEditingPriority(false);
+                                }}
+                                onClose={() => setIsEditingPriority(false)}
+                              >
+                                {PriorityArray.map((item) => {
+                                  return (
+                                    <MenuItem value={item} key={item}>
+                                      <Stack
+                                        direction="row"
+                                        spacing={2}
+                                        alignItems="center"
+                                        justifyContent="flex-start"
+                                      >
+                                        {PriorityIconMap(item)}
+                                        <Typography> {item} </Typography>
+                                      </Stack>
+                                    </MenuItem>
+                                  );
+                                })}
+                              </Select>
+                            </FormControl>
+                          </Box>
+                        ) : (
+                          <Stack
+                            direction="row"
+                            spacing={2}
+                            alignItems="center"
+                            justifyContent="flex-start"
+                            onClick={() => setIsEditingPriority(true)}
+                          >
+                            {PriorityIconMap(priority)}
+                            <Typography color="text.secondary" sx={{ ml: 1 }}>
+                              {priority || "Select..."}{" "}
+                            </Typography>
+                          </Stack>
+                        )}
+
                         <Box sx={{ flexGrow: 1 }} />
                         <Typography color="text.primary"> Parent</Typography>
                         <Typography color="text.secondary">
                           Add parent"{" "}
                         </Typography>
                         {/* this will be a InlineMulitpleSelect field  */}
+
                         <Typography color="text.primary"> Due date </Typography>
-                        <Typography color="text.secondary"> None </Typography>
+                        {/* another library for the time selector date-fns  */}
+                        <DatePicker />
+
                         {/* will be calender to choose date from the calendar  */}
                         <Typography color="text.primary"> Labels</Typography>
                         <Typography color="text.secondary">

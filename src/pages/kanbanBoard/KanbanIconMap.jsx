@@ -1,21 +1,23 @@
 import { SquarePlus, ShieldCheck, Bookmark, Proportions, Bug } from "lucide-react";
 import { ChevronsUp, ChevronUp, EqualApproximately, ChevronDown, ChevronsDown } from "lucide-react";
-
+import { RxLightningBolt } from "react-icons/rx";
 export const workTypeIconMap = (workType) => {
-    switch (workType) {
-        case "Request":
-            return <SquarePlus color="#498563" size={16} strokeWidth={1} />;
+  switch (workType) {
+    case "Epic":
+      return <RxLightningBolt color="#bf63f3" size={16} strokeWidth={1} />;
+    case "Request":
+      return <SquarePlus color="#498563" size={16} strokeWidth={1} />;
 
-        case "Task":
-            return <ShieldCheck color="#498563" size={16} strokeWidth={1} />;
-        case "Story":
-            return <Bookmark color="#498563" size={16} strokeWidth={1} />;
-        case "Feature":
-            return <Proportions color="#498563" size={16} strokeWidth={1} />;
+    case "Task":
+      return <ShieldCheck color="#4688ec" size={16} strokeWidth={1} />;
+    case "Story":
+      return <Bookmark color="#498563" size={16} strokeWidth={1} />;
+    case "Feature":
+      return <Proportions color="#6a9a23" size={16} strokeWidth={1} />;
 
-        case "Bug":
-            return <Bug color="#498563" size={16} strokeWidth={0.75} />;
-    }
+    case "Bug":
+      return <Bug color="#f15b50" size={16} strokeWidth={0.75} />;
+  }
 };
 
 export const PriorityIconMap = (priority) => {
