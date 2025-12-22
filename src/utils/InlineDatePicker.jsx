@@ -11,31 +11,36 @@ export default function InlineDatePicker({ ...props }) {
   const [isEditing, setEditing] = useState(false);
   const [date, setDate] = useState(dayjs.tz(new Date().toLocaleDateString() ))
   const [taskTitle, setTaskTitle] = useState("this is an enline textfield");
-  const handleDateChange = (newDate) => { 
-    setDate(newDate) ; 
-    alert(newDate.format("DD-MM-YYYY" )) ; 
-  }
+  const handleDateChange = (newDate) => {
+    setDate(newDate);
+    setEditing(false);
+  };
 
   if (isEditing) {
     return (
-        <LocalizationProvider dateAdapter={AdapterDayjs} 
-        adapterLocale='en-IN' 
-        dateLibInstance={dayjs.tz} > 
-      <DatePicker
-        onBlur={() => setEditing(false)}
-        onChange={handleDateChange }
-        {...props}
-        value={date}
-        showDaysOutsideCurrentMonth
-        slotProps={{ 
-            textField: { 
-                variant: "outlined", 
-                size: 'small' , 
-            }
-        }}
-      />
+      <LocalizationProvider
+        dateAdapter={AdapterDayjs}
+        adapterLocale="en-IN"
+        dateLibInstance={dayjs.tz}
+      >
+        <DatePicker
+          slotprops={{
+            textField: {
+              onBlur: () => setEditing(false),
+            },
+          }}
+          onChange={handleDateChange}
+          {...props}
+          value={date}
+          showDaysOutsideCurrentMonth
+          slotProps={{
+            textField: {
+              variant: "outlined",
+              size: "small",
+            },
+          }}
+        />
       </LocalizationProvider>
-      
     );
   }
 

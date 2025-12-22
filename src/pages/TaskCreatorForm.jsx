@@ -204,9 +204,13 @@ export default function TaskCreatorForm({ setOpen }) {
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails sx={{ p: 0 }}>
-                      <InlineTextField
+                      <InlineTextField // onBlur the submission will be triggered to the firstore task->description field 
                         multiline
-                        sx={{ fontSize: "0.8rem", color: "text.tertiary" }}
+                        sx={{
+                          fontSize: "0.8rem",
+                          color: "text.tertiary",
+                          width: "90%", 
+                        }}
                       />
                     </AccordionDetails>
                   </Accordion>

@@ -71,33 +71,33 @@ export default function SignUp() {
   }; // DATABASE: : REGULAR EXPRESSIONS  FOR VALIDATION
 
   function handleName(e) {
-    // TODO : Add the regex test
     const { value, id } = e.target;
     const newName = { ...name };
+
+    let setValid = null;
     if (id === "usersFirstName") {
       newName.firstName = value;
+      setValid = setIsfirstNameValid;
     }
     if (id === "usersLastName") {
       newName.lastName = value;
+      setValid = setIslastNameValid;
     }
-    setName(newName);
+    if (setValid) {
+      setName(newName);
+    }
 
-    let pattern = objectRegEx.name;
+    const pattern = objectRegEx.name;
     try {
-      let regEx = new RegExp(pattern);
-      let isNameValid = regEx.test(value);
-      if (id === "usersFirstName") {
-        setIsfirstNameValid(isNameValid);
-      }
-      if (id === "usersLastName") {
-        setIslastNameValid(isNameValid);
-      }
+      const regEx = new RegExp(pattern);
+      const isNameValid = regEx.test(value);
+      setValid(isNameValid);
     } catch (err) {
       console.error("invalid name regex pattern for the name", err);
-      if (id === "usersFirstName") setIsfirstNameValid(false);
-      if (id === "usersLastName") setIslastNameValid(false);
+      setValid(false);
     }
   }
+
   function handleBlur(e) {
     isfirstNameValid;
   }
@@ -395,7 +395,7 @@ export default function SignUp() {
 
                   <TextField
                     name="lastName"
-                    id="userLastName"
+                    id="usersLastName"
                     label=" Last Name* "
                     value={name.lastName}
                     onChange={handleName}

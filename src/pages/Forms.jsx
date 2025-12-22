@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -23,6 +23,8 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import { workTypeIconMap } from "./kanbanBoard/KanbanIconMap.jsx";
 import AddIcon from "@mui/icons-material/Add";
+import FormMorePopover from "../components/FormMorePopover.jsx";
+
 // TODO we will create a hash map for the color map for each new form created by users
 
 const DummyFormData = {
@@ -47,8 +49,19 @@ const DummyFormData = {
 };
 
 export default function Forms() {
-  // we will you use firebase  firestore to save and fetch forms from
+  const [anchorListHorizEl, setAnchorListHorizEl] = useState();
+
+  // we wilhandleListHorizPopoverClickl you use firebase  firestore to save and fetch forms from
   // or we can embed google form using iframe or
+  const handleListHorizPopoverClick = (event) => {
+    event.preventDefault();
+    setAnchorListHorizEl(anchorListHorizEl ? null : event.currentTarget);
+  };
+
+  const handleListHorizPopoverClose = (event) => {
+    setAnchorListHorizEl(null);
+  };
+
   return (
     <>
       <AppBar
@@ -152,7 +165,6 @@ export default function Forms() {
                           width="2rem"
                           height="0.2rem"
                         ></Skeleton>
-                        
                       </Paper>
                     </Box>
                     <Typography>{value.title}</Typography>
@@ -169,13 +181,17 @@ export default function Forms() {
                         label={value.workType}
                       ></Chip>
                       <Box sx={{ flexGrow: 1 }} />
-
                       <IconButton>
                         <CiLock />
                       </IconButton>
                       <IconButton>
-                        <MoreHorizIcon />
+                        <MoreHorizIcon onClick={handleListHorizPopoverClick} />
                       </IconButton>
+                      <FormMorePopover
+                        anchorEl={anchorListHorizEl}
+                        handleClose={handleListHorizPopoverClose}
+                      />{" "}
+                      {/* TODO:  create a popover component from more horix icon to show delete and edit options*/}
                     </Stack>
                   </Stack>
                 </CardActions>

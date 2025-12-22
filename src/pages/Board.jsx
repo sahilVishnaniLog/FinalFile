@@ -20,79 +20,105 @@ export default function Board() {
         setAnchorRadioGroupEl(null);
     }
     return (
-        <>
-            <AppBar
-                elevation={3}
-                position="static" // or 'fixed'
-                sx={{ backgroundColor: "transparent" }}
+      <>
+        <AppBar
+          elevation={3}
+          position="static" // or 'fixed'
+          sx={{ backgroundColor: "transparent" }}
+        >
+          <Toolbar sx={{ justifyContent: "space-between" }}>
+            <Stack
+              direction="row"
+              spacing={2}
+              alignItems="center"
+              justifyContent="space-between"
             >
-                <Toolbar sx={{ justifyContent: "space-between" }}>
-                    <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between">
-                        <TextField
-                            slotProps={{
-                                input: {
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <MdOutlineSearch />
-                                        </InputAdornment>
-                                    ),
-                                },
-                            }}
-                            placeholder="Search board"
-                        />
+              <TextField
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <MdOutlineSearch />
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+                placeholder="Search board"
+              />
 
-                        <AvatarGroup max={2} total={2} sx={{ backgroundColor: "transparent" }}>
-                            <Avatar alt="Sahil Vishnani" size="small" />
-                            <Avatar alt="Other user" />
-                        </AvatarGroup>
-                        <IconButton
-                            sx={{
-                                border: "3px solid rgba(0, 0,0 , 0.3)",
-                                borderRadius: "5px",
-                            }}
-                        >
-                            <FilterListIcon />
-                        </IconButton>
-                    </Stack>
-                    <Stack>
-                        <Stack direction="row" spacing={2}>
-                            <Button
-                                variant="outlined"
-                                onClick={handleRadioGroupPopoverClick}
-                                sx={{
-                                    border: "3px solid rgba(0, 0,0 , 0.3)",
-                                    borderRadius: "5px",
-                                }}
-                                endIcon={choosenValueRadioGroup === "none" || null ? <KeyboardArrowDownOutlinedIcon /> : null}
-                                color="inherit"
-                            >
-                                Group {choosenValueRadioGroup === "none" || null ? chosenValue : ""}
-                            </Button>
+              <AvatarGroup
+                max={2}
+                total={2}
+                sx={{ backgroundColor: "transparent" }}
+              >
+                <Avatar alt="Sahil Vishnani" size="small" />
+                <Avatar alt="Other user" />
+              </AvatarGroup>
+              <IconButton
+                sx={{
+                  border: "3px solid rgba(0, 0,0 , 0.3)",
+                  borderRadius: "5px",
+                }}
+              >
+                <FilterListIcon />
+              </IconButton>
+            </Stack>
+            <Stack>
+              <Stack direction="row" spacing={2}>
+                <Button
+                  variant="outlined"
+                  onClick={handleRadioGroupPopoverClick}
+                  sx={{
+                    border: "3px solid rgba(0, 0,0 , 0.3)",
+                    borderRadius: "5px",
+                  }}
+                  endIcon={
+                    choosenValueRadioGroup === "none" || null ? (
+                      <KeyboardArrowDownOutlinedIcon />
+                    ) : null
+                  }
+                  color="inherit"
+                >
+                  Group{" "}
+                  {choosenValueRadioGroup === "none" || null ? chosenValue : ""}
+                </Button>
 
-                            <RadioGroupPopover anchorEl={anchorRadioGroupEl} handleClose={handleRadioGroupPopoverClose} choosenRadio={choosenValueRadioGroup} setChosenRadio={setChoosenValueRadioGroup} />
-                            <IconButton
-                                sx={{
-                                    border: "3px solid rgba(0, 0,0 , 0.3)",
-                                    borderRadius: "5px",
-                                }}
-                            >
-                                <LuChartSpline />
-                            </IconButton>
-                            <IconButton
-                                sx={{
-                                    border: "3px solid rgba(0, 0,0 , 0.3)",
-                                    borderRadius: "5px",
-                                }}
-                            >
-                                {" "}
-                                <RiListSettingsLine />
-                            </IconButton>
-                        </Stack>
-                    </Stack>
-                </Toolbar>
-            </AppBar>
-            <Divider sx={{ borderColor: "background.neutral", borderMargin: "1rem" }} />
-            <KanbanBoard />
-        </>
+                <RadioGroupPopover
+                  anchorEl={anchorRadioGroupEl}
+                  handleClose={handleRadioGroupPopoverClose}
+                  choosenRadio={choosenValueRadioGroup}
+                  setChosenRadio={setChoosenValueRadioGroup}
+                />
+                <IconButton
+                  sx={{
+                    border: "3px solid rgba(0, 0,0 , 0.3)",
+                    borderRadius: "5px",
+                  }}
+                >
+                  <LuChartSpline />
+                </IconButton>
+                <IconButton
+                  sx={{
+                    border: "3px solid rgba(0, 0,0 , 0.3)",
+                    borderRadius: "5px",
+                  }}
+                >
+                  {" "}
+                  <RiListSettingsLine />
+                </IconButton>
+              </Stack>
+            </Stack>
+          </Toolbar>
+        </AppBar>
+        <Divider
+          sx={{
+            borderColor: "background.neutral",
+            borderMargin: "1rem",
+            marginTop: "2rem",
+            marginBottom: "2rem",
+          }}
+        />
+        <KanbanBoard />
+      </>
     );
 }
