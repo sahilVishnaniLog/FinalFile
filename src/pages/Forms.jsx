@@ -108,6 +108,7 @@ export default function Forms() {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
+                        borderRadius: 1,
                       }}
                     >
                       <Paper
@@ -151,6 +152,7 @@ export default function Forms() {
                           width="2rem"
                           height="0.2rem"
                         ></Skeleton>
+                        
                       </Paper>
                     </Box>
                     <Typography>{value.title}</Typography>

@@ -79,13 +79,13 @@ export default function ThemeContext({
         },
         background: {
           paper: isLight ? "#FFFFFF" : "#22272B",
-          default: "transparent",
+          default: "rgba(0 , 0, 0 , 0 )",
 
           neutral: isLight ? "#F4F5F7" : alpha("#000", 0.3),
         },
         board: {
           paper: isLight ? alpha("#f8f8f8", 0.3) : alpha("#18191a", 0.3),
-          default: "transparent",
+          default: "rgba(0 , 0, 0 , 0 )",
           card: isLight ? "#f0f1f2" : "#242528",
         },
         appbar: {
@@ -115,7 +115,7 @@ export default function ThemeContext({
         MuiAppBar: {
           styleOverrides: {
             root: {
-              backgroundColor: "transparent",
+              backgroundColor: "rgba(0 , 0, 0 , 0 )",
               boxShadow: "none",
               backgroundImage: "none",
               borderBottom: "none",
@@ -165,7 +165,7 @@ export default function ThemeContext({
                 ? alpha("#fff", 0.5)
                 : alpha("#1C2B41", 0.7),
               border: `1px solid ${
-                isLight ? "transparent" : alpha("#fff", 0.1)
+                isLight ? "rgba(0 , 0, 0 , 0 )" : alpha("#fff", 0.1)
               }`,
             },
             elevation1: {
@@ -179,7 +179,7 @@ export default function ThemeContext({
 
         MuiTabs: {
           styleOverrides: {
-            root: { minHeight: 40, backgroundColor: "transparent" },
+            root: { minHeight: 40, backgroundColor: "rgba(0 , 0, 0 , 0 )" },
             indicator: { backgroundColor: primaryText, height: 3 },
           },
         },
@@ -210,7 +210,8 @@ export default function ThemeContext({
               },
               "&:-webkit-autofill": {
                 //INFO : this is for autofill of inputs in chrome
-                WebkitBoxShadow: "0 0 0 100px transparent inset !important",
+                WebkitBoxShadow:
+                  "0 0 0 100px rgba(0 , 0, 0 , 0 ) inset !important",
                 WebkitTextFillColor: primaryText,
                 transition: "background-color 3000s ease-in-out 0s",
               },

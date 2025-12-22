@@ -29,12 +29,13 @@ import AutoModeOutlinedIcon from "@mui/icons-material/AutoModeOutlined";
 
 import FullScreenButton from "../utils/FullScreenButton.jsx";
 import InlineTextField from "../utils/InlineTextField.jsx";
+import InlineDatePicker from "../utils/InlineDatePicker.jsx";
 import { SplitterX } from "../utils/Splitter.jsx";
 import { VscSourceControl } from "react-icons/vsc";
 import { LuGitCommitVertical } from "react-icons/lu";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+// import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+// import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+// import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
 
 const DummyChipData = { projectTitle: "MBA-6", projectType: "Request" };
@@ -328,7 +329,7 @@ export default function TaskCreatorForm({ setOpen }) {
 
                         <Typography color="text.primary"> Due date </Typography>
                         {/* another library for the time selector date-fns  */}
-                        <DatePicker />
+                        <InlineDatePicker />
 
                         {/* will be calender to choose date from the calendar  */}
                         <Typography color="text.primary"> Labels</Typography>
