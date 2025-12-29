@@ -46,7 +46,7 @@ export default function InlineDatePicker({ ...props }) {
 
   return (
     <Typography tabIndex={0} onFocus={() => setEditing(true)} {...props}>
-      {date ? date.format("DD-MM-YYYY") : "Select Date" }  
+      {date ? date.format("DD/MM/YYYY") : "Select Date"}
     </Typography>
   );
 }

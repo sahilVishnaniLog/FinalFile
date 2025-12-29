@@ -5,35 +5,35 @@
 export const UserData = [
   {
     uid: "Uid-ofOmar",
-    name: "Omar",
+    name: "Omar Ali Khan",
     photoUrl:
       "https://plus.unsplash.com/premium_photo-1689977807477-a579eda91fa2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
     role: "Developer",
   },
   {
     uid: "UID-ofJohn",
-    name: "John",
+    name: "John Fethermann",
     photoUrl:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop",
     role: "Designer",
   },
   {
     uid: "Uid-ofNadia",
-    name: "Nadia",
+    name: "Nadia Sidqui",
     photoUrl:
       "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=500&auto=format&fit=crop",
     role: "Manager",
   },
   {
     uid: "Uid-ofAlice",
-    name: "Alice",
+    name: "Alice  Copper",
     photoUrl:
       "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=500&auto=format&fit=crop",
     role: "Developer",
   },
   {
     uid: "Uid-ofBob",
-    name: "Bob",
+    name: "Bob Dylan",
     photoUrl:
       "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=500&auto=format&fit=crop",
     role: "Tester",

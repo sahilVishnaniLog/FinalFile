@@ -25,7 +25,7 @@ import {
   VisibilityOff as VisibilityOffIcon,
   Close as CloseIcon,
 } from "@mui/icons-material";
-import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
+
 // INFO: authentication imports from firebase - project JIRA TEAMS APPLICATION
 // INFO:  APPLCATION NAME : TEST
 import { auth, db } from "./firebaseConfig";
@@ -41,9 +41,7 @@ import * as Flags from "country-flag-icons/react/3x2"; // ADDED: importing flags
 
 //NEW IMPORTS -29-NOV-2025
 export default function SignUp() {
-  // CLEANED
-  const [isValid, setValid] = useState(false); // wewill use this to check if the username choosen in valid or available ( no conflicts between the usernames  in the database collection over firestore)
-
+  
   const [email, setEmail] = useState(""); // FORM_DATA_UPDATE
   const [password, setPassword] = useState(""); // FORM_DATA_UPDATE
   const [country, setCountry] = useState(null); // FORM_DATA_UPDATE
@@ -51,7 +49,7 @@ export default function SignUp() {
   const [name, setName] = useState({ firstName: "", lastName: "" }); // FORM_DATA_UPDATE
 
   const [phone, setPhone] = useState(""); // FORM_DATA_UPDATE
-  const [phoneCode, setPhoneCode] = useState(" "); // FORM_DATA_UPDATE
+  
 
   const [hiddenPassword, setHiddenPassword] = useState(true);
 
@@ -66,16 +64,8 @@ export default function SignUp() {
   const [isPhoneValid, setIsPhoneValid] = useState(true);
   const [isfirstNameValid, setIsfirstNameValid] = useState(true);
   const [islastNameValid, setIslastNameValid] = useState(true);
-  const [isEmailValid, setIsEmailValid] = useState(true);
-  const [isPasswordValid, setIsPasswordValid] = useState(true);
-  const [isUsernameValid, setIsUsernameValid] = useState(true);
-  const objectRegEx = {
-    email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-    password: /^(?=.*[A-Z])(?=.*[a-z])(?=.\\d)(?=.*[@$!%*?&]).{8,}$/,
-    name: /^[a-zA-Z]+$/,
-    username: /^[a-zA-Z0-9]+[_,@]*[a-zA-Z0_9]*$/,
-  }; // DATABASE: : REGULAR EXPRESSIONS  FOR VALIDATION
 
+  
   function handleName(e) {
     const { value, id } = e.target;
     const newName = { ...name };
@@ -93,7 +83,7 @@ export default function SignUp() {
       setName(newName);
     }
 
-    const pattern = objectRegEx.name;
+    const pattern = /^[a-zA-Z]+$/; 
     try {
       const regEx = new RegExp(pattern);
       const isNameValid = regEx.test(value);
@@ -106,10 +96,6 @@ export default function SignUp() {
   function handleSnackbarClose(event, reason) {
     if (reason === "clickaway") return;
     setOpenSnackbar(false);
-  }
-
-  function handleBlur(e) {
-    isfirstNameValid;
   }
 
   function handlePassword(e) {
@@ -220,7 +206,7 @@ export default function SignUp() {
     //dummy run
     if (auth.currentUser) {
       try {
-        Navigate(`/${dataObject.usernamme}`, { replace: true });
+        Navigate(`/${dataObject.username}`, { replace: true });
       } catch (err) {
         console.error("Navigation error", err);
       }

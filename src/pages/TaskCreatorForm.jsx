@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { db } from "../Auth/firebaseConfig"; // NOTE: this to add the task to database
+
 import {
   Container,
   IconButton,
@@ -33,9 +35,7 @@ import InlineDatePicker from "../utils/InlineDatePicker.jsx";
 import { SplitterX } from "../utils/Splitter.jsx";
 import { VscSourceControl } from "react-icons/vsc";
 import { LuGitCommitVertical } from "react-icons/lu";
-// import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-// import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-// import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+
 import dayjs from "dayjs";
 
 const DummyChipData = { projectTitle: "MBA-6", projectType: "Request" };
@@ -86,7 +86,7 @@ export default function TaskCreatorForm({ setOpen }) {
         bgcolor="transparent"
         color="text.secondary"
         elevation={0}
-        width="1500px"
+        width="94%"
       >
         <Toolbar
           sx={{
@@ -95,7 +95,7 @@ export default function TaskCreatorForm({ setOpen }) {
             display: "flex",
             flexDirection: "row",
             backgroundColor: "transparent",
-            width: "1400px",
+            width: "100%",
           }}
         >
           <Chip
@@ -150,7 +150,7 @@ export default function TaskCreatorForm({ setOpen }) {
             >
               <SplitterX
                 totalSize="100%"
-                initialPrimarySize={450}
+                initialPrimarySize={900}
                 minSize={150}
                 maxSize={1000}
               >
@@ -174,6 +174,7 @@ export default function TaskCreatorForm({ setOpen }) {
                     {" "}
                   </Tooltip>
                   <InlineTextField
+                    id="outlined-basic"
                     sx={{
                       fontSize: "1.2rem",
                       fontWeight: "bold",
@@ -204,12 +205,13 @@ export default function TaskCreatorForm({ setOpen }) {
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails sx={{ p: 0 }}>
-                      <InlineTextField // onBlur the submission will be triggered to the firstore task->description field 
+                      <InlineTextField
+                        id="taskCreatorForm-TaskDescription" // onBlur the submission will be triggered to the firstore task->description field
                         multiline
                         sx={{
                           fontSize: "0.8rem",
                           color: "text.tertiary",
-                          width: "90%", 
+                          width: "90%",
                         }}
                       />
                     </AccordionDetails>
@@ -224,11 +226,11 @@ export default function TaskCreatorForm({ setOpen }) {
                     {" "}
                     Subtasks{" "}
                   </Typography>
-                  <InlineTextField></InlineTextField>
+                  <InlineTextField id="taskCreatorForm-SubtaskArray"></InlineTextField>
 
                   <Stack direction="row"></Stack>
                 </Box>
-                <Box class="Splitter-panel2">
+                <Box class="Splitter-panel2" sx={{ overflow: "auto" }}>
                   <Stack direction="row" jusitfyContent="space-between">
                     <Button>In Progress</Button>
                     <Button>
@@ -271,58 +273,70 @@ export default function TaskCreatorForm({ setOpen }) {
                         >
                           {isAssigned ? "Assign to me" : "Assigned"}
                         </Button>
-                        <Typography color="text.primary"> Priority</Typography>
+                        <Stack
+                          direction="row"
+                          sx={{
+                            width: "80%",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Typography color="text.primary">
+                            {" "}
+                            Priority
+                          </Typography>
 
-                        {isEditingPriority ? (
-                          <Box
-                            sx={{ minWidth: 200 }}
-                            //onClick={(event) => event.stopPropagation()}
-                          >
-                            <FormControl fullWidth>
-                              <Select
-                                autoFocus // focuses when rendered
-                                // open={true}
-                                variant="outlined"
-                                id="one"
-                                value={priority}
-                                onChange={(e) => {
-                                  setPriority(e.target.value);
-                                  setIsEditingPriority(false);
-                                }}
-                                onClose={() => setIsEditingPriority(false)}
-                              >
-                                {PriorityArray.map((item) => {
-                                  return (
-                                    <MenuItem value={item} key={item}>
-                                      <Stack
-                                        direction="row"
-                                        spacing={2}
-                                        alignItems="center"
-                                        justifyContent="flex-start"
-                                      >
-                                        {PriorityIconMap(item)}
-                                        <Typography> {item} </Typography>
-                                      </Stack>
-                                    </MenuItem>
-                                  );
-                                })}
-                              </Select>
-                            </FormControl>
-                          </Box>
-                        ) : (
-                          <Stack
-                            direction="row"
-                            spacing={2}
-                            alignItems="center"
-                            justifyContent="flex-start"
-                            onClick={() => setIsEditingPriority(true)}
-                          >
-                            {PriorityIconMap(priority)}
-                            <Typography color="text.secondary" sx={{ ml: 1 }}>
-                              {priority || "Select..."}{" "}
-                            </Typography>
-                          </Stack>
-                        )}
+                          {isEditingPriority ? (
+                            <Box
+                              sx={{ minWidth: 200 }}
+                              //onClick={(event) => event.stopPropagation()}
+                            >
+                              <FormControl fullWidth>
+                                <Select
+                                  autoFocus // focuses when rendered
+                                  // open={true}
+                                  variant="outlined"
+                                  id="one"
+                                  value={priority}
+                                  onChange={(e) => {
+                                    setPriority(e.target.value);
+                                    setIsEditingPriority(false);
+                                  }}
+                                  onClose={() => setIsEditingPriority(false)}
+                                >
+                                  {PriorityArray.map((item) => {
+                                    return (
+                                      <MenuItem value={item} key={item}>
+                                        <Stack
+                                          direction="row"
+                                          spacing={2}
+                                          alignItems="center"
+                                          justifyContent="flex-start"
+                                        >
+                                          {PriorityIconMap(item)}
+                                          <Typography> {item} </Typography>
+                                        </Stack>
+                                      </MenuItem>
+                                    );
+                                  })}
+                                </Select>
+                              </FormControl>
+                            </Box>
+                          ) : (
+                            <Stack
+                              direction="row"
+                              spacing={2}
+                              alignItems="center"
+                              justifyContent="flex-start"
+                              onClick={() => setIsEditingPriority(true)}
+                            >
+                              {PriorityIconMap(priority)}
+                              <Typography color="text.secondary" sx={{ ml: 1 }}>
+                                {priority || "Select..."}{" "}
+                              </Typography>
+                            </Stack>
+                          )}
+                        </Stack>
 
                         <Box sx={{ flexGrow: 1 }} />
                         <Typography color="text.primary"> Parent</Typography>
@@ -330,10 +344,22 @@ export default function TaskCreatorForm({ setOpen }) {
                           Add parent"{" "}
                         </Typography>
                         {/* this will be a InlineMulitpleSelect field  */}
-
-                        <Typography color="text.primary"> Due date </Typography>
-                        {/* another library for the time selector date-fns  */}
-                        <InlineDatePicker />
+                        <Stack
+                          direction="row"
+                          width="80%"
+                          sx={{
+                            justifyContent: "space-between",
+                            alignItemms: "center",
+                          }}
+                        >
+                          <Typography color="text.primary">
+                            {" "}
+                            Due date{" "}
+                          </Typography>
+                          <Box sx={{ flexGrow: 1 }}> </Box>
+                          {/* another library for the time selector date-fns  */}
+                          <InlineDatePicker id="taskCreatorForm-DueDate" />
+                        </Stack>
 
                         {/* will be calender to choose date from the calendar  */}
                         <Typography color="text.primary"> Labels</Typography>
@@ -348,12 +374,24 @@ export default function TaskCreatorForm({ setOpen }) {
                           Add member{" "}
                         </Typography>
                         {/* this will be a dynamic field to add labels */}
-                        <Typography color="text.primary">
-                          {" "}
-                          Start date{" "}
-                        </Typography>
+                        <Stack
+                          direction="row"
+                          width="80%"
+                          sx={{
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Typography color="text.primary">
+                            {" "}
+                            Start date{" "}
+                          </Typography>
+                          <Box sx={{ flexGrow: 1 }} />
+                          <InlineDatePicker id="taskCreatorForm-startDate" />
+                        </Stack>
                         <Typography color="text.secondary"> none </Typography>
                         {/* this will be a dynamic field to add labels */}
+
                         <Accordion>
                           <AccordionSummary>Development</AccordionSummary>
                           <AccordionDetails>

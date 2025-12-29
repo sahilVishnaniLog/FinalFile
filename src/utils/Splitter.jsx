@@ -164,7 +164,6 @@ const SplitterBase = ({
           sx={{
             ...panel2Style,
             flex: "1 1 auto",
-            overflow: "hidden",
           }}
         >
           {child2}
