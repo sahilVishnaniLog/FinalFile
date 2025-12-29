@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useRef } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import ValidateTextField from "../components/ValidateTextField.jsx";
 import { useNavigate } from "react-router";
 import countryPhoneCodes from "../assets/countryPhoneCode"; // DATABASE
@@ -17,11 +17,13 @@ import {
   IconButton,
   Paper,
   AppBar,
+  Snackbar,
 } from "@mui/material";
 import {
   ArrowRightAlt as ArrowRightAltIcon,
   Visibility as VisibilityIcon,
   VisibilityOff as VisibilityOffIcon,
+  Close as CloseIcon,
 } from "@mui/icons-material";
 import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
 // INFO: authentication imports from firebase - project JIRA TEAMS APPLICATION
@@ -34,7 +36,7 @@ import {
 } from "firebase/auth";
 import { collection, doc, setDoc, addDoc } from "firebase/firestore";
 import { useAuth } from "../routingP/BrowserRouter"; // importing the auth context ( vales { isLoggedIn , setLoggedIn, userCredentials, setUserCredentials} )
-import FlagIcon from "@mui/icons-material/Flag"; // DEBUG
+import FlagIcon from "@mui/icons-material/Flag";
 import * as Flags from "country-flag-icons/react/3x2"; // ADDED: importing flags from country flag icons package
 
 //NEW IMPORTS -29-NOV-2025
@@ -56,6 +58,9 @@ export default function SignUp() {
   const Navigate = useNavigate();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  // snackbar mount state
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   //regex test
   const [isPhoneValid, setIsPhoneValid] = useState(true);
@@ -98,6 +103,10 @@ export default function SignUp() {
       setValid(false);
     }
   }
+  function handleSnackbarClose(event, reason) {
+    if (reason === "clickaway") return;
+    setOpenSnackbar(false);
+  }
 
   function handleBlur(e) {
     isfirstNameValid;
@@ -105,46 +114,6 @@ export default function SignUp() {
 
   function handlePassword(e) {
     setPassword(e.target.value);
-  }
-  function handleRegexValidation(e) {
-    const { value, id } = e.target;
-    if (id === "user-password-signup") {
-      let pattern = objectRegEx.password;
-      try {
-        let regEx = new RegExp(pattern);
-        let isPasswordValid = regEx.test(value);
-        setIsPasswordValid(Boolean(isPasswordValid));
-      } catch (err) {
-        console.error("password doesnt satisfy the regex pattern ", err);
-        setIsPasswordValid(false);
-      }
-    }
-
-    if (id === "user-email-signup") {
-      let pattern = objectRegEx.email;
-      try {
-        let regEx = new RegExp(pattern);
-        let isEmailValid = regEx.test(value);
-        setIsEmailValid(isEmailValid);
-      } catch (err) {
-        console.error(
-          " invalid email doesnt satisfy the underlying regex ",
-          err
-        );
-        setIsEmailValid(false);
-      }
-    }
-    if (id === "user-SignUp-userName") {
-      let pattern = objectRegEx.username;
-      try {
-        let regEx = new RegExp(pattern);
-        let isUsernameValid = regEx.test(value);
-        setIsUsernameValid(isUsernameValid);
-      } catch (err) {
-        console.error("invalid", err);
-        setIsUsernameValid(false);
-      }
-    }
   }
 
   const timeoutRef = useRef(null);
@@ -235,7 +204,7 @@ export default function SignUp() {
 
     console.log("create account works "); //LOG
     if (!email || !password || !name || !username || !phone || !country) {
-      alert("Please fill in all the fields");
+      setOpenSnackbar(true);
       setError("Please fill  in all the fields");
       return;
     }
@@ -261,6 +230,13 @@ export default function SignUp() {
   };
 
   //TODO
+  const action = (
+    <React.Fragment>
+      <IconButton size="small" color="inherit" onClick={handleSnackbarClose}>
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
 
   function handlePhoneInput(event) {
     // CRITICAL
@@ -406,7 +382,6 @@ export default function SignUp() {
                   />
                 </Stack>
 
-                {/* CRITICAL:  EMAIL  */}
                 <ValidateTextField
                   name="email"
                   id="user-email-signup"
@@ -420,7 +395,6 @@ export default function SignUp() {
                   defaultHelperText="Enter a valid email address"
                 />
 
-                {/* CRITICAL:  password  */}
                 <ValidateTextField
                   name="password"
                   variant="outlined"
@@ -570,6 +544,20 @@ export default function SignUp() {
           </Box>
         </Box>
       </Paper>
+      <Snackbar
+        sx={{
+          mt: 2,
+          mb: 2,
+          backgroundColor: "background.paper",
+          "& .MuiSnackbarContent-message": { color: "text.error" },
+        }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        message="Please fill all the fields"
+        action={action}
+      />
     </>
   );
 }

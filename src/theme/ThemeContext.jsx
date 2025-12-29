@@ -46,16 +46,18 @@ export default function ThemeContext({
   const theme = useMemo(() => {
     const isLight = effectiveMode === "light";
 
-    const { primaryText, secondaryText, tertiaryText } = isLight
+    const { primaryText, secondaryText, tertiaryText, errorText } = isLight
       ? {
           primaryText: "#172B4D",
           secondaryText: "#5E6C84",
           tertiaryText: "#86898f",
+          errorText: "#E57373",
         }
       : {
           primaryText: "#EDF2FC",
           secondaryText: "#cecfd2",
           tertiaryText: "#96999e",
+          errorText: "#B71C1C",
         };
 
     const bgImage = backgroundImg ? `url(${backgroundImg})` : "none";
@@ -76,6 +78,7 @@ export default function ThemeContext({
           primary: primaryText,
           secondary: secondaryText,
           tertiary: tertiaryText,
+          error: errorText,
         },
         background: {
           paper: isLight ? "#FFFFFF" : "#22272B",
