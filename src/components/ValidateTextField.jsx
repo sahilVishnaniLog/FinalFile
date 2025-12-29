@@ -8,28 +8,37 @@ export default function ValidateTextField({
   errorMessage,
   defaultHelperText,
   value,
-  onBlur,
+
   ...props
 }) {
-  const [isError, setError] = useState();
+  
+  const [isError, setError] = useState(null);
+
+  const handleInValidSubmit = (e) => {
+    if (e.key === "Enter") {
+      e.prevernntDefault();
+    }
+  };
+  const handleFocus = (e) => {
+    setError(false);
+  };
 
   const handleBlur = (e) => {
-    const isValid = validateField(validationType, e.target.value);
+    const isValid = validateField(validationType, e.target.value.trim());
 
     setError(!isValid);
-
-    if (onBlur) onBlur(e);
   };
-  const showRedText = isError && value !== "";
 
   return (
     <TextField
       {...props}
+      onKeyDown={handleInValidSubmit}
       value={value}
+      onFocus={handleFocus}
       onBlur={handleBlur}
       helperText={
-        showRedText ? (
-          defaultHelperText || " "
+        !isError ? (
+          defaultHelperText
         ) : (
           <Stack direction="row" sx={{ gap: 1, alignItems: "center" }}>
             {" "}

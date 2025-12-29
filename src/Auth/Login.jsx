@@ -1013,13 +1013,13 @@ export default function Login() {
                   },
                 }}
               />
-              <Button 
-                variant="contained" 
-                type="submit" 
+              <Button
+                variant="contained"
+                type="submit"
                 color="success"
                 disabled={loading} // Added: Disable during loading
               >
-                {loading ? "Signing In..." : "Sign In"} // Added: Loading text
+                {loading ? "Signing In..." : "Sign In"}
               </Button>
             </Stack>
           </form>

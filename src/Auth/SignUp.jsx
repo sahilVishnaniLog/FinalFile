@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo, useRef } from "react";
+import ValidateTextField from "../components/ValidateTextField.jsx";
 import { useNavigate } from "react-router";
 import countryPhoneCodes from "../assets/countryPhoneCode"; // DATABASE
 import {
@@ -26,7 +27,7 @@ import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
 // INFO: authentication imports from firebase - project JIRA TEAMS APPLICATION
 // INFO:  APPLCATION NAME : TEST
 import { auth, db } from "./firebaseConfig";
-import ValidateTextField from "../components/ValidateTextField.jsx";
+
 import {
   createUserWithEmailAndPassword,
   fetchSignInMethodsForEmail,
@@ -388,18 +389,17 @@ export default function SignUp() {
                     value={name.firstName}
                     onChange={handleName}
                     validationType="name"
-                    errorMessage="Please enter a valid first name"
+                    errorMessage="Please enter a valid firsts name"
                     defaultHelperText="Please enter first name only"
-                    onKeyDown={handleInvalidSubmit}
+                    // onKeyDown={handleInvalidSubmit}
                   />
 
-                  <TextField
+                  <ValidateTextField
                     name="lastName"
                     id="usersLastName"
                     label=" Last Name* "
                     value={name.lastName}
                     onChange={handleName}
-                    onKeyDown={handleInvalidSubmit}
                     validationType="name"
                     errorMessage="Please enter a valid last name"
                     defaultHelperText="Please enter last name only"
@@ -407,7 +407,7 @@ export default function SignUp() {
                 </Stack>
 
                 {/* CRITICAL:  EMAIL  */}
-                <TextField
+                <ValidateTextField
                   name="email"
                   id="user-email-signup"
                   label=" Email* "
@@ -415,14 +415,13 @@ export default function SignUp() {
                   onChange={(e) => {
                     setEmail(e.target.value);
                   }}
-                  onKeyDown={handleInvalidSubmit}
                   validationType="email"
                   errorMessage="This is not an acceptable email address"
-                  defaultHelperText="Please enter a valid email address"
+                  defaultHelperText="Enter a valid email address"
                 />
 
                 {/* CRITICAL:  password  */}
-                <TextField
+                <ValidateTextField
                   name="password"
                   variant="outlined"
                   label="Set Password"
@@ -431,8 +430,8 @@ export default function SignUp() {
                   onChange={handlePassword}
                   onKeyDown={handleInvalidSubmit}
                   validationType="password"
-                  errorMessage="Password should contain a minimum of 8 characters, one uppercase letter, one lowercase letter, one digit, and one special character."
-                  defaultHelperText="Please enter a valid password"
+                  errorMessage="Please enter a valid password"
+                  defaultHelperText="Password should contain a minimum of 8 characters, one uppercase letter, one lowercase letter, one digit, and one special character."
                   type={hiddenPassword ? "password" : "text"}
                   slotProps={{
                     input: {
@@ -453,7 +452,7 @@ export default function SignUp() {
                     },
                   }}
                 />
-                <TextField
+                <ValidateTextField
                   name="username"
                   label="Set Username"
                   id="user-SignUp-userName"
@@ -461,29 +460,9 @@ export default function SignUp() {
                   onChange={(e) => {
                     setUsername(e.target.value);
                   }}
-                  onKeyDown={handleInvalidSubmit}
-                  onBlur={handleRegexValidation}
-                  helperText={
-                    isPasswordValid ? (
-                      "Username should contain only AlphaNumberic characters and should  not start with a number."
-                    ) : (
-                      <Stack
-                        direction="row"
-                        sx={{ gap: 1, alignItems: "center" }}
-                      >
-                        {" "}
-                        <ReportGmailerrorredIcon
-                          sx={{ color: "red", fontSize: "0.75rem" }}
-                        />{" "}
-                        <Typography variant="caption" sx={{ color: "red" }}>
-                          {" "}
-                          Not an acceptable username, It should contain only
-                          Aplhanueric characters and should not state with a
-                          number.
-                        </Typography>{" "}
-                      </Stack>
-                    )
-                  }
+                  validationType="username"
+                  errorMessage=" Please enter a valid username"
+                  defaultHelperText="Username should contain only AlphaNumeric characters and should not start with a number."
                 />
 
                 <Autocomplete // REVIEW : MEMOIZATION
@@ -571,7 +550,7 @@ export default function SignUp() {
                   label="Receive occasional product updates and announcemennts"
                 ></FormControlLabel>
                 <Button
-                  sx={{ bgcolor: "#233629" }}
+                  sx={{ bgcolor: "#5394d5ff" }}
                   variant="contained"
                   type="submit"
                   endIcon={<ArrowRightAltIcon />}
