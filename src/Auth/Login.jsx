@@ -832,7 +832,13 @@ export default function Login() {
         } = docSnap.data();
         localStorage.setItem(
           "user-info",
-          JSON.stringify({ firstName, lastName, email: userEmail, username })
+          JSON.stringify({
+            firstName,
+            lastName,
+            email: userEmail,
+            username,
+            userId: uid,
+          })
         );
       } else {
         // Fixed: Handle missing doc explicitly
@@ -848,7 +854,9 @@ export default function Login() {
             const userInfo = JSON.parse(userInfoString);
             navigate(`/${userInfo.username}`, { replace: true });
           } else {
-            console.warn("User authenticated, but local profile info is missing.");
+            console.warn(
+              "User authenticated, but local profile info is missing."
+            );
             navigate("/", { replace: true });
           }
         } catch (error) {
@@ -914,15 +922,28 @@ export default function Login() {
                 lastName: displayName.split(" ")[1] || "",
                 email: email,
                 username: email.split("@")[0],
+                userId: uid,
               })
             );
           } else {
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
-              const { firstName, lastName, email: userEmail, username } = docSnap.data();
+              const {
+                firstName,
+                lastName,
+                email: userEmail,
+                username,
+                uid,
+              } = docSnap.data();
               localStorage.setItem(
                 "user-info",
-                JSON.stringify({ firstName, lastName, email: userEmail, username })
+                JSON.stringify({
+                  firstName,
+                  lastName,
+                  email: userEmail,
+                  username,
+                  userId: uid,
+                })
               );
             } else {
               // Added: Handle missing doc for existing users (rare, but consistent)

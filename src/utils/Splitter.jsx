@@ -113,7 +113,7 @@ const SplitterBase = ({
           height: isHorizontal ? "100%" : totalSize,
 
           width: isHorizontal ? totalSize : "100%",
-          overflow: "hidden",
+
           ...(!isHorizontal && { width: "100%" }),
           ...(!isHorizontal && { height: "100%" }),
         }}
@@ -124,7 +124,6 @@ const SplitterBase = ({
             ...panel1Style,
             flex: "0  0 auto",
             [isHorizontal ? "width" : "height"]: size,
-            overflow: "hidden",
           }}
         >
           {child1}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Chip, Avatar, Stack } from "@mui/material";
 import { UserData } from "../assets/KanbanInitialData";
-import useTheme from "../theme/ThemeContext.jsx";
+import { useTheme } from "../theme/ThemeContext.jsx";
 
 export default function Summary() {
   const { modeChoice } = useTheme();
@@ -25,15 +25,17 @@ export default function Summary() {
       <Stack direction="column" gap={2}>
         {UserData.map((user) => (
           <Chip
-            key={user.id}
+            key={user.uid}
             label={user.name}
             avatar={<Avatar alt={user.name} src={user.photoUrl} />}
             sx={{
-              width: 200,
-              height: 50,
-              backgroundColor: roleColorMap(user.role),
+              justifyContext: "space-between",
+              width: 175,
+              height: 40,
+              backgroundColor: roleColorMap(user.role, modeChoice),
               color: "text.primary",
             }}
+            onDelete
             variant="filled"
           />
         ))}

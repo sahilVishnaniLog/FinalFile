@@ -1,6 +1,24 @@
 import { useState } from "react";
 import { db } from "../Auth/firebaseConfig"; // NOTE: this to add the task to database
+/*NOTE  : STARTS 
+=> CREATOR :  Uid 
+=> CATEGORY : which column of kanban board it belongs to 
 
+
+=> FROM Form panel 2 : 
+=> FROM form panel 1 : TaskTitle, TaskDescription , TaskType 
+=> FROM appbar : Priority , Worktype 
+=> FROM 
+
+
+
+
+
+
+
+
+
+ NOTE : ENDS  */ 
 import {
   Container,
   IconButton,
@@ -28,7 +46,7 @@ import {
   ClickAwayListener,
 } from "@mui/material";
 import AutoModeOutlinedIcon from "@mui/icons-material/AutoModeOutlined";
-
+import InlineMultiChipSelect from "../utils/InlineMultiChipSelect.jsx" ; 
 import FullScreenButton from "../utils/FullScreenButton.jsx";
 import InlineTextField from "../utils/InlineTextField.jsx";
 import InlineDatePicker from "../utils/InlineDatePicker.jsx";
@@ -42,7 +60,6 @@ const DummyChipData = { projectTitle: "MBA-6", projectType: "Request" };
 
 const DummyViewers = 10;
 const PriorityArray = ["Highest", "High", "Medium", "Low", "Lowest"];
-
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ShareIcon from "@mui/icons-material/Share";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -53,6 +70,7 @@ import {
   PriorityIconMap,
 } from "./kanbanBoard/KanbanIconMap.jsx";
 import { Maximize2, X } from "lucide-react";
+import { UserData} from '../assets/KanbanInitialData.js' ; 
 
 const User = () => {
   let userJSON = localStorage.getItem("user-info");
@@ -154,7 +172,7 @@ export default function TaskCreatorForm({ setOpen }) {
                 minSize={150}
                 maxSize={1000}
               >
-                <Box class="Splitter-panel1" sx={{}}>
+                <Box className="Splitter-panel1" sx={{}}>
                   <Stack direction="row" justifyContent="space-between">
                     <Typography
                       sx={{
@@ -230,7 +248,10 @@ export default function TaskCreatorForm({ setOpen }) {
 
                   <Stack direction="row"></Stack>
                 </Box>
-                <Box class="Splitter-panel2" sx={{ overflow: "auto" }}>
+                <Box
+                  className="Splitter-panel2"
+                  sx={{ overflowY: "scroll", height: "100%" }}
+                >
                   <Stack direction="row" jusitfyContent="space-between">
                     <Button>In Progress</Button>
                     <Button>
@@ -339,10 +360,12 @@ export default function TaskCreatorForm({ setOpen }) {
                         </Stack>
 
                         <Box sx={{ flexGrow: 1 }} />
+                        <Stack direction='row' sx={{ justifyContent: "space-between", width: '80%'}}> 
                         <Typography color="text.primary"> Parent</Typography>
                         <Typography color="text.secondary">
                           Add parent"{" "}
                         </Typography>
+                        </Stack>
                         {/* this will be a InlineMulitpleSelect field  */}
                         <Stack
                           direction="row"
@@ -362,17 +385,20 @@ export default function TaskCreatorForm({ setOpen }) {
                         </Stack>
 
                         {/* will be calender to choose date from the calendar  */}
+                        <Stack direction = "row" sx={{ justifyContent: 'space-between', width: '80%' }}> 
                         <Typography color="text.primary"> Labels</Typography>
                         <Typography color="text.secondary">
                           {" "}
                           Add labels{" "}
                         </Typography>
+
+                        </Stack> 
                         {/* this will be a dynamic field to add labels */}
+                        <Stack direction = "row" sx={{ justifyContent: 'space-between', width: '80%' }}>
                         <Typography color="text.primary"> Team</Typography>
-                        <Typography color="text.secondary">
-                          {" "}
-                          Add member{" "}
-                        </Typography>
+                        <InlineMultiChipSelect menuOptions={UserData}  /> 
+
+                        </Stack>
                         {/* this will be a dynamic field to add labels */}
                         <Stack
                           direction="row"
@@ -383,17 +409,22 @@ export default function TaskCreatorForm({ setOpen }) {
                           }}
                         >
                           <Typography color="text.primary">
-                            {" "}
-                            Start date{" "}
+                          
+                            Start date
                           </Typography>
                           <Box sx={{ flexGrow: 1 }} />
                           <InlineDatePicker id="taskCreatorForm-startDate" />
                         </Stack>
-                        <Typography color="text.secondary"> none </Typography>
+                        
                         {/* this will be a dynamic field to add labels */}
 
-                        <Accordion>
-                          <AccordionSummary>Development</AccordionSummary>
+                        <Accordion elevation={0} defaultExpanded disableGutters sx={{ backgroundColor: 'transparent' , margin: '0' , padding: '0'  , border: "none", 
+                      boxShadow: "none",
+                      "&:before": {
+                        display: "none",
+                      } }}>
+                          <AccordionSummary sx={{fontSize: "1rem" , padding: '0' , margin: '0' 
+                          }}>Development</AccordionSummary>
                           <AccordionDetails>
                             <Accordion>
                               <AccordionSummary>
