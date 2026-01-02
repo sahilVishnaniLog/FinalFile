@@ -46,106 +46,109 @@ export default function profilePopover({ anchorEl, handleClose }) {
     const Navigate = useNavigate();
 
     return (
-        <Popover
-            anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-            }}
-            transformOrigin={{ vertical: "top", horizontal: "right" }}
-            open={open}
-            anchorEl={anchorEl}
-            onClose={handleClose}
-            disableEnforceFocus
-            slotProps={{
-                paper: {
-                    sx: {
-                        pointerEvents: "auto",
-                        overflow: "visible",
-                        width: `${425 / 1.36}px`,
-                        bgcolor: "background.paper",
-                        color: "text.primary",
-                        p: `${11 / 1.36}px`,
-                    },
-                },
-                backdrop: {
-                    sx: {
-                        backgroundColor: "transparent",
-                    },
-                },
-            }}
+      <Popover
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        disableEnforceFocus
+        slotProps={{
+          paper: {
+            sx: {
+              pointerEvents: "auto",
+              overflow: "visible",
+              minWidth: `${425 / 1.36}px`,
+              bgcolor: "background.paper",
+              color: "text.primary",
+              p: `${11 / 1.36}px`,
+            },
+          },
+          backdrop: {
+            sx: {
+              backgroundColor: "transparent",
+            },
+          },
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
+            bgcolor: "background.neutral", // themeUsed
+            color: "text.primary", // themeUsed
+            borderRadius: 1,
+            height: `${130 / 1.36}px`,
+            p: "1rem",
+          }}
         >
-            <Box
-                sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1.5,
-                    bgcolor: "background.neutral", // themeUsed
-                    color: "text.primary", // themeUsed
-                    borderRadius: 1,
-                    height: `${130 / 1.36}px`,
-                    p: "1rem",
-                }}
-            >
-                <Stack direction="row" gap={2}>
-                    <Avatar
-                        {...stringAvatar(User().firstName, User().lastName)}
-                        sx={{
-                            width: "4rem",
-                            height: `4rem`,
-                            fontSize: "2rem",
-                        }}
-                    />
+          <Stack direction="row" gap={2}>
+            <Avatar
+              {...stringAvatar(User().firstName, User().lastName)}
+              sx={{
+                width: "4rem",
+                height: `4rem`,
+                fontSize: "2rem",
+              }}
+            />
 
-                    <Stack direction="column">
-                        <Typography sx={{ fontWeight: "bold" , textTransform: 'capitalize',   }} fontSize="1.3rem">
-                            {" "}
-                            {User().firstName + " " + User().lastName}{" "}
-                        </Typography>
-                        <Typography fontSize="0.9rem"> {User().email} </Typography>
-                    </Stack>
-                </Stack>
-            </Box>
-            <List>
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <PersonOutlineIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Profile" />
-                    </ListItemButton>
-                </ListItem>
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <SettingsSuggestIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Account settings" />
-                    </ListItemButton>
-                </ListItem>
-                <Divider />
-                <ListItem disablePadding>
-                    <ListItemButton onClick={handleSwitchAccount}>
-                        <ListItemIcon>
-                            <AiOutlineUserSwitch />
-                        </ListItemIcon>
-                        <ListItemText primary="Switch Account" />
-                    </ListItemButton>
-                </ListItem>
-                <ListItem disablePadding>
-                    <ListItemButton onClick={handleSignOut} type="submit">
-                        <ListItemIcon>
-                            <LogoutIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Logout" />
-                    </ListItemButton>
-                </ListItem>
-            </List>
+            <Stack direction="column">
+              <Typography
+                sx={{ fontWeight: "bold", textTransform: "capitalize" }}
+                fontSize="1.3rem"
+              >
+                {" "}
+                {User().firstName + " " + User().lastName}{" "}
+              </Typography>
+              <Typography fontSize="0.9rem"> {User().email} </Typography>
+            </Stack>
+          </Stack>
+        </Box>
+        <List>
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <PersonOutlineIcon />
+              </ListItemIcon>
+              <ListItemText primary="Profile" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <SettingsSuggestIcon />
+              </ListItemIcon>
+              <ListItemText primary="Account settings" />
+            </ListItemButton>
+          </ListItem>
+          <Divider />
+          <ListItem disablePadding>
+            <ListItemButton onClick={handleSwitchAccount}>
+              <ListItemIcon>
+                <AiOutlineUserSwitch />
+              </ListItemIcon>
+              <ListItemText primary="Switch Account" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton onClick={handleSignOut} type="submit">
+              <ListItemIcon>
+                <LogoutIcon />
+              </ListItemIcon>
+              <ListItemText primary="Logout" />
+            </ListItemButton>
+          </ListItem>
+        </List>
 
-            <AvatarGroup sx={{ alignItems: "center" }} max={4}>
-                {DummyOnlineUser.map((user) => {
-                    return <Avatar alt={user.name} src={user.url} />;
-                })}
-            </AvatarGroup>
-        </Popover>
+        <AvatarGroup sx={{ alignItems: "center" }} max={4}>
+          {DummyOnlineUser.map((user) => {
+            return <Avatar alt={user.name} src={user.url} />;
+          })}
+        </AvatarGroup>
+      </Popover>
     );
 }

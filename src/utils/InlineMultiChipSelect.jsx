@@ -5,9 +5,19 @@
 import React  , {useState} from 'react' ; 
 import { Select, MenuItem , Chip, Avatar, Stack, FormControl , OutlinedInput , Box, FilledInput,  } from '@mui/material' ;   
 import { useTheme } from '../theme/ThemeContext.jsx' ; 
-export default function InlineMultiChipSelect({ menuOptions  , ...props }) { // EVENT_USER
-    const { modeChoice } = useTheme();
+export default function InlineMultiChipSelect({
+  menuOptions,
+  onSelectionChange,
+  ...props
+}) {
+  // EVENT_USER
+
+  const { modeChoice } = useTheme();
+  const [isEditing, setEditing] = useState(false);
+  const [selectedOption, setSelectedOption] = useState([]);
+
   const roleColorMap = (role, modeChoice) => {
+    // FUNCTION
     switch (role) {
       case "Manager":
         return modeChoice === "light" ? "#D32F2F" : "#FF5252";
@@ -22,29 +32,75 @@ export default function InlineMultiChipSelect({ menuOptions  , ...props }) { // 
         return null;
     }
   };
-  const  [isEditing , setEditing] = useState(false) // EVENT_HANDLER_USER
-  const [selectedOption , setSelectedOption] = useState([]) ;
   const handleChange = (event) => {
-    setSelectedOption(event.target.value);
+    const newValue = event.target.value;
+    setSelectedOption(newValue);
+
+    if (onSelectionChange) {
+      // not empty
+      onSelectionChange(newValue);
+    }
   };
-  const handleDelete = (chipToDelete) => () => {
-    setSelectedOption((chips) => chips.filter((chip) => chip.uid !== chipToDelete.uid));
+  const handleDelete = (chipToDelete) => (event) => {
+    event.stopPropagation();
+
+    const filteredChips = selectedOption.filter(
+      (chip) => chip.uid !== chipToDelete.uid
+    );
+    setSelectedOption(filteredChips);
+
+    if (onSelectionChange) {
+      onSelectionChange(filteredChips);
+    }
   };
   return (
-  <> 
-  <Select
-  multiple 
-  value={selectedOption}
-  input={ <FilledInput disableUnderline sx={{ backgroundColor: "transparent" }} id='select-multiple-chip' label="Chip"/> }
-  onChange={handleChange} 
-  renderValue={(selected) => ( 
-  <Box sx={{ display: 'flex' , flexWrap: 'wrap' , flexDirection: 'row' , gap: 0.5 }} >  
-  {selected.map((value) => (<Chip key={value.uid} label={value.name} avatar={<Avatar alt={value.name} src={value.photoUrl} />} sx={{ justifyContent: 'space-between' , width: 'auto', height: "auto" , backgroundColor: roleColorMap(value.role, modeChoice) , color: 'text.primary'  }} onDelete={handleDelete(value)} variant='filled' />))} 
-  </Box>)}
-  > 
-  {menuOptions.map((option) => ( <MenuItem key={option?.uid ?? option?.id} value={option}>{option.name ?? option.taskTitle}</MenuItem>))} 
-  </Select>
-  </>
-    
-  )
+    <>
+      <Select
+        multiple
+        value={selectedOption}
+        input={
+          <FilledInput
+            disableUnderline
+            sx={{ backgroundColor: "transparent" }}
+            id="select-multiple-chip"
+            label="Chip"
+          />
+        }
+        onChange={handleChange}
+        renderValue={(selected) => (
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              flexDirection: "row",
+              gap: 0.5,
+            }}
+          >
+            {selected.map((value) => (
+              <Chip
+                key={value.uid}
+                label={value.name}
+                avatar={<Avatar alt={value.name} src={value.photoUrl} />}
+                sx={{
+                  justifyContent: "space-between",
+                  width: "auto",
+                  height: "auto",
+                  backgroundColor: roleColorMap(value.role, modeChoice),
+                  color: "text.primary",
+                }}
+                onDelete={handleDelete(value)}
+                variant="filled"
+              />
+            ))}
+          </Box>
+        )}
+      >
+        {menuOptions.map((option) => (
+          <MenuItem key={option?.uid ?? option?.id} value={option}>
+            {option.name ?? option.taskTitle}
+          </MenuItem>
+        ))}
+      </Select>
+    </>
+  );
 } 

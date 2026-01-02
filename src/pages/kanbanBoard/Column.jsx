@@ -134,6 +134,8 @@ export default function Column({ column, activeTaskId, isDragging }) {
           open={open}
           setOpen={setOpen}
           handleClose={handleClose}
+          columnId={column.id}
+          columnTitle={column.title}
         />
       </Modal>
     </>

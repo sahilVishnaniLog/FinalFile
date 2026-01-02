@@ -74,7 +74,7 @@ const T11 = "task-11";
 const T12 = "task-12";
 const T13 = "task-13";
 
-export const kanbanBoardList = [
+ export const kanbanBoardList = [
     {
         id: C1,
         title: "Complete",
@@ -330,5 +330,210 @@ export const kanbanBoardList = [
         ],
     },
 ];
+const flattenedKanban = {
+  columns: [
+    { id: "C1", title: "Complete", chipColor: "success" },
+    { id: "C2", title: "In Progress", chipColor: "error" },
+    { id: "C3", title: "To Do", chipColor: "disabled" },
+    { id: "C4", title: "Misc", chipColor: "disabled" }
+  ],
+  tasks: [
+    {
+      id: "T1",
+      columnId: "C1",
+      title: "Redux Toolkit Store Setup",
+      status: "Ready",
+      workType: "Request",
+      author: findUser("Uid-ofOmar") || DummUserDefault,
+      assignedTo: ["Uid-ofOmar", "UID-ofJohn", "Uid-ofNadia"],
+      projectId: "MBA-1",
+      contributors: ["Uid-ofOmar", "UID-ofJohn", "Uid-ofNadia"],
+      priority: "High",
+      dueDate: "2025-11-30",
+      subTasks: [{ subTask1: "T4", subTask2: "T5", subTask3: "T6" }],
+      description: "Initialize the global state management using RTK."
+    },
+    {
+      id: "T2",
+      columnId: "C1",
+      title: "Login Page UI Implementation",
+      status: "Dormant",
+      workType: "Task",
+      author: findUser("UID-ofJohn") || DummUserDefault,
+      assignedTo: ["UID-ofJohn", "Uid-ofAlice"],
+      projectId: "MBA-1",
+      contributors: ["UID-ofJohn", "Uid-ofAlice", "Uid-ofBob"],
+      priority: "Medium",
+      dueDate: "2025-12-15",
+      subTasks: [{ subTask1: "T7", subTask2: "T8" }],
+      description: "Build the login form using MUI TextField components."
+    },
+    {
+      id: "T3",
+      columnId: "C1",
+      title: "Signup Form Validation Schema",
+      status: "Active",
+      workType: "Story",
+      author: findUser("Uid-ofNadia") || DummUserDefault,
+      assignedTo: ["Uid-ofNadia"],
+      projectId: "MBA-1",
+      contributors: ["Uid-ofNadia"],
+      priority: "Low",
+      dueDate: "2025-11-25",
+      subTasks: [],
+      description: "Implement Yup/Zod validation for the registration flow."
+    },
+    {
+      id: "T4",
+      columnId: "C1",
+      title: "MUI Custom Theme Overrides",
+      status: "Inactive",
+      workType: "Bug",
+      author: findUser("Uid-ofAlice") || DummUserDefault,
+      assignedTo: ["Uid-ofAlice", "Uid-ofOmar"],
+      projectId: "MBA-1",
+      contributors: ["Uid-ofAlice", "Uid-ofOmar"],
+      priority: "Highest",
+      dueDate: "2025-11-20",
+      subTasks: [{ subTask1: "T9" }],
+      description: "Fix primary color contrast issues in dark mode."
+    },
+    {
+      id: "T5",
+      columnId: "C2",
+      title: "Firebase Auth Integration",
+      status: "Ready",
+      workType: "Feature",
+      author: findUser("Uid-ofOmar") || DummUserDefault,
+      assignedTo: ["Uid-ofOmar", "Uid-ofNadia"],
+      projectId: "MBA-1",
+      contributors: ["Uid-ofOmar", "Uid-ofNadia", "UID-ofJohn"],
+      priority: "High",
+      dueDate: "2025-12-10",
+      subTasks: [{ subTask1: "T10", subTask2: "T11" }],
+      description: "Connect the frontend forms to Firebase Authentication SDK."
+    },
+    {
+      id: "T6",
+      columnId: "C2",
+      title: "Responsive Navigation Sidebar",
+      status: "Dormant",
+      workType: "Request",
+      author: findUser("UID-ofJohn") || DummUserDefault,
+      assignedTo: ["UID-ofJohn"],
+      projectId: "MBA-1",
+      contributors: ["UID-ofJohn"],
+      priority: "Medium",
+      dueDate: "2025-12-05",
+      subTasks: [],
+      description: "Create a collapsible drawer for mobile views."
+    },
+    {
+      id: "T7",
+      columnId: "C2",
+      title: "React Router Protected Routes",
+      status: "Active",
+      workType: "Task",
+      author: findUser("Uid-ofAlice") || DummUserDefault,
+      assignedTo: ["Uid-ofAlice", "Uid-ofBob"],
+      projectId: "MBA-1",
+      contributors: ["Uid-ofAlice", "Uid-ofBob"],
+      priority: "Low",
+      dueDate: "2025-11-28",
+      subTasks: [{ subTask1: "T12" }],
+      description: "Redirect unauthenticated users to the login page."
+    },
+    {
+      id: "T8",
+      columnId: "C3",
+      title: "Axios Interceptor for JWT",
+      status: "Ready",
+      workType: "Story",
+      author: findUser("Uid-ofNadia") || DummUserDefault,
+      assignedTo: ["Uid-ofNadia", "Uid-ofOmar"],
+      projectId: "MBA-1",
+      contributors: ["Uid-ofNadia", "Uid-ofOmar"],
+      priority: "Medium",
+      dueDate: "2025-12-20",
+      subTasks: [{ subTask1: "T1" }],
+      description: "Attach bearer tokens automatically to API requests."
+    },
+    {
+      id: "T9",
+      columnId: "C3",
+      title: "Fix Next.js Hydration Errors",
+      status: "Inactive",
+      workType: "Bug",
+      author: findUser("Uid-ofBob") || DummUserDefault,
+      assignedTo: ["Uid-ofBob"],
+      projectId: "MBA-1",
+      contributors: ["Uid-ofBob"],
+      priority: "Low",
+      dueDate: "2025-11-30",
+      subTasks: [],
+      description: "Resolve mismatch between server and client rendered HTML."
+    },
+    {
+      id: "T10",
+      columnId: "C3",
+      title: "Unit Tests for Auth Hooks",
+      status: "Dormant",
+      workType: "Feature",
+      author: findUser("Uid-ofAlice") || DummUserDefault,
+      assignedTo: ["Uid-ofAlice", "UID-ofJohn"],
+      projectId: "MBA-1",
+      contributors: ["Uid-ofAlice", "UID-ofJohn"],
+      priority: "High",
+      dueDate: "2025-12-01",
+      subTasks: [{ subTask1: "T2", subTask2: "T3" }],
+      description: "Write Vitest tests for useAuth and useUser hooks."
+    },
+    {
+      id: "T11",
+      columnId: "C4",
+      title: "ESLint & Prettier Setup",
+      status: "Active",
+      workType: "Task",
+      author: findUser("Uid-ofOmar") || DummUserDefault,
+      assignedTo: ["Uid-ofOmar"],
+      projectId: "MBA-1",
+      contributors: ["Uid-ofOmar"],
+      priority: "Lowest",
+      dueDate: "2025-12-31",
+      subTasks: [],
+      description: "Standardize code formatting across the repository."
+    },
+    {
+      id: "T12",
+      columnId: "C4",
+      title: "PWA Manifest & Icons",
+      status: "Ready",
+      workType: "Request",
+      author: findUser("UID-ofJohn") || DummUserDefault,
+      assignedTo: ["UID-ofJohn", "Uid-ofNadia"],
+      projectId: "MBA-1",
+      contributors: ["UID-ofJohn", "Uid-ofNadia"],
+      priority: "Medium",
+      dueDate: "2025-11-25",
+      subTasks: [{ subTask1: "T5" }],
+      description: "Configure manifest.json for 'Add to Home Screen' support."
+    },
+    {
+      id: "T13",
+      columnId: "C4",
+      title: "Dark Mode Context Logic",
+      status: "Inactive",
+      workType: "Story",
+      author: findUser("Uid-ofBob") || DummUserDefault,
+      assignedTo: ["Uid-ofBob"],
+      projectId: "MBA-1",
+      contributors: ["Uid-ofBob"],
+      priority: "High",
+      dueDate: "2025-12-15",
+      subTasks: [{ subTask1: "T6", subTask2: "T7" }],
+      description: "Manage theme state using React Context API."
+    }
+  ]
+};;
 
 export default kanbanBoardList; // Export the base lists too, without flags
